@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { restaurants, categories } from './data.js';
 
 const COLORS = {
-  green: '#1B7340', greenLight: '#e8f5ee', greenDark: '#145a32',
+  green: '#0f4d2a', greenLight: '#e6f0eb', greenDark: '#0a3520',
   gold: '#C5960C', goldLight: '#fdf6e3',
-  bg: '#FAFAF8', cardWhite: '#FFFFFF',
-  textDark: '#1A1A1A', textMid: '#555555', textLight: '#888888',
-  border: '#E8E8E6',
+  bg: '#F7F7F5', cardWhite: '#FFFFFF',
+  textDark: '#111111', textMid: '#4a4a4a', textLight: '#777777',
+  border: '#E2E2DF',
 };
 
 function SimpleNav({ navigate }) {
@@ -40,11 +40,21 @@ export default function RestaurantPage({ slug, navigate }) {
   const restaurant = restaurants.find(r => r.slug === slug);
   const [emailInput, setEmailInput] = useState('');
 
+  // Inject SEO meta tags
+  React.useEffect(() => {
+    if (!restaurant) return;
+    const title = restaurant.seoTitle || `${restaurant.name} – Halal Rated`;
+    const desc = restaurant.seoDescription || restaurant.description;
+    document.title = title;
+    let meta = document.querySelector('meta[name="description"]');
+    if (!meta) { meta = document.createElement('meta'); meta.name = 'description'; document.head.appendChild(meta); }
+    meta.content = desc;
+  }, [restaurant]);
+
   if (!restaurant) {
     return (
       <div style={{ background: COLORS.bg, minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center', fontFamily: "'DM Sans', sans-serif" }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🍽️</div>
           <h2 style={{ color: COLORS.textDark, marginBottom: 8 }}>Restaurant not found</h2>
           <button onClick={() => navigate('/')} style={{
             background: COLORS.green, color: 'white', border: 'none',

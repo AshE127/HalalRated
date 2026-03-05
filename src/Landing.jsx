@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { restaurants, categories, cities } from './data.js';
 
 const COLORS = {
-  green: '#1B7340',
-  greenLight: '#e8f5ee',
-  greenDark: '#145a32',
+  green: '#0f4d2a',
+  greenLight: '#e6f0eb',
+  greenDark: '#0a3520',
   gold: '#C5960C',
   goldLight: '#fdf6e3',
-  bg: '#FAFAF8',
+  bg: '#F7F7F5',
   cardWhite: '#FFFFFF',
-  textDark: '#1A1A1A',
-  textMid: '#555555',
-  textLight: '#888888',
-  border: '#E8E8E6',
+  textDark: '#111111',
+  textMid: '#4a4a4a',
+  textLight: '#777777',
+  border: '#E2E2DF',
 };
 
 // Restaurant of the Week (sponsored slot)
@@ -21,7 +21,7 @@ const RESTAURANT_OF_WEEK = {
   city: "Herndon, VA",
   tagline: "Wood-fire halal burgers that hit every single time.",
   category: "Hidden Halal",
-  slug: "charred-herndon",
+  slug: "charred",
 };
 
 function Nav({ navigate, menuOpen, setMenuOpen }) {
@@ -112,12 +112,12 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           display: 'flex', flexDirection: 'column', gap: 4,
         }}>
           {[
-            { label: '🔍 Hidden Halal', path: '/category/hidden-halal' },
-            { label: '🍗 Delicious Desi', path: '/category/delicious-desi' },
-            { label: '🧆 Mezze Musts', path: '/category/mezze-musts' },
-            { label: '🥡 Soy Selects', path: '/category/soy-selects' },
-            { label: '⭐ Top Tier', path: '/category/top-tier' },
-            { label: '📖 Guides', path: '/learn' },
+            { label: 'Hidden Halal', path: '/category/hidden-halal' },
+            { label: 'Delicious Desi', path: '/category/delicious-desi' },
+            { label: 'Mezze Musts', path: '/category/mezze-musts' },
+            { label: 'Soy Selects', path: '/category/soy-selects' },
+            { label: 'Top Tier', path: '/category/top-tier' },
+            { label: 'Guides', path: '/learn' },
             { label: 'About', path: '/about' },
             { label: 'Contact', path: '/contact' },
             { label: 'For Restaurants', path: '/for-restaurants' },
@@ -174,7 +174,7 @@ function RestaurantCard({ restaurant, navigate }) {
         display: 'flex', alignItems: 'center', justifyContent: 'center',
         position: 'relative',
       }}>
-        <span style={{ fontSize: 48 }}>{cat?.emoji || '🍽️'}</span>
+
         {restaurant.spotlight && (
           <div style={{
             position: 'absolute', top: 12, right: 12,
@@ -306,7 +306,7 @@ export default function Landing({ navigate }) {
             fontSize: 13, fontWeight: 600, color: COLORS.gold,
             letterSpacing: '0.5px',
           }}>
-            📍 Northern Virginia's Halal Food Guide
+            Northern Virginia's Halal Food Guide
           </div>
 
           <h1 className="fade-up-2 hero-title" style={{
@@ -344,11 +344,14 @@ export default function Landing({ navigate }) {
               }}
             />
             <button style={{
-              background: COLORS.gold, color: 'white',
+              background: COLORS.green, color: 'white',
               border: 'none', borderRadius: 12, cursor: 'pointer',
-              padding: '14px 20px', fontSize: 18,
-              boxShadow: '0 4px 20px rgba(197,150,12,0.3)',
-            }}>🔍</button>
+              padding: '14px 22px',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 14, fontWeight: 600, letterSpacing: '0.3px',
+              boxShadow: '0 4px 20px rgba(15,77,42,0.35)',
+              whiteSpace: 'nowrap',
+            }}>Search</button>
           </div>
 
           {/* Quick tags */}
@@ -509,7 +512,6 @@ export default function Landing({ navigate }) {
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
               >
-                <div style={{ fontSize: 28, marginBottom: 8 }}>{cat.emoji}</div>
                 <div style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 13, fontWeight: 700, color: COLORS.textDark,

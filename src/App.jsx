@@ -3,6 +3,7 @@ import Landing from './Landing.jsx';
 import RestaurantPage from './RestaurantPage.jsx';
 import CategoryPage from './CategoryPage.jsx';
 import { CityPage, AboutPage, ContactPage, ForRestaurantsPage } from './Pages.jsx';
+import AdminPage from './AdminPage.jsx';
 
 export default function App() {
   const [page, setPage] = useState('home');
@@ -33,6 +34,8 @@ export default function App() {
       setPage('contact'); setPageData(null);
     } else if (path === '/for-restaurants') {
       setPage('for-restaurants'); setPageData(null);
+    } else if (path === '/admin') {
+      setPage('admin'); setPageData(null);
     } else {
       setPage('home'); setPageData(null);
     }
@@ -50,5 +53,6 @@ export default function App() {
   if (page === 'about') return <AboutPage navigate={navigate} />;
   if (page === 'contact') return <ContactPage navigate={navigate} />;
   if (page === 'for-restaurants') return <ForRestaurantsPage navigate={navigate} />;
+  if (page === 'admin') return <AdminPage navigate={navigate} />;
   return <Landing navigate={navigate} />;
 }
