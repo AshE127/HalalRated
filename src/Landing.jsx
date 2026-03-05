@@ -64,7 +64,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             { label: 'Hidden Halal', path: '/category/hidden-halal' },
             { label: 'Delicious Desi', path: '/category/delicious-desi' },
             { label: 'Mezze Musts', path: '/category/mezze-musts' },
-            { label: 'Guides', path: '/learn' },
+            { label: 'Guides', path: '/guide' },
             { label: 'About', path: '/about' },
           ].map(item => (
             <button key={item.path} onClick={() => item.path.startsWith('/learn') ? window.location.href = item.path : navigate(item.path)} style={{
@@ -117,7 +117,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             { label: 'Mezze Musts', path: '/category/mezze-musts' },
             { label: 'Soy Selects', path: '/category/soy-selects' },
             { label: 'Top Tier', path: '/category/top-tier' },
-            { label: 'Guides', path: '/learn' },
+            { label: 'Guides', path: '/guide' },
             { label: 'About', path: '/about' },
             { label: 'Contact', path: '/contact' },
             { label: 'For Restaurants', path: '/for-restaurants' },
@@ -315,8 +315,8 @@ export default function Landing({ navigate }) {
             color: 'white', lineHeight: 1.15,
             marginBottom: 16, letterSpacing: '-1px',
           }}>
-            If it's good,<br />
-            <span style={{ color: COLORS.gold }}>you'll see it here.</span>
+            If it's <span style={{ color: COLORS.gold }}>halal,</span><br />
+            you'll see it here.
           </h1>
 
           <p className="fade-up-3" style={{
@@ -324,7 +324,7 @@ export default function Landing({ navigate }) {
             marginBottom: 32, lineHeight: 1.6,
             maxWidth: 520, margin: '0 auto 32px',
           }}>
-            Spotlighting NOVA's best halal restaurants — from hidden gems to neighborhood classics.
+            Spotlighting NOVA's best halal restaurants — from neighborhood classics to cuisines you wouldn't expect to find halal.
           </p>
 
           {/* Search */}
@@ -632,7 +632,6 @@ export default function Landing({ navigate }) {
             borderRadius: 20, padding: '40px',
             textAlign: 'center',
           }}>
-            <div style={{ fontSize: 32, marginBottom: 12 }}>📬</div>
             <h3 style={{
               fontFamily: "'Playfair Display', serif",
               fontSize: 24, fontWeight: 700, color: COLORS.textDark,
@@ -765,6 +764,7 @@ export default function Landing({ navigate }) {
                   { label: 'Contact', path: '/contact' },
                   { label: 'For Restaurants', path: '/for-restaurants' },
                   { label: 'Instagram', path: 'https://instagram.com/halalrated', external: true },
+                  { label: 'TikTok', path: 'https://tiktok.com/@halalrated', external: true },
                 ].map(l => (
                   <button key={l.label} onClick={() => l.external ? window.open(l.path, '_blank') : navigate(l.path)} style={{
                     display: 'block', background: 'none', border: 'none',
