@@ -129,7 +129,7 @@ function ScrollingCarousel({ onSelect }) {
           display: flex;
           gap: 10px;
           width: max-content;
-          animation: scrollLeft 40s linear infinite;
+          animation: scrollLeft 70s linear infinite;
         }
         .carousel-track:hover {
           animation-play-state: paused;
@@ -498,7 +498,7 @@ export default function Landing({ navigate }) {
           </div>
 
           {/* Scrolling pill carousel */}
-          <div style={{ marginTop: 20, width: '100vw', position: 'relative', left: '50%', transform: 'translateX(-50%)' }}>
+          <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
             <ScrollingCarousel onSelect={(tag) => { setSearch(tag); window.scrollTo({ top: 600, behavior: 'smooth' }); }} />
           </div>
         </div>
