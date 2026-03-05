@@ -24,11 +24,153 @@ const RESTAURANT_OF_WEEK = {
   slug: "charred",
 };
 
+function DropdownNav({ label, items, navigate, onClose }) {
+  const [open, setOpen] = React.useState(false);
+  const ref = React.useRef(null);
+
+  React.useEffect(() => {
+    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setOpen(false); };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  return (
+    <div ref={ref} style={{ position: 'relative' }}>
+      <button
+        onClick={() => setOpen(o => !o)}
+        style={{
+          background: 'none', border: 'none', cursor: 'pointer',
+          padding: '6px 12px', borderRadius: 6,
+          fontFamily: "'DM Sans', sans-serif",
+          fontSize: 14, fontWeight: 500,
+          color: open ? COLORS.green : COLORS.textMid,
+          display: 'flex', alignItems: 'center', gap: 4,
+          transition: 'color 0.15s',
+        }}
+        onMouseEnter={e => e.currentTarget.style.color = COLORS.green}
+        onMouseLeave={e => { if (!open) e.currentTarget.style.color = COLORS.textMid; }}
+      >
+        {label}
+        <span style={{
+          fontSize: 10, marginTop: 1,
+          display: 'inline-block',
+          transform: open ? 'rotate(180deg)' : 'rotate(0deg)',
+          transition: 'transform 0.2s',
+        }}>▾</span>
+      </button>
+      {open && (
+        <div style={{
+          position: 'absolute', top: 'calc(100% + 8px)', left: 0,
+          background: 'white',
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 12,
+          boxShadow: '0 8px 32px rgba(0,0,0,0.10)',
+          minWidth: 200, zIndex: 200,
+          overflow: 'hidden',
+        }}>
+          {items.map((item, i) => (
+            <button key={item.path}
+              onClick={() => {
+                if (item.external) window.location.href = item.path;
+                else navigate(item.path);
+                setOpen(false);
+                if (onClose) onClose();
+              }}
+              style={{
+                display: 'block', width: '100%',
+                background: 'none', border: 'none',
+                borderBottom: i < items.length - 1 ? `1px solid ${COLORS.border}` : 'none',
+                cursor: 'pointer', textAlign: 'left',
+                padding: '11px 16px',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, fontWeight: 500,
+                color: COLORS.textDark,
+                transition: 'background 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
+            >
+              {item.label}
+              {item.sub && <div style={{ fontSize: 11, color: COLORS.textLight, marginTop: 1 }}>{item.sub}</div>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function ScrollingCarousel({ onSelect }) {
+  const pills = [
+    // Dishes
+    'Biryani', 'Shawarma', 'Kabob', 'Wings', 'Burgers', 'Karahi', 'Mandi',
+    'Korean BBQ', 'Pizza', 'Buffet', 'Chaat', 'Nihari', 'Haleem', 'Roti',
+    // Cuisines
+    'Pakistani', 'Afghan', 'Lebanese', 'Chinese', 'Korean', 'Indian',
+    'Mediterranean', 'American', 'Turkish', 'Fusion',
+    // Cities
+    'Herndon', 'Chantilly', 'Sterling', 'Ashburn', 'Falls Church', 'Fairfax',
+    // Vibes
+    'Late Night', 'Family Friendly', 'Hidden Gem', 'Halal Certified',
+  ];
+
+  // Duplicate for seamless loop
+  const allPills = [...pills, ...pills];
+
+  return (
+    <div style={{ overflow: 'hidden', width: '100%', position: 'relative' }}>
+      <style>{`
+        @keyframes scrollLeft {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .carousel-track {
+          display: flex;
+          gap: 10px;
+          width: max-content;
+          animation: scrollLeft 40s linear infinite;
+        }
+        .carousel-track:hover {
+          animation-play-state: paused;
+        }
+        .carousel-pill {
+          background: rgba(255,255,255,0.12);
+          border: 1px solid rgba(255,255,255,0.22);
+          color: white;
+          border-radius: 100px;
+          padding: 7px 16px;
+          cursor: pointer;
+          font-family: 'DM Sans', sans-serif;
+          font-size: 13px;
+          font-weight: 500;
+          white-space: nowrap;
+          transition: background 0.2s, border-color 0.2s;
+          flex-shrink: 0;
+        }
+        .carousel-pill:hover {
+          background: rgba(255,255,255,0.24);
+          border-color: rgba(255,255,255,0.4);
+        }
+      `}</style>
+      <div className="carousel-track">
+        {allPills.map((pill, i) => (
+          <button
+            key={i}
+            className="carousel-pill"
+            onClick={() => onSelect(pill)}
+          >{pill}</button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Nav({ navigate, menuOpen, setMenuOpen }) {
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(250, 250, 248, 0.95)',
+      background: 'rgba(250, 250, 248, 0.97)',
       backdropFilter: 'blur(12px)',
       borderBottom: `1px solid ${COLORS.border}`,
       padding: '0 24px',
@@ -59,33 +201,31 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         </button>
 
         {/* Desktop Nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }} className="desktop-nav">
+        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="desktop-nav">
           {[
-            { label: 'Hidden Halal', path: '/category/hidden-halal' },
-            { label: 'Delicious Desi', path: '/category/delicious-desi' },
-            { label: 'Mezze Musts', path: '/category/mezze-musts' },
-            { label: 'Guides', path: '/guide' },
+            { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
           ].map(item => (
-            <button key={item.path} onClick={() => item.path.startsWith('/learn') ? window.location.href = item.path : navigate(item.path)} style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: '6px 12px', borderRadius: 6,
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, fontWeight: 500,
-              color: COLORS.textMid,
-              transition: 'color 0.2s',
-            }}
-            onMouseEnter={e => e.target.style.color = COLORS.green}
-            onMouseLeave={e => e.target.style.color = COLORS.textMid}
+            <button key={item.path}
+              onClick={() => item.external ? window.location.href = item.path : navigate(item.path)}
+              style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                padding: '6px 12px', borderRadius: 6,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, fontWeight: 500,
+                color: COLORS.textMid,
+                transition: 'color 0.15s',
+              }}
+              onMouseEnter={e => e.target.style.color = COLORS.green}
+              onMouseLeave={e => e.target.style.color = COLORS.textMid}
             >{item.label}</button>
           ))}
           <button onClick={() => navigate('/for-restaurants')} style={{
             background: COLORS.green, color: 'white',
             border: 'none', borderRadius: 8, cursor: 'pointer',
-            padding: '8px 16px',
+            padding: '8px 16px', marginLeft: 8,
             fontFamily: "'DM Sans', sans-serif",
             fontSize: 14, fontWeight: 600,
-            marginLeft: 8,
           }}>Get Featured</button>
         </div>
 
@@ -93,52 +233,55 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           style={{
-            background: 'none', border: 'none', cursor: 'pointer',
-            fontSize: 22, color: COLORS.textDark,
+            background: menuOpen ? COLORS.green : COLORS.greenLight,
+            border: `1px solid ${COLORS.border}`,
+            borderRadius: 8,
+            cursor: 'pointer',
+            width: 40, height: 40,
             display: 'none',
+            alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column', gap: 5,
+            padding: 0,
           }}
           className="hamburger-btn"
-        >{menuOpen ? '✕' : '☰'}</button>
+        >
+          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+          <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
+          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+        </button>
       </div>
 
       {/* Mobile menu */}
       {menuOpen && (
         <div style={{
           position: 'fixed', top: 64, left: 0, right: 0, bottom: 0,
-          background: 'rgba(250,250,248,0.98)',
-          backdropFilter: 'blur(12px)',
+          background: '#F7F7F5',
           zIndex: 99,
           padding: 24,
+          overflowY: 'auto',
           display: 'flex', flexDirection: 'column', gap: 4,
         }}>
+
           {[
-            { label: 'Hidden Halal', path: '/category/hidden-halal' },
-            { label: 'Delicious Desi', path: '/category/delicious-desi' },
-            { label: 'Mezze Musts', path: '/category/mezze-musts' },
-            { label: 'Soy Selects', path: '/category/soy-selects' },
-            { label: 'Top Tier', path: '/category/top-tier' },
-            { label: 'Guides', path: '/guide' },
+            { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
             { label: 'Contact', path: '/contact' },
             { label: 'For Restaurants', path: '/for-restaurants' },
           ].map(item => (
-            <button key={item.path} onClick={() => { item.path.startsWith('/learn') ? window.location.href = item.path : navigate(item.path); setMenuOpen(false); }} style={{
+            <button key={item.path} onClick={() => { item.external ? window.location.href = item.path : navigate(item.path); setMenuOpen(false); }} style={{
               background: 'none', border: 'none', cursor: 'pointer',
-              padding: '14px 8px',
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 17, fontWeight: 500,
-              color: COLORS.textDark,
-              textAlign: 'left',
+              padding: '13px 8px',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+              color: COLORS.textDark, textAlign: 'left',
               borderBottom: `1px solid ${COLORS.border}`,
             }}>{item.label}</button>
           ))}
           <button onClick={() => { navigate('/for-restaurants'); setMenuOpen(false); }} style={{
-            marginTop: 16, background: COLORS.green, color: 'white',
+            marginTop: 20, background: COLORS.green, color: 'white',
             border: 'none', borderRadius: 12, cursor: 'pointer',
             padding: '14px 24px',
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 16, fontWeight: 600,
-          }}>✦ Get Featured on Halal Rated</button>
+            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
+          }}>Get Featured on Halal Rated</button>
         </div>
       )}
     </nav>
@@ -354,22 +497,9 @@ export default function Landing({ navigate }) {
             }}>Search</button>
           </div>
 
-          {/* Quick tags */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, justifyContent: 'center' }}>
-            {quickTags.map(tag => (
-              <button key={tag} onClick={() => setSearch(tag)} style={{
-                background: 'rgba(255,255,255,0.12)', backdropFilter: 'blur(4px)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: 'white', borderRadius: 20,
-                padding: '5px 14px', cursor: 'pointer',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, fontWeight: 500,
-                transition: 'background 0.2s',
-              }}
-              onMouseEnter={e => e.target.style.background = 'rgba(255,255,255,0.22)'}
-              onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.12)'}
-              >{tag}</button>
-            ))}
+          {/* Scrolling pill carousel */}
+          <div style={{ marginTop: 20, width: '100vw', position: 'relative', left: '50%', transform: 'translateX(-50%)' }}>
+            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); window.scrollTo({ top: 600, behavior: 'smooth' }); }} />
           </div>
         </div>
       </section>
