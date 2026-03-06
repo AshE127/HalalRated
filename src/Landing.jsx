@@ -167,6 +167,13 @@ function ScrollingCarousel({ onSelect }) {
 }
 
 function Nav({ navigate, menuOpen, setMenuOpen }) {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  React.useEffect(() => {
+    const handler = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', handler);
+    return () => window.removeEventListener('resize', handler);
+  }, []);
+
   return (
     <nav style={{
       position: 'sticky', top: 0, zIndex: 200,
@@ -201,7 +208,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         </button>
 
         {/* Desktop Nav */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 4 }} className="desktop-nav">
+        <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4 }}>
           {[
             { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
@@ -232,8 +239,10 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="hamburger-btn"
           style={{
+            display: isMobile ? 'flex' : 'none',
+            alignItems: 'center', justifyContent: 'center',
+            flexDirection: 'column',
             background: menuOpen ? COLORS.green : COLORS.greenLight,
             border: `1px solid ${COLORS.border}`,
             borderRadius: 8,
@@ -415,10 +424,7 @@ export default function Landing({ navigate }) {
     <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        .hamburger-btn { display: none; }
         @media (max-width: 768px) {
-          .desktop-nav { display: none !important; }
-          .hamburger-btn { display: flex !important; align-items: center !important; justify-content: center !important; flex-direction: column !important; gap: 5px !important; }
           .hero-title { font-size: 38px !important; }
           .stats-strip { flex-direction: column !important; gap: 16px !important; }
           .category-grid { grid-template-columns: repeat(2, 1fr) !important; }
