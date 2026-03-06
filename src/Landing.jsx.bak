@@ -175,7 +175,6 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
   }, []);
 
   return (
-    <>
     <nav style={{
       position: 'sticky', top: 0, zIndex: 200,
       background: 'rgba(250, 250, 248, 0.97)',
@@ -261,14 +260,12 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         </button>
       </div>
 
-    </nav>
-
-      {/* Mobile menu — outside nav so z-index works correctly */}
+      {/* Mobile menu */}
       {menuOpen && (
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
           background: '#F7F7F5',
-          zIndex: 9999,
+          zIndex: 199,
           padding: '0 24px 40px',
           overflowY: 'auto',
           display: 'flex', flexDirection: 'column', gap: 4,
@@ -312,7 +309,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           }}>Get Featured on Halal Rated</button>
         </div>
       )}
-    </>
+    </nav>
   );
 }
 
