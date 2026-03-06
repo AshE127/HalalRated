@@ -3,6 +3,6 @@
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/guide", "destination": "/learn/index.html" },
     { "source": "/guide/:path*", "destination": "/learn/:path*" },
-    { "source": "/((?!learn/).*)", "destination": "/index.html" }
+    { "source": "/((?!learn/|admin|restaurant/).*)", "destination": "/index.html" }
   ]
 }

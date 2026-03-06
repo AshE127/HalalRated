@@ -169,7 +169,7 @@ function ScrollingCarousel({ onSelect }) {
 function Nav({ navigate, menuOpen, setMenuOpen }) {
   return (
     <nav style={{
-      position: 'sticky', top: 0, zIndex: 100,
+      position: 'sticky', top: 0, zIndex: 200,
       background: 'rgba(250, 250, 248, 0.97)',
       backdropFilter: 'blur(12px)',
       borderBottom: `1px solid ${COLORS.border}`,
@@ -232,18 +232,19 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         {/* Mobile hamburger */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
+          className="hamburger-btn"
           style={{
             background: menuOpen ? COLORS.green : COLORS.greenLight,
             border: `1px solid ${COLORS.border}`,
             borderRadius: 8,
             cursor: 'pointer',
             width: 40, height: 40,
-            display: 'none',
             alignItems: 'center', justifyContent: 'center',
             flexDirection: 'column', gap: 5,
             padding: 0,
+            zIndex: 201,
+            position: 'relative',
           }}
-          className="hamburger-btn"
         >
           <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
           <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
@@ -254,13 +255,29 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
       {/* Mobile menu */}
       {menuOpen && (
         <div style={{
-          position: 'fixed', top: 64, left: 0, right: 0, bottom: 0,
+          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
           background: '#F7F7F5',
-          zIndex: 99,
-          padding: 24,
+          zIndex: 199,
+          padding: '0 24px 40px',
           overflowY: 'auto',
           display: 'flex', flexDirection: 'column', gap: 4,
         }}>
+          {/* Mobile menu header */}
+          <div style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            height: 64, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 8,
+            flexShrink: 0,
+          }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: COLORS.textDark }}>
+              Halal <span style={{ color: COLORS.gold }}>Rated</span>
+            </span>
+            <button onClick={() => setMenuOpen(false)} style={{
+              background: COLORS.green, border: 'none', borderRadius: 8,
+              width: 36, height: 36, cursor: 'pointer',
+              color: 'white', fontSize: 18, fontWeight: 700,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>✕</button>
+          </div>
 
           {[
             { label: 'Guides', path: '/guide', external: true },
@@ -401,7 +418,7 @@ export default function Landing({ navigate }) {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
-          .hamburger-btn { display: flex !important; }
+          .hamburger-btn { display: flex !important; align-items: center; justify-content: center; flex-direction: column; }
           .hero-title { font-size: 38px !important; }
           .stats-strip { flex-direction: column !important; gap: 16px !important; }
           .category-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -477,6 +494,7 @@ export default function Landing({ navigate }) {
             <input
               value={search}
               onChange={e => setSearch(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' })}
               placeholder="Search restaurant, dish, or city..."
               style={{
                 flex: 1, padding: '14px 18px',
@@ -486,20 +504,22 @@ export default function Landing({ navigate }) {
                 boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
               }}
             />
-            <button style={{
-              background: COLORS.green, color: 'white',
-              border: 'none', borderRadius: 12, cursor: 'pointer',
-              padding: '14px 22px',
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, fontWeight: 600, letterSpacing: '0.3px',
-              boxShadow: '0 4px 20px rgba(15,77,42,0.35)',
-              whiteSpace: 'nowrap',
-            }}>Search</button>
+            <button
+              onClick={() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' })}
+              style={{
+                background: COLORS.green, color: 'white',
+                border: 'none', borderRadius: 12, cursor: 'pointer',
+                padding: '14px 22px',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, fontWeight: 600, letterSpacing: '0.3px',
+                boxShadow: '0 4px 20px rgba(15,77,42,0.35)',
+                whiteSpace: 'nowrap',
+              }}>Search</button>
           </div>
 
           {/* Scrolling pill carousel */}
           <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
-            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); window.scrollTo({ top: 600, behavior: 'smooth' }); }} />
+            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
           </div>
         </div>
       </section>
@@ -657,8 +677,49 @@ export default function Landing({ navigate }) {
         </div>
       </section>
 
+{/* HIDDEN HALAL BANNER */}
+      <section style={{ padding: '56px 24px 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div style={{
+            background: COLORS.goldLight,
+            border: `1px solid rgba(197,150,12,0.3)`,
+            borderRadius: 20, padding: '36px 40px',
+            display: 'flex', alignItems: 'center', gap: 32,
+          }}>
+            <div style={{ fontSize: 52, flexShrink: 0 }}>🔍</div>
+            <div style={{ flex: 1 }}>
+              <div style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12, fontWeight: 700, color: COLORS.gold,
+                letterSpacing: '1px', textTransform: 'uppercase',
+                marginBottom: 8,
+              }}>Hidden Halal Series</div>
+              <h3 style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 24, fontWeight: 700, color: COLORS.textDark,
+                marginBottom: 8, letterSpacing: '-0.3px',
+              }}>You didn't know these spots were halal.</h3>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, color: COLORS.textMid, lineHeight: 1.6,
+                marginBottom: 16,
+              }}>
+                Mainstream restaurants with halal options that fly under the radar. Korean BBQ, Chinese, smokehouse BBQ, Italian — all halal, all verified.
+              </p>
+              <button onClick={() => navigate('/category/hidden-halal')} style={{
+                background: COLORS.gold, color: 'white',
+                border: 'none', borderRadius: 8, cursor: 'pointer',
+                padding: '10px 20px',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, fontWeight: 600,
+              }}>Explore Hidden Halal →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CITY FILTER */}
-      <section style={{ padding: '40px 24px 0' }}>
+      <section id="results-section" style={{ padding: '40px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
             <h2 style={{
@@ -712,46 +773,7 @@ export default function Landing({ navigate }) {
         </div>
       </section>
 
-      {/* HIDDEN HALAL BANNER */}
-      <section style={{ padding: '56px 24px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{
-            background: COLORS.goldLight,
-            border: `1px solid rgba(197,150,12,0.3)`,
-            borderRadius: 20, padding: '36px 40px',
-            display: 'flex', alignItems: 'center', gap: 32,
-          }}>
-            <div style={{ fontSize: 52, flexShrink: 0 }}>🔍</div>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 700, color: COLORS.gold,
-                letterSpacing: '1px', textTransform: 'uppercase',
-                marginBottom: 8,
-              }}>Hidden Halal Series</div>
-              <h3 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 24, fontWeight: 700, color: COLORS.textDark,
-                marginBottom: 8, letterSpacing: '-0.3px',
-              }}>You didn't know these spots were halal.</h3>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, color: COLORS.textMid, lineHeight: 1.6,
-                marginBottom: 16,
-              }}>
-                Mainstream restaurants with halal options that fly under the radar. Korean BBQ, Chinese, smokehouse BBQ, Italian — all halal, all verified.
-              </p>
-              <button onClick={() => navigate('/category/hidden-halal')} style={{
-                background: COLORS.gold, color: 'white',
-                border: 'none', borderRadius: 8, cursor: 'pointer',
-                padding: '10px 20px',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, fontWeight: 600,
-              }}>Explore Hidden Halal →</button>
-            </div>
-          </div>
-        </div>
-      </section>
+      
 
       {/* EMAIL SUBSCRIPTION */}
       <section style={{ padding: '56px 24px 0' }}>
