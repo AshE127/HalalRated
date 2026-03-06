@@ -36,9 +36,26 @@ function SimpleNav({ navigate }) {
   );
 }
 
+const BEEHIIV_PUB_ID = '516d8310-4df5-407e-9681-a142b4b46732';
+const BEEHIIV_API_KEY = 'beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r';
+
+async function subscribeToBeehiiv(email) {
+  const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${BEEHIIV_API_KEY}`,
+    },
+    body: JSON.stringify({ email, reactivate_existing: true, send_welcome_email: true }),
+  });
+  if (!res.ok) throw new Error('Failed');
+  return res.json();
+}
+
 export default function RestaurantPage({ slug, navigate }) {
   const restaurant = restaurants.find(r => r.slug === slug);
   const [emailInput, setEmailInput] = useState('');
+  const [subStatus, setSubStatus] = useState('idle');
 
   // Inject SEO meta tags
   React.useEffect(() => {
@@ -293,22 +310,49 @@ export default function RestaurantPage({ slug, navigate }) {
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 12, color: COLORS.textMid, marginBottom: 12, lineHeight: 1.5,
               }}>Get new restaurant features sent to your inbox.</p>
-              <form onSubmit={e => { e.preventDefault(); alert(`Subscribed! ${emailInput}`); }} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-                <input
-                  value={emailInput} onChange={e => setEmailInput(e.target.value)}
-                  type="email" placeholder="your@email.com" required
-                  style={{
-                    padding: '9px 12px', borderRadius: 8,
-                    border: `1px solid rgba(197,150,12,0.3)`,
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: 'none',
-                    background: 'white',
-                  }}
-                />
-                <button type="submit" style={{
-                  background: COLORS.gold, color: 'white', border: 'none',
-                  borderRadius: 8, cursor: 'pointer', padding: '9px',
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
-                }}>Subscribe</button>
+              <form onSubmit={async e => {
+                e.preventDefault();
+                if (!emailInput) return;
+                setSubStatus('loading');
+                try {
+                  await subscribeToBeehiiv(emailInput);
+                  setSubStatus('success');
+                  setEmailInput('');
+                } catch {
+                  setSubStatus('error');
+                }
+              }} style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+                {subStatus === 'success' ? (
+                  <div style={{
+                    background: COLORS.greenLight, borderRadius: 8, padding: '10px 12px',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 12,
+                    color: COLORS.green, fontWeight: 600, textAlign: 'center',
+                  }}>You're in! Check your inbox.</div>
+                ) : (
+                  <>
+                    <input
+                      value={emailInput} onChange={e => setEmailInput(e.target.value)}
+                      type="email" placeholder="your@email.com" required
+                      style={{
+                        padding: '9px 12px', borderRadius: 8,
+                        border: `1px solid ${subStatus === 'error' ? '#c0392b' : 'rgba(197,150,12,0.3)'}`,
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: 'none',
+                        background: 'white',
+                      }}
+                    />
+                    <button type="submit" disabled={subStatus === 'loading'} style={{
+                      background: COLORS.gold, color: 'white', border: 'none',
+                      borderRadius: 8, cursor: 'pointer', padding: '9px',
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600,
+                      opacity: subStatus === 'loading' ? 0.7 : 1,
+                    }}>{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
+                    {subStatus === 'error' && (
+                      <div style={{ fontSize: 11, color: '#c0392b', fontFamily: "'DM Sans', sans-serif" }}>
+                        Something went wrong — try again.
+                      </div>
+                    )}
+                  </>
+                )}
               </form>
             </div>
           </div>

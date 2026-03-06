@@ -406,10 +406,28 @@ function RestaurantCard({ restaurant, navigate }) {
   );
 }
 
+const BEEHIIV_PUB_ID = '516d8310-4df5-407e-9681-a142b4b46732';
+const BEEHIIV_API_KEY = 'beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r';
+
+async function subscribeToBeehiiv(email) {
+  const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${BEEHIIV_API_KEY}`,
+    },
+    body: JSON.stringify({ email, reactivate_existing: true, send_welcome_email: true }),
+  });
+  if (!res.ok) throw new Error('Failed');
+  return res.json();
+}
+
 export default function Landing({ navigate }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeCity, setActiveCity] = useState('All');
+  const [subEmail, setSubEmail] = useState('');
+  const [subStatus, setSubStatus] = useState('idle');
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchSearch = !search ||
@@ -690,46 +708,60 @@ export default function Landing({ navigate }) {
       <section style={{ padding: '56px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{
-            background: COLORS.goldLight,
-            border: `1px solid rgba(197,150,12,0.3)`,
-            borderRadius: 20, padding: '36px 40px',
-            display: 'flex', alignItems: 'center', gap: 32,
+            background: '#111',
+            borderRadius: 20, padding: '28px 36px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 32, position: 'relative', overflow: 'hidden',
           }}>
-            <div style={{ fontSize: 52, flexShrink: 0 }}>🔍</div>
-            <div style={{ flex: 1 }}>
-              <div style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 700, color: COLORS.gold,
-                letterSpacing: '1px', textTransform: 'uppercase',
-                marginBottom: 8,
-              }}>Hidden Halal Series</div>
+            {/* thin gold left border accent */}
+            <div style={{
+              position: 'absolute', left: 0, top: 0, bottom: 0,
+              width: 3, background: COLORS.gold, borderRadius: '20px 0 0 20px',
+            }} />
+            {/* faint radial glow */}
+            <div style={{
+              position: 'absolute', top: '50%', left: '40%',
+              transform: 'translate(-50%,-50%)',
+              width: 500, height: 300, borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(197,150,12,0.06) 0%, transparent 70%)',
+              pointerEvents: 'none',
+            }} />
+            <div style={{ position: 'relative', flex: 1 }}>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                <div style={{ width: 5, height: 5, borderRadius: '50%', background: COLORS.gold }} />
+                <span style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: 11, fontWeight: 700, color: COLORS.gold,
+                  letterSpacing: '1.5px', textTransform: 'uppercase',
+                }}>Hidden Halal Series</span>
+              </div>
               <h3 style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: 24, fontWeight: 700, color: COLORS.textDark,
-                marginBottom: 8, letterSpacing: '-0.3px',
+                fontSize: 21, fontWeight: 700, color: 'white',
+                marginBottom: 6, letterSpacing: '-0.3px', lineHeight: 1.3,
               }}>You didn't know these spots were halal.</h3>
               <p style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, color: COLORS.textMid, lineHeight: 1.6,
-                marginBottom: 16,
-              }}>
-                Mainstream restaurants with halal options that fly under the radar. Korean BBQ, Chinese, smokehouse BBQ, Italian — all halal, all verified.
-              </p>
-              <button onClick={() => navigate('/category/hidden-halal')} style={{
-                background: COLORS.gold, color: 'white',
-                border: 'none', borderRadius: 8, cursor: 'pointer',
-                padding: '10px 20px',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, fontWeight: 600,
-              }}>Explore Hidden Halal →</button>
+                fontSize: 13, color: 'rgba(255,255,255,0.4)', lineHeight: 1.6,
+              }}>Korean BBQ, Chinese, smokehouse, Italian — mainstream spots with halal options, all verified.</p>
             </div>
+            <button onClick={() => navigate('/category/hidden-halal')} style={{
+              background: COLORS.gold, color: 'white', border: 'none',
+              borderRadius: 10, cursor: 'pointer', padding: '11px 22px',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
+              whiteSpace: 'nowrap', flexShrink: 0, transition: 'opacity 0.15s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.opacity = '0.85'}
+            onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+            >Explore Hidden Halal →</button>
           </div>
         </div>
       </section>
 
       {/* CITY FILTER */}
-      <section id="results-section" style={{ padding: '40px 24px 0' }}>
+      <section style={{ padding: '40px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+          <div id="results-section" style={{ scrollMarginTop: '120px' }} />
           <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
             <h2 style={{
               fontFamily: "'Playfair Display', serif",
@@ -803,31 +835,54 @@ export default function Landing({ navigate }) {
               fontSize: 14, color: COLORS.textMid,
               marginBottom: 24,
             }}>Weekly halal restaurant discoveries across Northern Virginia.</p>
-            <form
-              onSubmit={e => {
-                e.preventDefault();
-                const email = e.target.email.value;
-                if (email) alert(`You're subscribed! We'll keep you updated at ${email}`);
-              }}
-              style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto' }}
-            >
-              <input
-                name="email" type="email" placeholder="your@email.com" required
-                style={{
-                  flex: 1, padding: '12px 16px',
-                  borderRadius: 10, border: `1px solid ${COLORS.border}`,
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
-                }}
-              />
-              <button type="submit" style={{
-                background: COLORS.green, color: 'white',
-                border: 'none', borderRadius: 10, cursor: 'pointer',
-                padding: '12px 20px',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, fontWeight: 600,
-                whiteSpace: 'nowrap',
-              }}>Subscribe</button>
-            </form>
+            {subStatus === 'success' ? (
+              <div style={{
+                background: COLORS.greenLight, border: `1px solid rgba(15,77,42,0.2)`,
+                borderRadius: 12, padding: '16px 24px', maxWidth: 440, margin: '0 auto',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: COLORS.green, fontWeight: 600,
+              }}>You're in! Check your inbox for a confirmation email.</div>
+            ) : (
+              <div style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', gap: 10 }}>
+                  <input
+                    type="email" placeholder="your@email.com" value={subEmail}
+                    onChange={e => setSubEmail(e.target.value)}
+                    onKeyDown={e => e.key === 'Enter' && handleSubscribe()}
+                    style={{
+                      flex: 1, padding: '12px 16px',
+                      borderRadius: 10, border: `1px solid ${subStatus === 'error' ? '#c0392b' : COLORS.border}`,
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
+                    }}
+                  />
+                  <button
+                    onClick={async () => {
+                      if (!subEmail) return;
+                      setSubStatus('loading');
+                      try {
+                        await subscribeToBeehiiv(subEmail);
+                        setSubStatus('success');
+                        setSubEmail('');
+                      } catch {
+                        setSubStatus('error');
+                      }
+                    }}
+                    disabled={subStatus === 'loading'}
+                    style={{
+                      background: COLORS.green, color: 'white',
+                      border: 'none', borderRadius: 10, cursor: 'pointer',
+                      padding: '12px 20px',
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 14, fontWeight: 600,
+                      whiteSpace: 'nowrap', opacity: subStatus === 'loading' ? 0.7 : 1,
+                    }}>{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
+                </div>
+                {subStatus === 'error' && (
+                  <div style={{ fontSize: 12, color: '#c0392b', fontFamily: "'DM Sans', sans-serif" }}>
+                    Something went wrong — please try again.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </section>
