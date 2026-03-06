@@ -254,9 +254,9 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             position: 'relative',
           }}
         >
-          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translateY(7px)' : 'none' }} />
           <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
-          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none' }} />
         </button>
       </div>
 
@@ -525,7 +525,7 @@ export default function Landing({ navigate }) {
 
           {/* Scrolling pill carousel */}
           <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
-            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
+            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 300); }} />
           </div>
         </div>
       </section>
@@ -848,7 +848,7 @@ export default function Landing({ navigate }) {
                 fontFamily: "'Playfair Display', serif",
                 fontSize: 26, fontWeight: 700, color: 'white',
                 marginBottom: 10,
-              }}>Own a halal restaurant in NOVA?</h3>
+              }}>Own a halal restaurant or have halal options in NOVA?</h3>
               <p style={{
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14, color: 'rgba(255,255,255,0.8)',
