@@ -211,6 +211,38 @@
       padding: 1px 5px; border-radius: 3px; color: var(--green);
     }
 
+    /* ── LOGIN GATE ── */
+    .login-gate {
+      position: fixed; inset: 0; background: var(--green-dark);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 9999; font-family: 'DM Sans', sans-serif;
+    }
+    .login-box {
+      background: white; border-radius: 20px; padding: 44px 40px;
+      width: 100%; max-width: 360px;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+    }
+    .login-logo { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+    .login-logo span { color: var(--gold); }
+    .login-sub { font-size: 13px; color: var(--text-light); margin-bottom: 32px; }
+    .login-label { font-size: 11px; font-weight: 700; color: var(--text-light); letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 6px; }
+    .login-input {
+      width: 100%; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 10px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      outline: none; margin-bottom: 10px; transition: border-color 0.15s;
+    }
+    .login-input:focus { border-color: var(--green); }
+    .login-input.error { border-color: var(--red); }
+    .login-error { font-size: 12px; color: var(--red); margin-bottom: 12px; display: none; }
+    .login-btn {
+      width: 100%; background: var(--green); color: white;
+      border: none; border-radius: 10px; padding: 13px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 700;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .login-btn:hover { background: var(--green-dark); }
+
     @media (max-width: 800px) {
       .layout { grid-template-columns: 1fr; }
       .two-col { grid-template-columns: 1fr; }
@@ -468,7 +500,43 @@
   </div>
 </div>
 
+<!-- Login Gate -->
+<div class="login-gate" id="login-gate">
+  <div class="login-box">
+    <div class="login-logo">Halal <span>Rated</span></div>
+    <div class="login-sub">Admin — Restaurant Editor</div>
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="login-pw" placeholder="Enter password"
+      onkeydown="if(event.key==='Enter') checkLogin()" />
+    <div class="login-error" id="login-error">Incorrect password. Try again.</div>
+    <button class="login-btn" onclick="checkLogin()">Sign In</button>
+  </div>
+</div>
+
 <script>
+  // ── AUTH ─────────────────────────────────────────────────────
+  function checkLogin() {
+    const pw = document.getElementById('login-pw').value;
+    const input = document.getElementById('login-pw');
+    const err = document.getElementById('login-error');
+    if (pw === 'halal_pass') {
+      document.getElementById('login-gate').style.display = 'none';
+      sessionStorage.setItem('hr_auth', '1');
+    } else {
+      input.classList.add('error');
+      err.style.display = 'block';
+      input.value = '';
+      input.focus();
+    }
+  }
+
+  // Check session on load
+  if (sessionStorage.getItem('hr_auth') === '1') {
+    document.getElementById('login-gate').style.display = 'none';
+  } else {
+    setTimeout(() => document.getElementById('login-pw').focus(), 100);
+  }
+
   // ── TAG DATA ──────────────────────────────────────────────────
   const TAG_GROUPS = {
     dishes: ['Biryani','Shawarma','Kabob','Wings','Burgers','Karahi','Mandi','Nihari',

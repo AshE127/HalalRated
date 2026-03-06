@@ -239,8 +239,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             borderRadius: 8,
             cursor: 'pointer',
             width: 40, height: 40,
-            alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column', gap: 5,
+            gap: 5,
             padding: 0,
             zIndex: 201,
             position: 'relative',
@@ -416,9 +415,10 @@ export default function Landing({ navigate }) {
     <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`
         * { box-sizing: border-box; margin: 0; padding: 0; }
+        .hamburger-btn { display: none; }
         @media (max-width: 768px) {
           .desktop-nav { display: none !important; }
-          .hamburger-btn { display: flex !important; align-items: center; justify-content: center; flex-direction: column; }
+          .hamburger-btn { display: flex !important; align-items: center !important; justify-content: center !important; flex-direction: column !important; gap: 5px !important; }
           .hero-title { font-size: 38px !important; }
           .stats-strip { flex-direction: column !important; gap: 16px !important; }
           .category-grid { grid-template-columns: repeat(2, 1fr) !important; }
