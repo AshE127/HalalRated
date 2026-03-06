@@ -316,6 +316,41 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
   );
 }
 
+// Map cuisine to a food photo search term for Unsplash
+const CUISINE_PHOTO_MAP = {
+  'american bbq': 'bbq burger smash',
+  'american diner': 'american diner food',
+  'korean bbq': 'korean bbq grill meat',
+  'korean': 'korean food',
+  'chinese': 'chinese food noodles',
+  'pakistani': 'biryani rice curry',
+  'afghan': 'kabob rice afghan food',
+  'indian': 'curry biryani indian food',
+  'lebanese': 'shawarma lebanese food',
+  'mediterranean': 'mediterranean food mezze',
+  'turkish': 'turkish food kebab',
+  'middle eastern': 'middle eastern food hummus',
+  'fusion': 'gourmet food plating',
+  'central asian': 'mandi rice lamb',
+  'pizza': 'pizza italian',
+  'italian': 'italian food pasta',
+  'mexican': 'tacos mexican food',
+  'thai': 'thai food noodles',
+  'japanese': 'japanese food ramen',
+  'seafood': 'seafood fresh fish',
+  'burgers': 'gourmet burger fries',
+  'default': 'halal food restaurant',
+};
+
+function getPhotoUrl(cuisine, slug) {
+  const key = (cuisine || '').toLowerCase();
+  const match = Object.keys(CUISINE_PHOTO_MAP).find(k => key.includes(k)) || 'default';
+  const query = CUISINE_PHOTO_MAP[match];
+  // Use a deterministic seed based on slug so each restaurant always gets same photo
+  const seed = slug.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return `https://source.unsplash.com/400x280/?${encodeURIComponent(query)}&sig=${seed}`;
+}
+
 function RestaurantCard({ restaurant, navigate }) {
   const cat = categories.find(c => c.id === restaurant.category);
   return (
@@ -338,14 +373,22 @@ function RestaurantCard({ restaurant, navigate }) {
         e.currentTarget.style.boxShadow = 'none';
       }}
     >
-      {/* Image placeholder with gradient */}
+      {/* Restaurant photo */}
       <div style={{
         height: 180,
         background: `linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`,
-        display: 'flex', alignItems: 'center', justifyContent: 'center',
-        position: 'relative',
+        position: 'relative', overflow: 'hidden',
       }}>
-
+        <img
+          src={restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.slug)}
+          alt={restaurant.name}
+          loading="lazy"
+          onError={e => { e.target.style.display = 'none'; }}
+          style={{
+            width: '100%', height: '100%',
+            objectFit: 'cover', display: 'block',
+          }}
+        />
         {restaurant.spotlight && (
           <div style={{
             position: 'absolute', top: 12, right: 12,
@@ -358,7 +401,7 @@ function RestaurantCard({ restaurant, navigate }) {
         )}
         <div style={{
           position: 'absolute', bottom: 12, left: 12,
-          background: 'rgba(255,255,255,0.15)',
+          background: 'rgba(0,0,0,0.45)',
           backdropFilter: 'blur(8px)',
           borderRadius: 20, padding: '3px 10px',
           fontFamily: "'DM Sans', sans-serif",

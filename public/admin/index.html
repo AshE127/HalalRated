@@ -93,7 +93,15 @@
 
     /* ── TAGS ── */
     .tag-grid { display: flex; flex-wrap: wrap; gap: 7px; margin-bottom: 10px; }
-    .tag-pill {
+    .cat-pill {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+    background: white; color: var(--text-mid); cursor: pointer; transition: all 0.15s;
+  }
+  .cat-pill.active {
+    background: var(--green); color: white; border-color: var(--green);
+  }
+  .tag-pill {
       font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 500;
       padding: 5px 12px; border-radius: 100px; cursor: pointer;
       border: 1px solid var(--border); background: white; color: var(--text-mid);
@@ -310,14 +318,14 @@
             </div>
           </div>
           <div class="field">
-            <label>Category *</label>
-            <select id="f-category" onchange="update()">
-              <option value="hidden-halal">Hidden Halal</option>
-              <option value="delicious-desi">Delicious Desi</option>
-              <option value="mezze-musts">Mezze Musts</option>
-              <option value="soy-selects">Soy Selects</option>
-              <option value="top-tier">Top Tier</option>
-            </select>
+            <label>Category * <span style="font-weight:400;color:var(--text-light);font-size:12px;">(select all that apply)</span></label>
+            <div id="category-pills" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;">
+              <button type="button" class="cat-pill" data-cat="hidden-halal" onclick="toggleCat(this)">Hidden Halal</button>
+              <button type="button" class="cat-pill" data-cat="delicious-desi" onclick="toggleCat(this)">Delicious Desi</button>
+              <button type="button" class="cat-pill" data-cat="mezze-musts" onclick="toggleCat(this)">Mezze Musts</button>
+              <button type="button" class="cat-pill" data-cat="soy-selects" onclick="toggleCat(this)">Soy Selects</button>
+              <button type="button" class="cat-pill" data-cat="top-tier" onclick="toggleCat(this)">Top Tier</button>
+            </div>
           </div>
           <div class="field">
             <label>Description *</label>
@@ -345,8 +353,13 @@
             </div>
           </div>
           <div class="field" style="margin-top:14px;">
-            <label>Custom Tags</label>
-            <input type="text" id="f-custom-tags" placeholder="Comma separated: Mandi, Open Late, Outdoor Seating" oninput="update()">
+            <label>Add New Tag <span style="font-weight:400;color:var(--text-light);font-size:12px;">(adds to tag library permanently)</span></label>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="f-new-tag" placeholder="e.g. Mandi, Open Late, Outdoor Seating" style="flex:1;"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();addCustomTag();}">
+              <button type="button" onclick="addCustomTag()" style="background:var(--green);color:white;border:none;border-radius:8px;padding:0 16px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">+ Add</button>
+            </div>
+            <div id="tags-custom" class="tag-grid" style="margin-top:10px;"></div>
           </div>
         </div>
       </div>
@@ -556,7 +569,52 @@
   };
 
   let activeTags = new Set();
+  let activeCategories = new Set();
   let flags = { featured: false, 'hidden-halal': false, spotlight: false };
+
+  // ── CATEGORY MULTI-SELECT ─────────────────────────────────────
+  function toggleCat(btn) {
+    const cat = btn.dataset.cat;
+    if (activeCategories.has(cat)) {
+      activeCategories.delete(cat);
+      btn.classList.remove('active');
+    } else {
+      activeCategories.add(cat);
+      btn.classList.add('active');
+      // auto-set hiddenHalal flag if Hidden Halal is selected
+      if (cat === 'hidden-halal') { flags['hidden-halal'] = true; document.getElementById('toggle-hidden-halal').classList.replace('off','on'); }
+    }
+    update();
+  }
+
+  // ── CUSTOM TAG ADD ────────────────────────────────────────────
+  function addCustomTag() {
+    const input = document.getElementById('f-new-tag');
+    const raw = input.value.trim();
+    if (!raw) return;
+    raw.split(',').map(t => t.trim()).filter(Boolean).forEach(tag => {
+      if (!activeTags.has(tag)) {
+        // Add to the custom tag grid as a clickable pill
+        const container = document.getElementById('tags-custom');
+        const existing = [...container.querySelectorAll('.tag-pill')].find(b => b.dataset.tag === tag);
+        if (!existing) {
+          const btn = document.createElement('button');
+          btn.className = 'tag-pill active';
+          btn.textContent = tag;
+          btn.dataset.tag = tag;
+          btn.onclick = () => {
+            if (activeTags.has(tag)) { activeTags.delete(tag); btn.classList.remove('active'); }
+            else { activeTags.add(tag); btn.classList.add('active'); }
+            update();
+          };
+          container.appendChild(btn);
+        }
+        activeTags.add(tag);
+      }
+    });
+    input.value = '';
+    update();
+  }
 
   // ── INIT TAGS ─────────────────────────────────────────────────
   function initTags() {
@@ -619,17 +677,14 @@
 
   // ── HELPERS ───────────────────────────────────────────────────
   const v = id => document.getElementById(id).value.trim();
-  const getAllTags = () => {
-    const custom = v('f-custom-tags').split(',').map(t => t.trim()).filter(Boolean);
-    return [...activeTags, ...custom];
-  };
+  const getAllTags = () => [...activeTags];
 
   // ── UPDATE PREVIEW ────────────────────────────────────────────
   function update() {
     const name = v('f-name') || 'Restaurant Name';
     const slug = v('f-slug') || 'slug';
     const city = v('f-city') || 'City';
-    const cat = v('f-category') || 'hidden-halal';
+    const cat = activeCategories.size > 0 ? [...activeCategories][0] : 'hidden-halal';
     const desc = v('f-desc') || 'Description will appear here.';
     const seoTitle = v('f-seo-title') || `Is ${name} Halal? | Halal Rated NOVA`;
     const seoDesc = v('f-seo-desc') || `${name} in ${city}, VA — verified halal by Halal Rated.`;
@@ -637,7 +692,8 @@
 
     document.getElementById('prev-name').textContent = name;
     document.getElementById('prev-city').textContent = `${city}, VA`;
-    document.getElementById('prev-category').textContent = CATEGORY_NAMES[cat] || cat;
+    const catLabels = [...activeCategories].map(c => CATEGORY_NAMES[c] || c);
+    document.getElementById('prev-category').textContent = catLabels.length ? catLabels.join(' · ') : 'Category';
     document.getElementById('prev-desc').textContent = desc.slice(0, 100) + (desc.length > 100 ? '…' : '');
     document.getElementById('prev-url').textContent = `halalrated.com/restaurant/${slug}`;
     document.getElementById('prev-seo-title').textContent = seoTitle;
@@ -654,7 +710,8 @@
     const slug = v('f-slug');
     const city = v('f-city');
     const cuisine = v('f-cuisine');
-    const cat = v('f-category');
+    const cat = [...activeCategories][0] || 'hidden-halal';
+    const cats = activeCategories.size > 0 ? [...activeCategories] : ['hidden-halal'];
     const desc = v('f-desc');
     const halalNote = v('f-halal-note');
     const mapsUrl = v('f-maps-url') || `https://www.google.com/maps/search/${encodeURIComponent(name + ' ' + city + ' VA')}`;
@@ -807,7 +864,8 @@
     const slug = v('f-slug');
     const city = v('f-city');
     const cuisine = v('f-cuisine');
-    const cat = v('f-category');
+    const cat = [...activeCategories][0] || 'hidden-halal';
+    const cats = activeCategories.size > 0 ? [...activeCategories] : ['hidden-halal'];
     const desc = v('f-desc');
     const halalNote = v('f-halal-note');
     const seoTitle = v('f-seo-title') || `Is ${name} Halal? | Halal Rated NOVA`;
@@ -819,7 +877,7 @@
     name: "${name}",
     city: "${city}",
     state: "VA",
-    category: "${cat}",
+    category: ${cats.length === 1 ? `"${cats[0]}"` : JSON.stringify(cats)},
     cuisine: "${cuisine}",
     tags: [${tags.map(t => `"${t}"`).join(', ')}],
     description: "${desc.replace(/"/g, '\\"')}",

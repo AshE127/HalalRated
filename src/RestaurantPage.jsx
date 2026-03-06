@@ -36,6 +36,39 @@ function SimpleNav({ navigate }) {
   );
 }
 
+const CUISINE_PHOTO_MAP = {
+  'american bbq': 'bbq burger smash',
+  'american diner': 'american diner food',
+  'korean bbq': 'korean bbq grill meat',
+  'korean': 'korean food',
+  'chinese': 'chinese food noodles',
+  'pakistani': 'biryani rice curry',
+  'afghan': 'kabob rice afghan food',
+  'indian': 'curry biryani indian food',
+  'lebanese': 'shawarma lebanese food',
+  'mediterranean': 'mediterranean food mezze',
+  'turkish': 'turkish food kebab',
+  'middle eastern': 'middle eastern food hummus',
+  'fusion': 'gourmet food plating',
+  'central asian': 'mandi rice lamb',
+  'pizza': 'pizza italian',
+  'italian': 'italian food pasta',
+  'mexican': 'tacos mexican food',
+  'thai': 'thai food noodles',
+  'japanese': 'japanese food ramen',
+  'seafood': 'seafood fresh fish',
+  'burgers': 'gourmet burger fries',
+  'default': 'halal food restaurant',
+};
+
+function getPhotoUrl(cuisine, slug) {
+  const key = (cuisine || '').toLowerCase();
+  const match = Object.keys(CUISINE_PHOTO_MAP).find(k => key.includes(k)) || 'default';
+  const query = CUISINE_PHOTO_MAP[match];
+  const seed = slug.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
+  return `https://source.unsplash.com/1200x400/?${encodeURIComponent(query)}&sig=${seed}`;
+}
+
 const BEEHIIV_PUB_ID = '516d8310-4df5-407e-9681-a142b4b46732';
 const BEEHIIV_API_KEY = 'beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r';
 
@@ -104,8 +137,18 @@ export default function RestaurantPage({ slug, navigate }) {
       <div style={{
         background: `linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`,
         padding: '48px 24px',
+        position: 'relative', overflow: 'hidden',
       }} className="hero-section">
-        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+        <img
+          src={restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.slug)}
+          alt={restaurant.name}
+          onError={e => { e.target.style.display = 'none'; }}
+          style={{
+            position: 'absolute', inset: 0, width: '100%', height: '100%',
+            objectFit: 'cover', opacity: 0.25, display: 'block',
+          }}
+        />
+        <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
             <span style={{
               background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
