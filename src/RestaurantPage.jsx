@@ -116,8 +116,12 @@ export default function RestaurantPage({ slug, navigate }) {
     );
   }
 
-  const cat = categories.find(c => c.id === restaurant.category);
-  const related = restaurants.filter(r => r.category === restaurant.category && r.id !== restaurant.id).slice(0, 3);
+  const catIds = Array.isArray(restaurant.category) ? restaurant.category : [restaurant.category];
+  const cat = categories.find(c => c.id === catIds[0]);
+  const related = restaurants.filter(r => {
+    const rCats = Array.isArray(r.category) ? r.category : [r.category];
+    return rCats.some(c => catIds.includes(c)) && r.id !== restaurant.id;
+  }).slice(0, 3);
 
   return (
     <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
@@ -150,11 +154,17 @@ export default function RestaurantPage({ slug, navigate }) {
         />
         <div style={{ maxWidth: 900, margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16, flexWrap: 'wrap' }}>
-            <span style={{
-              background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
-              color: 'white', borderRadius: 20, padding: '3px 12px',
-              fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
-            }}>{cat?.emoji} {cat?.name}</span>
+            {catIds.map(cid => {
+              const c = categories.find(x => x.id === cid);
+              if (!c) return null;
+              return (
+                <span key={cid} style={{
+                  background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(4px)',
+                  color: 'white', borderRadius: 20, padding: '3px 12px',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 600,
+                }}>{c.emoji} {c.name}</span>
+              );
+            })}
             <span style={{
               background: 'rgba(255,255,255,0.1)',
               color: 'rgba(255,255,255,0.8)', borderRadius: 20, padding: '3px 12px',
@@ -275,7 +285,7 @@ export default function RestaurantPage({ slug, navigate }) {
             }}>
               {[
                 { label: 'Cuisine', value: restaurant.cuisine },
-                { label: 'Category', value: cat?.name },
+                { label: 'Category', value: catIds.map(cid => categories.find(x => x.id === cid)?.name).filter(Boolean).join(', ') },
                 { label: 'City', value: `${restaurant.city}, ${restaurant.state}` },
               ].map(item => (
                 <div key={item.label}>

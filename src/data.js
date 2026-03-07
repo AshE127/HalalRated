@@ -310,30 +310,13 @@ export const restaurants = [
     seoTitle: "Krave Shack Chantilly VA – Halal Wings & Burgers | Halal Rated",
     seoDescription: "Krave Shack in Chantilly, VA is a fully halal comfort food spot. Wings, burgers, loaded fries — all halal.",
   },
-  {
-    id: "saigon-rolls",
-    name: "Saigon Rolls",
-    city: "Alexandria",
-    state: "VA",
-    category: ["hidden-halal","soy-selects"],
-    cuisine: "Vietnamese",
-    tags: ["Noodles", "Vietnamese", "Pho", "Old Town Alexandria", "bánh mì", "Curry", "Fried Rice", "Soup", "Shrimp Rolls"],
-    description: "Delicious eatery serving classic Vietnamese dishes such as pho, bánh mì and clay pot fish.  Must Try!",
-    isHalal: true,
-    halalNote: "Owner and manager certified to have halal chicken and beef. Team is aware and active to use separate cooking with pork.",
-    slug: "saigon-rolls",
-    featured: true,
-    spotlight: true,
-    hiddenHalal: true,
-    seoTitle: "Saigon Rolls Alexandria – Halal Vietnamese Pho & Bánh Mì in Old Town | Halal Rated",
-    seoDescription: "Saigon Rolls brings authentic Vietnamese flavors to Old Town Alexandria. Discover halal-friendly pho, bánh mì, and fresh spring rolls on King Street. Rated by Halal Rated NOVA.",
-  },
 ];
 
 export const categories = [
   {
     id: "hidden-halal",
     name: "Hidden Halal",
+    emoji: "🔍",
     description: "Mainstream spots you didn't know were halal",
     color: "#1B7340",
     slug: "hidden-halal",
@@ -341,6 +324,7 @@ export const categories = [
   {
     id: "delicious-desi",
     name: "Delicious Desi",
+    emoji: "🍛",
     description: "The best Pakistani, Indian & South Asian in NOVA",
     color: "#0f4d2a",
     slug: "delicious-desi",
@@ -348,6 +332,7 @@ export const categories = [
   {
     id: "mezze-musts",
     name: "Mezze Musts",
+    emoji: "🫙",
     description: "Mediterranean, Arab, Turkish & Afghan gems",
     color: "#1B7340",
     slug: "mezze-musts",
@@ -355,6 +340,7 @@ export const categories = [
   {
     id: "soy-selects",
     name: "Soy Selects",
+    emoji: "🥢",
     description: "Halal Asian food done right",
     color: "#0f4d2a",
     slug: "soy-selects",
@@ -362,6 +348,7 @@ export const categories = [
   {
     id: "top-tier",
     name: "Top Tier",
+    emoji: "⭐",
     description: "The best of the best, regardless of cuisine",
     color: "#0f4d2a",
     slug: "top-tier",

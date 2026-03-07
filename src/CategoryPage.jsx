@@ -11,7 +11,7 @@ const COLORS = {
 
 export default function CategoryPage({ slug, navigate }) {
   const cat = categories.find(c => c.slug === slug);
-  const rests = restaurants.filter(r => r.category === slug);
+  const rests = restaurants.filter(r => Array.isArray(r.category) ? r.category.includes(slug) : r.category === slug);
 
   return (
     <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>

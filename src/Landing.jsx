@@ -352,7 +352,8 @@ function getPhotoUrl(cuisine, slug) {
 }
 
 function RestaurantCard({ restaurant, navigate }) {
-  const cat = categories.find(c => c.id === restaurant.category);
+  const catIds = Array.isArray(restaurant.category) ? restaurant.category : [restaurant.category];
+  const cat = categories.find(c => c.id === catIds[0]);
   return (
     <div
       onClick={() => navigate(`/restaurant/${restaurant.slug}`)}
@@ -409,13 +410,18 @@ function RestaurantCard({ restaurant, navigate }) {
         }}>{restaurant.city}, {restaurant.state}</div>
       </div>
       <div style={{ padding: '16px 18px 18px' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6 }}>
-          <span style={{
-            background: COLORS.greenLight, color: COLORS.green,
-            borderRadius: 20, padding: '2px 8px',
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 11, fontWeight: 600,
-          }}>{cat?.name || restaurant.category}</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 6, flexWrap: 'wrap' }}>
+          {catIds.map(cid => {
+            const c = categories.find(x => x.id === cid);
+            return (
+              <span key={cid} style={{
+                background: COLORS.greenLight, color: COLORS.green,
+                borderRadius: 20, padding: '2px 8px',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 11, fontWeight: 600,
+              }}>{c?.name || cid}</span>
+            );
+          })}
         </div>
         <h3 style={{
           fontFamily: "'Playfair Display', serif",
