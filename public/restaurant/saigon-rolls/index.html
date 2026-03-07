@@ -25,7 +25,6 @@
     .badge-cat{background:rgba(255,255,255,.15);color:white}
     .badge-city{background:rgba(255,255,255,.1);color:rgba(255,255,255,.8)}
     .badge-halal{background:#C5960C;color:white}
-    .badge-hidden{background:rgba(197,150,12,.25);color:#C5960C;border:1px solid rgba(197,150,12,.4)}
     h1{font-family:'Playfair Display',serif;font-size:40px;font-weight:700;color:white;margin-bottom:12px;letter-spacing:-.5px;line-height:1.2}
     .hero-desc{font-size:16px;color:rgba(255,255,255,.85);line-height:1.6;max-width:600px}
     .content{max-width:900px;margin:0 auto;padding:40px 24px}
@@ -34,9 +33,10 @@
     .sidebar{width:280px;flex-shrink:0}
     .tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:32px}
     .tag{background:#e6f0eb;color:#0f4d2a;border-radius:20px;padding:5px 12px;font-size:13px;font-weight:500}
-    .insta-box{background:white;border:1px solid #E2E2DF;border-radius:16px;padding:24px;margin-bottom:32px;text-align:center}
-    .insta-box p{font-size:14px;color:#4a4a4a;margin-bottom:12px}
-    .insta-link{display:inline-block;background:#0f4d2a;color:white;border-radius:8px;padding:8px 16px;text-decoration:none;font-size:13px;font-weight:600}
+    .follow-box{background:white;border:1px solid #E2E2DF;border-radius:16px;padding:24px;margin-bottom:32px;text-align:center}
+    .follow-box p{font-size:14px;color:#4a4a4a;margin-bottom:12px}
+    .follow-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+    .follow-btn{display:inline-block;border-radius:8px;padding:8px 16px;text-decoration:none;font-size:13px;font-weight:600;font-family:'DM Sans',sans-serif}
     .spotlight{margin-bottom:32px}
     .spotlight h2,.halal-box h2,.info-row h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#111;margin-bottom:14px}
     .spotlight p{font-size:15px;color:#4a4a4a;line-height:1.8;margin-bottom:12px}
@@ -55,13 +55,34 @@
     .qi-val{font-size:13px;color:#111}
     .qi-val.halal{color:#0f4d2a;font-weight:600}
     .maps-btn{display:block;margin-top:14px;background:#0f4d2a;color:white;border-radius:8px;padding:10px;text-align:center;text-decoration:none;font-size:13px;font-weight:600}
-    .related{margin-top:48px}
-    .related h2{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:#111;margin-bottom:20px}
+    .newsletter-card{background:#fdf6e3;border:1px solid rgba(197,150,12,0.2);border-radius:16px;padding:20px;margin-bottom:16px}
+    .newsletter-card h3{font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;color:#111;margin-bottom:6px}
+    .sub-form{display:flex;flex-direction:column;gap:8px}
+    .sub-input{padding:9px 12px;border-radius:8px;border:1px solid rgba(197,150,12,0.3);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white}
+    .sub-btn{background:#C5960C;color:white;border:none;border-radius:8px;cursor:pointer;padding:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600}
+    .sub-success{display:none;background:#e6f0eb;border-radius:8px;padding:10px 12px;font-size:12px;color:#0f4d2a;font-weight:600;text-align:center}
     footer{border-top:1px solid #E2E2DF;padding:32px 24px;text-align:center;margin-top:48px}
     footer a{color:#0f4d2a;text-decoration:none;font-size:14px;font-weight:600}
     footer p{font-size:12px;color:#777;margin-bottom:8px}
     @media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}h1{font-size:28px}}
   </style>
+  <script>
+    async function handleSub(e, form) {
+      e.preventDefault();
+      const email = form.querySelector('input[type=email]').value;
+      const btn = form.querySelector('button');
+      btn.textContent = 'Subscribing...'; btn.disabled = true;
+      try {
+        await fetch('https://api.beehiiv.com/v2/publications/516d8310-4df5-407e-9681-a142b4b46732/subscriptions', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r'},
+          body: JSON.stringify({email, reactivate_existing:true, send_welcome_email:true})
+        });
+        form.style.display = 'none';
+        form.nextElementSibling.style.display = 'block';
+      } catch { btn.textContent = 'Try again'; btn.disabled = false; }
+    }
+  </script>
 </head>
 <body>
 <nav><div class="ni">
@@ -71,32 +92,39 @@
 
 <div class="hero"><div class="hi">
   <div class="badges">
-    <span class="badge badge-cat">Hidden Halal</span>
-    <span class="badge badge-city">Alexandria, VA</span>
+    <span class="badge badge-cat">🔍 Hidden Halal</span>
+    <span class="badge badge-cat">🥢 Soy Selects</span>
+    <span class="badge badge-city">📍 Alexandria, VA</span>
     <span class="badge badge-halal">✓ Halal Verified</span>
-    <span class="badge badge-hidden">Hidden Halal</span>
   </div>
   <h1>Saigon Rolls</h1>
-  <p class="hero-desc">Delicious eatery serving classic Vietnamese dishes such as pho, bánh mì and clay pot fish.  Must Try!</p>
+  <p class="hero-desc">Delicious eatery serving classic Vietnamese dishes such as pho, bánh mì and clay pot fish. Must Try!</p>
 </div></div>
 
 <div class="content">
   <div class="layout">
     <div class="main">
-      <div class="tags"><span class="tag">Noodles</span><span class="tag">Vietnamese</span><span class="tag">Pho</span><span class="tag">Old Town Alexandria</span><span class="tag">bánh mì</span><span class="tag">Curry</span><span class="tag">Fried Rice</span><span class="tag">Soup</span><span class="tag">Shrimp Rolls</span></div>
+      <div class="tags">
+        <span class="tag">Noodles</span><span class="tag">Vietnamese</span><span class="tag">Pho</span>
+        <span class="tag">Old Town Alexandria</span><span class="tag">bánh mì</span><span class="tag">Curry</span>
+        <span class="tag">Fried Rice</span><span class="tag">Soup</span><span class="tag">Shrimp Rolls</span>
+      </div>
 
-      <div class="insta-box">
-        <p>Instagram Reel coming soon — follow <strong>@halalrated</strong> for the full feature.</p>
-        <a class="insta-link" href="https://instagram.com/halalrated" target="_blank">Follow @halalrated →</a>
+      <div class="follow-box">
+        <div style="font-size:32px;margin-bottom:8px">📱</div>
+        <p>Reel coming soon — follow us for the full feature.</p>
+        <div class="follow-btns">
+          <a class="follow-btn" href="https://instagram.com/halalrated" target="_blank" style="background:#0f4d2a;color:white">📸 Instagram</a>
+          <a class="follow-btn" href="https://tiktok.com/@halalrated" target="_blank" style="background:#111;color:white">🎵 TikTok</a>
+        </div>
       </div>
 
       <div class="spotlight">
         <h2>The Spotlight</h2>
-        <p>Tucked along the iconic King Street strip in Old Town Alexandria, Saigon Rolls is bringing the bold, aromatic flavors of Vietnamese cuisine to one of Northern Virginia's most charming neighborhoods. Opened in early 2025, the restaurant is backed by the family behind the beloved Nha Trang Restaurant at Eden Center, so the culinary roots run deep.
-The menu centers on Vietnamese staples done right: rich, slow-simmered phở broths, crispy spring rolls, fresh summer rolls packed with herbs and rice noodles, and bánh mì sandwiches loaded with pickled vegetables and your choice of protein. Halal-conscious diners should ask about halal protein options, with the chicken-based dishes being the go-to picks here.
-The space itself is warm and cozy with wooden interiors, making it equally good for a quick weekday lunch or a sit-down dinner. Service is consistently praised for being friendly and attentive, and the generous portions make it easy to leave satisfied.
-Halal Rated Verdict: A solid spot for Vietnamese cravings in NOVA. Stick to the chicken phở, grilled chicken bánh mì, and vegetarian rolls for a halal-friendly experience. A hidden gem for the community.</p>
-        
+        <p>Tucked along the iconic King Street strip in Old Town Alexandria, Saigon Rolls is bringing the bold, aromatic flavors of Vietnamese cuisine to one of Northern Virginia's most charming neighborhoods. Opened in early 2025, the restaurant is backed by the family behind the beloved Nha Trang Restaurant at Eden Center, so the culinary roots run deep.</p>
+        <p>The menu centers on Vietnamese staples done right: rich, slow-simmered phở broths, crispy spring rolls, fresh summer rolls packed with herbs and rice noodles, and bánh mì sandwiches loaded with pickled vegetables and your choice of protein. Halal-conscious diners should ask about halal protein options, with the chicken-based dishes being the go-to picks here.</p>
+        <p>The space itself is warm and cozy with wooden interiors, making it equally good for a quick weekday lunch or a sit-down dinner. Service is consistently praised for being friendly and attentive, and the generous portions make it easy to leave satisfied.</p>
+        <p>Halal Rated Verdict: A solid spot for Vietnamese cravings in NOVA. Stick to the chicken phở, grilled chicken bánh mì, and vegetarian rolls for a halal-friendly experience. A hidden gem for the community.</p>
       </div>
 
       <div class="halal-box">
@@ -112,7 +140,7 @@ Halal Rated Verdict: A solid spot for Vietnamese cravings in NOVA. Stick to the 
 
       <div class="info-row">
         <div class="info-item"><label>Cuisine</label><span>Vietnamese</span></div>
-        <div class="info-item"><label>Category</label><span>Hidden Halal</span></div>
+        <div class="info-item"><label>Category</label><span>Hidden Halal, Soy Selects</span></div>
         <div class="info-item"><label>City</label><span>Alexandria, VA</span></div>
       </div>
     </div>
@@ -120,10 +148,21 @@ Halal Rated Verdict: A solid spot for Vietnamese cravings in NOVA. Stick to the 
     <div class="sidebar">
       <div class="card">
         <h3>Quick Info</h3>
-        <div class="qi"><div><span class="qi-label">Location</span><span class="qi-val">Alexandria, VA</span></div></div>
-        <div class="qi"><div><span class="qi-label">Cuisine</span><span class="qi-val">Vietnamese</span></div></div>
-        <div class="qi"><div><span class="qi-label">Halal Status</span><span class="qi-val halal">Verified Halal</span></div></div>
+        <div class="qi"><span style="font-size:16px">📍</span><div><span class="qi-label">Location</span><span class="qi-val">Alexandria, VA</span></div></div>
+        <div class="qi"><span style="font-size:16px">🍽️</span><div><span class="qi-label">Cuisine</span><span class="qi-val">Vietnamese</span></div></div>
+        <div class="qi"><span style="font-size:16px">✅</span><div><span class="qi-label">Halal Status</span><span class="qi-val halal">Verified Halal</span></div></div>
         <a class="maps-btn" href="https://maps.app.goo.gl/1r8h7QyDzeb4cb9UA" target="_blank">View on Google Maps →</a>
+      </div>
+
+      <div class="newsletter-card">
+        <div style="font-size:24px;margin-bottom:8px">📬</div>
+        <h3>Stay in the loop</h3>
+        <p style="font-size:12px;color:#4a4a4a;margin-bottom:12px;line-height:1.5">Get new restaurant features sent to your inbox.</p>
+        <form class="sub-form" onsubmit="handleSub(event,this)">
+          <input class="sub-input" type="email" placeholder="your@email.com" required>
+          <button class="sub-btn" type="submit">Subscribe</button>
+        </form>
+        <div class="sub-success">You're in! Check your inbox.</div>
       </div>
     </div>
   </div>
