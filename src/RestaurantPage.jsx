@@ -36,36 +36,68 @@ function SimpleNav({ navigate }) {
   );
 }
 
-const CUISINE_PHOTOS = {
-  'american bbq':    'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?w=1200&h=400&fit=crop',
-  'american diner':  'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?w=1200&h=400&fit=crop',
-  'korean bbq':      'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?w=1200&h=400&fit=crop',
-  'korean':          'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?w=1200&h=400&fit=crop',
-  'vietnamese':      'https://images.pexels.com/photos/3582379/pexels-photo-3582379.jpeg?w=1200&h=400&fit=crop',
-  'chinese':         'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=1200&h=400&fit=crop',
-  'pakistani':       'https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg?w=1200&h=400&fit=crop',
-  'afghan':          'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=1200&h=400&fit=crop',
-  'indian':          'https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg?w=1200&h=400&fit=crop',
-  'lebanese':        'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=1200&h=400&fit=crop',
-  'mediterranean':   'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=1200&h=400&fit=crop',
-  'turkish':         'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=1200&h=400&fit=crop',
-  'middle eastern':  'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=1200&h=400&fit=crop',
-  'fusion':          'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?w=1200&h=400&fit=crop',
-  'central asian':   'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=1200&h=400&fit=crop',
-  'pizza':           'https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg?w=1200&h=400&fit=crop',
-  'italian':         'https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg?w=1200&h=400&fit=crop',
-  'mexican':         'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?w=1200&h=400&fit=crop',
-  'thai':            'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=1200&h=400&fit=crop',
-  'japanese':        'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=1200&h=400&fit=crop',
-  'seafood':         'https://images.pexels.com/photos/1268549/pexels-photo-1268549.jpeg?w=1200&h=400&fit=crop',
-  'burgers':         'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?w=1200&h=400&fit=crop',
-  'default':         'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?w=1200&h=400&fit=crop',
+const PHOTOS = {
+  burger:     'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?w=1200&h=400&fit=crop',
+  bbq:        'https://images.pexels.com/photos/410648/pexels-photo-410648.jpeg?w=1200&h=400&fit=crop',
+  wings:      'https://images.pexels.com/photos/60616/fried-chicken-chicken-fried-crunchy-60616.jpeg?w=1200&h=400&fit=crop',
+  kbbq:       'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?w=1200&h=400&fit=crop',
+  biryani:    'https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg?w=1200&h=400&fit=crop',
+  kabob:      'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=1200&h=400&fit=crop',
+  shawarma:   'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=1200&h=400&fit=crop',
+  pizza:      'https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg?w=1200&h=400&fit=crop',
+  noodles:    'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=1200&h=400&fit=crop',
+  pho:        'https://images.pexels.com/photos/3582379/pexels-photo-3582379.jpeg?w=1200&h=400&fit=crop',
+  tacos:      'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?w=1200&h=400&fit=crop',
+  rice:       'https://images.pexels.com/photos/723198/pexels-photo-723198.jpeg?w=1200&h=400&fit=crop',
+  diner:      'https://images.pexels.com/photos/376464/pexels-photo-376464.jpeg?w=1200&h=400&fit=crop',
+  seafood:    'https://images.pexels.com/photos/1268549/pexels-photo-1268549.jpeg?w=1200&h=400&fit=crop',
+  default:    'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?w=1200&h=400&fit=crop',
 };
 
-function getPhotoUrl(cuisine) {
-  const key = (cuisine || '').toLowerCase();
-  const match = Object.keys(CUISINE_PHOTOS).find(k => key.includes(k)) || 'default';
-  return CUISINE_PHOTOS[match];
+const TAG_PHOTO_RULES = [
+  { keywords: ['pho', 'vietnamese'],              photo: 'pho' },
+  { keywords: ['kbbq', 'korean bbq', 'korean'],   photo: 'kbbq' },
+  { keywords: ['shawarma', 'wrap'],               photo: 'shawarma' },
+  { keywords: ['kabob', 'kabab', 'kebab'],        photo: 'kabob' },
+  { keywords: ['wings'],                          photo: 'wings' },
+  { keywords: ['diner', 'breakfast'],             photo: 'diner' },
+  { keywords: ['burger', 'burgers', 'smash'],     photo: 'burger' },
+  { keywords: ['bbq', 'smokehouse', 'ribs'],      photo: 'bbq' },
+  { keywords: ['pizza'],                          photo: 'pizza' },
+  { keywords: ['biryani', 'karahi', 'nihari'],    photo: 'biryani' },
+  { keywords: ['taco', 'tacos', 'mexican'],       photo: 'tacos' },
+  { keywords: ['noodle', 'ramen', 'chinese', 'thai', 'stir fry'], photo: 'noodles' },
+  { keywords: ['chicken rice', 'rice'],           photo: 'rice' },
+  { keywords: ['seafood', 'fish'],                photo: 'seafood' },
+];
+
+const CUISINE_PHOTO_RULES = [
+  { keywords: ['vietnamese'],                     photo: 'pho' },
+  { keywords: ['korean bbq'],                     photo: 'kbbq' },
+  { keywords: ['korean'],                         photo: 'kbbq' },
+  { keywords: ['lebanese', 'shawarma'],           photo: 'shawarma' },
+  { keywords: ['mediterranean', 'middle eastern', 'afghan', 'turkish', 'central asian'], photo: 'kabob' },
+  { keywords: ['american bbq', 'smokehouse'],     photo: 'bbq' },
+  { keywords: ['american diner', 'diner'],        photo: 'diner' },
+  { keywords: ['american', 'wings'],              photo: 'wings' },
+  { keywords: ['pizza'],                          photo: 'pizza' },
+  { keywords: ['pakistani', 'indian', 'desi'],    photo: 'biryani' },
+  { keywords: ['chinese', 'thai', 'japanese', 'fusion'], photo: 'noodles' },
+  { keywords: ['mexican'],                        photo: 'tacos' },
+  { keywords: ['street food'],                    photo: 'rice' },
+  { keywords: ['seafood'],                        photo: 'seafood' },
+];
+
+function getPhotoUrl(cuisine, tags) {
+  const allText = [...(tags || []), cuisine || ''].join(' ').toLowerCase();
+  for (const rule of TAG_PHOTO_RULES) {
+    if (rule.keywords.some(k => allText.includes(k))) return PHOTOS[rule.photo];
+  }
+  const cuisineText = (cuisine || '').toLowerCase();
+  for (const rule of CUISINE_PHOTO_RULES) {
+    if (rule.keywords.some(k => cuisineText.includes(k))) return PHOTOS[rule.photo];
+  }
+  return PHOTOS.default;
 }
 
 const BEEHIIV_PUB_ID = '516d8310-4df5-407e-9681-a142b4b46732';
@@ -143,7 +175,7 @@ export default function RestaurantPage({ slug, navigate }) {
         position: 'relative', overflow: 'hidden',
       }} className="hero-section">
         <img
-          src={restaurant.photo || getPhotoUrl(restaurant.cuisine)}
+          src={restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.tags)}
           alt={restaurant.name}
           onError={e => { e.target.style.display = 'none'; }}
           style={{
