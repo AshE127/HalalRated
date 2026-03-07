@@ -787,6 +787,23 @@
     footer p{font-size:12px;color:#777;margin-bottom:8px}
     @media(max-width:768px){.layout{flex-direction:column}.sidebar{width:100%}h1{font-size:28px}}
   </style>
+  <script>
+    async function handleSub(e, form) {
+      e.preventDefault();
+      const email = form.querySelector('input[type=email]').value;
+      const btn = form.querySelector('button');
+      btn.textContent = 'Subscribing...'; btn.disabled = true;
+      try {
+        await fetch('https://api.beehiiv.com/v2/publications/516d8310-4df5-407e-9681-a142b4b46732/subscriptions', {
+          method: 'POST',
+          headers: {'Content-Type':'application/json','Authorization':'Bearer beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r'},
+          body: JSON.stringify({email, reactivate_existing:true, send_welcome_email:true})
+        });
+        form.style.display = 'none';
+        form.nextElementSibling.style.display = 'block';
+      } catch { btn.textContent = 'Try again'; btn.disabled = false; }
+    }
+  </script>
 </head>
 <body>
 <nav><div class="ni">
@@ -811,8 +828,11 @@
       ${tags.length ? `<div class="tags">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
 
       <div class="insta-box">
-        <p>Instagram Reel coming soon — follow <strong>@halalrated</strong> for the full feature.</p>
-        <a class="insta-link" href="https://instagram.com/halalrated" target="_blank">Follow @halalrated →</a>
+        <p>Reel coming soon — follow us for the full feature.</p>
+        <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+          <a class="insta-link" href="https://instagram.com/halalrated" target="_blank">📸 Instagram</a>
+          <a class="insta-link" href="https://tiktok.com/@halalrated" target="_blank" style="background:#111">🎵 TikTok</a>
+        </div>
       </div>
 
       <div class="spotlight">
@@ -842,10 +862,26 @@
     <div class="sidebar">
       <div class="card">
         <h3>Quick Info</h3>
-        <div class="qi"><div><span class="qi-label">Location</span><span class="qi-val">${city}, VA</span></div></div>
-        <div class="qi"><div><span class="qi-label">Cuisine</span><span class="qi-val">${cuisine}</span></div></div>
-        <div class="qi"><div><span class="qi-label">Halal Status</span><span class="qi-val halal">Verified Halal</span></div></div>
+        <div class="qi"><span style="font-size:16px">📍</span><div><span class="qi-label">Location</span><span class="qi-val">${city}, VA</span></div></div>
+        <div class="qi"><span style="font-size:16px">🍽️</span><div><span class="qi-label">Cuisine</span><span class="qi-val">${cuisine}</span></div></div>
+        <div class="qi"><span style="font-size:16px">✅</span><div><span class="qi-label">Halal Status</span><span class="qi-val halal">Verified Halal</span></div></div>
         <a class="maps-btn" href="${mapsUrl}" target="_blank">View on Google Maps →</a>
+      </div>
+      <div class="card" style="background:#fdf6e3;border-color:rgba(197,150,12,0.2)">
+        <div style="font-size:24px;margin-bottom:8px">📬</div>
+        <h3 style="margin-bottom:6px">Stay in the loop</h3>
+        <p style="font-size:12px;color:#4a4a4a;margin-bottom:12px;line-height:1.5">Get new restaurant features sent to your inbox.</p>
+        <form onsubmit="handleSub(event,this)" style="display:flex;flex-direction:column;gap:8px">
+          <input type="email" placeholder="your@email.com" required
+            style="padding:9px 12px;border-radius:8px;border:1px solid rgba(197,150,12,0.3);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;background:white">
+          <button type="submit"
+            style="background:#C5960C;color:white;border:none;border-radius:8px;cursor:pointer;padding:9px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600">
+            Subscribe
+          </button>
+        </form>
+        <div class="sub-success" style="display:none;background:#e6f0eb;border-radius:8px;padding:10px 12px;font-size:12px;color:#0f4d2a;font-weight:600;text-align:center">
+          You're in! Check your inbox.
+        </div>
       </div>
     </div>
   </div>

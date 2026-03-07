@@ -316,39 +316,37 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
   );
 }
 
-// Map cuisine to a food photo search term for Unsplash
-const CUISINE_PHOTO_MAP = {
-  'american bbq': 'bbq burger smash',
-  'american diner': 'american diner food',
-  'korean bbq': 'korean bbq grill meat',
-  'korean': 'korean food',
-  'chinese': 'chinese food noodles',
-  'pakistani': 'biryani rice curry',
-  'afghan': 'kabob rice afghan food',
-  'indian': 'curry biryani indian food',
-  'lebanese': 'shawarma lebanese food',
-  'mediterranean': 'mediterranean food mezze',
-  'turkish': 'turkish food kebab',
-  'middle eastern': 'middle eastern food hummus',
-  'fusion': 'gourmet food plating',
-  'central asian': 'mandi rice lamb',
-  'pizza': 'pizza italian',
-  'italian': 'italian food pasta',
-  'mexican': 'tacos mexican food',
-  'thai': 'thai food noodles',
-  'japanese': 'japanese food ramen',
-  'seafood': 'seafood fresh fish',
-  'burgers': 'gourmet burger fries',
-  'default': 'halal food restaurant',
+// Curated Pexels photo IDs by cuisine type (free, stable, no API key needed)
+const CUISINE_PHOTOS = {
+  'american bbq':    'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?w=400&h=280&fit=crop',
+  'american diner':  'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?w=400&h=280&fit=crop',
+  'korean bbq':      'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?w=400&h=280&fit=crop',
+  'korean':          'https://images.pexels.com/photos/6210747/pexels-photo-6210747.jpeg?w=400&h=280&fit=crop',
+  'vietnamese':      'https://images.pexels.com/photos/3582379/pexels-photo-3582379.jpeg?w=400&h=280&fit=crop',
+  'chinese':         'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=400&h=280&fit=crop',
+  'pakistani':       'https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg?w=400&h=280&fit=crop',
+  'afghan':          'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=400&h=280&fit=crop',
+  'indian':          'https://images.pexels.com/photos/7625056/pexels-photo-7625056.jpeg?w=400&h=280&fit=crop',
+  'lebanese':        'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=400&h=280&fit=crop',
+  'mediterranean':   'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=400&h=280&fit=crop',
+  'turkish':         'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=400&h=280&fit=crop',
+  'middle eastern':  'https://images.pexels.com/photos/5409010/pexels-photo-5409010.jpeg?w=400&h=280&fit=crop',
+  'fusion':          'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?w=400&h=280&fit=crop',
+  'central asian':   'https://images.pexels.com/photos/6210876/pexels-photo-6210876.jpeg?w=400&h=280&fit=crop',
+  'pizza':           'https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg?w=400&h=280&fit=crop',
+  'italian':         'https://images.pexels.com/photos/825661/pexels-photo-825661.jpeg?w=400&h=280&fit=crop',
+  'mexican':         'https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?w=400&h=280&fit=crop',
+  'thai':            'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=400&h=280&fit=crop',
+  'japanese':        'https://images.pexels.com/photos/2347311/pexels-photo-2347311.jpeg?w=400&h=280&fit=crop',
+  'seafood':         'https://images.pexels.com/photos/1268549/pexels-photo-1268549.jpeg?w=400&h=280&fit=crop',
+  'burgers':         'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?w=400&h=280&fit=crop',
+  'default':         'https://images.pexels.com/photos/958545/pexels-photo-958545.jpeg?w=400&h=280&fit=crop',
 };
 
-function getPhotoUrl(cuisine, slug) {
+function getPhotoUrl(cuisine) {
   const key = (cuisine || '').toLowerCase();
-  const match = Object.keys(CUISINE_PHOTO_MAP).find(k => key.includes(k)) || 'default';
-  const query = CUISINE_PHOTO_MAP[match];
-  // Use a deterministic seed based on slug so each restaurant always gets same photo
-  const seed = slug.split('').reduce((a, c) => a + c.charCodeAt(0), 0);
-  return `https://source.unsplash.com/400x280/?${encodeURIComponent(query)}&sig=${seed}`;
+  const match = Object.keys(CUISINE_PHOTOS).find(k => key.includes(k)) || 'default';
+  return CUISINE_PHOTOS[match];
 }
 
 function RestaurantCard({ restaurant, navigate }) {
@@ -381,7 +379,7 @@ function RestaurantCard({ restaurant, navigate }) {
         position: 'relative', overflow: 'hidden',
       }}>
         <img
-          src={restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.slug)}
+          src={restaurant.photo || getPhotoUrl(restaurant.cuisine)}
           alt={restaurant.name}
           loading="lazy"
           onError={e => { e.target.style.display = 'none'; }}
