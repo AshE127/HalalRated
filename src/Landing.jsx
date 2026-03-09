@@ -530,7 +530,8 @@ export default function Landing({ navigate }) {
         @media (max-width: 768px) {
           .hero-title { font-size: 38px !important; }
           .stats-strip { flex-direction: column !important; gap: 16px !important; }
-          .category-grid { grid-template-columns: repeat(2, 1fr) !important; }
+          .hidden-halal-banner { flex-direction: column !important; align-items: flex-start !important; padding: 24px !important; }
+          .hidden-halal-banner button { width: 100% !important; }
           .restaurant-grid { grid-template-columns: 1fr !important; }
           .rotw-inner { flex-direction: column !important; }
           .city-scroll { flex-wrap: wrap !important; }
@@ -739,61 +740,55 @@ export default function Landing({ navigate }) {
       </section>
 
       {/* CATEGORIES */}
-      <section style={{ padding: '48px 24px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 20 }}>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 26, fontWeight: 700, color: COLORS.textDark,
-            }}>Browse by Category</h2>
-          </div>
-          <div className="category-grid" style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(5, 1fr)',
-            gap: 12,
-          }}>
-            {categories.map(cat => (
-              <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-                background: COLORS.cardWhite,
-                border: `1px solid ${COLORS.border}`,
-                borderRadius: 14, padding: '20px 16px',
-                cursor: 'pointer', textAlign: 'center',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = COLORS.green;
-                e.currentTarget.style.background = COLORS.greenLight;
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = COLORS.border;
-                e.currentTarget.style.background = COLORS.cardWhite;
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
-              >
-                <div style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13, fontWeight: 700, color: COLORS.textDark,
-                  marginBottom: 4,
-                }}>{cat.name}</div>
-                <div style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 11, color: COLORS.textLight, lineHeight: 1.3,
-                }}>{cat.description}</div>
-              </button>
-            ))}
-          </div>
+      <section style={{ padding: '48px 0 0' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
+          <h2 style={{
+            fontFamily: "'Playfair Display', serif",
+            fontSize: 22, fontWeight: 700, color: COLORS.textDark,
+            marginBottom: 16,
+          }}>Browse by Category</h2>
+        </div>
+        <div style={{
+          display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4,
+          paddingLeft: 24, paddingRight: 24,
+          scrollbarWidth: 'none', msOverflowStyle: 'none',
+        }}>
+          {categories.map(cat => (
+            <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
+              background: COLORS.cardWhite,
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 40, padding: '10px 20px',
+              cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
+              display: 'flex', alignItems: 'center', gap: 7,
+              transition: 'all 0.2s',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = COLORS.green;
+              e.currentTarget.style.background = COLORS.greenLight;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = COLORS.border;
+              e.currentTarget.style.background = COLORS.cardWhite;
+            }}
+            >
+              <span style={{ fontSize: 16 }}>{cat.emoji}</span>
+              <span style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, color: COLORS.textDark,
+              }}>{cat.name}</span>
+            </button>
+          ))}
         </div>
       </section>
 
 {/* HIDDEN HALAL BANNER */}
       <section style={{ padding: '56px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{
+          <div className="hidden-halal-banner" style={{
             background: '#111',
-            borderRadius: 20, padding: '28px 36px',
+            borderRadius: 20, padding: '28px 32px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            gap: 32, position: 'relative', overflow: 'hidden',
+            gap: 24, position: 'relative', overflow: 'hidden',
           }}>
             {/* thin gold left border accent */}
             <div style={{
