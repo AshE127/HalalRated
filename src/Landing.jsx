@@ -631,6 +631,37 @@ export default function Landing({ navigate }) {
           <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
             <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
           </div>
+
+          {/* Category pills in hero */}
+          <div style={{
+            display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap',
+            marginTop: 20, maxWidth: 700, margin: '20px auto 0',
+          }}>
+            {categories.map(cat => (
+              <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); }} style={{
+                background: 'rgba(255,255,255,0.12)',
+                backdropFilter: 'blur(8px)',
+                border: '1px solid rgba(255,255,255,0.2)',
+                borderRadius: 40, padding: '7px 16px',
+                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13, fontWeight: 600, color: 'white',
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.22)';
+                e.currentTarget.style.borderColor = COLORS.gold;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
+              }}
+              >
+                <span>{cat.emoji}</span>
+                <span>{cat.name}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -848,26 +879,25 @@ export default function Landing({ navigate }) {
             </h2>
           </div>
 
-          {/* City filter pills */}
-          {!search && (
-            <div className="city-scroll" style={{
-              display: 'flex', gap: 8, marginBottom: 24,
-              overflowX: 'auto', paddingBottom: 4,
-            }}>
-              {['All', 'Herndon', 'Chantilly', 'Sterling', 'Ashburn', 'Fairfax', 'Falls Church'].map(city => (
-                <button key={city} onClick={() => setActiveCity(city)} style={{
-                  background: activeCity === city ? COLORS.green : COLORS.cardWhite,
-                  color: activeCity === city ? 'white' : COLORS.textMid,
-                  border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
-                  borderRadius: 20, padding: '6px 16px', cursor: 'pointer',
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 13, fontWeight: 500,
-                  whiteSpace: 'nowrap',
-                  transition: 'all 0.2s',
-                }}>{city}</button>
-              ))}
-            </div>
-          )}
+          {/* City filter pills — always visible */}
+          <div className="city-scroll" style={{
+            display: 'flex', gap: 8, marginBottom: 24,
+            overflowX: 'auto', paddingBottom: 4,
+            scrollbarWidth: 'none',
+          }}>
+            {['All', 'Herndon', 'Chantilly', 'Sterling', 'Ashburn', 'Fairfax', 'Falls Church', 'Alexandria', 'Fair Oaks'].map(city => (
+              <button key={city} onClick={() => setActiveCity(city)} style={{
+                background: activeCity === city ? COLORS.green : COLORS.cardWhite,
+                color: activeCity === city ? 'white' : COLORS.textMid,
+                border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
+                borderRadius: 20, padding: '6px 16px', cursor: 'pointer',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 13, fontWeight: 500,
+                whiteSpace: 'nowrap', flexShrink: 0,
+                transition: 'all 0.2s',
+              }}>{city}</button>
+            ))}
+          </div>
 
           {/* Restaurant Grid */}
           <div className="restaurant-grid" style={{
@@ -1078,11 +1108,18 @@ export default function Landing({ navigate }) {
             <span style={{
               fontFamily: "'DM Sans', sans-serif",
               fontSize: 12, color: COLORS.textLight,
-            }}>© 2025 Halal Rated. All rights reserved.</span>
-            <a href="mailto:hello@halalrated.com" style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, color: COLORS.green, textDecoration: 'none',
-            }}>hello@halalrated.com</a>
+            }}>© 2026 Halal Rated. All rights reserved.</span>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
+              <button onClick={() => navigate('/privacy')} style={{
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12, color: COLORS.textLight, textDecoration: 'underline',
+              }}>Privacy Policy</button>
+              <a href="mailto:hello@halalrated.com" style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 12, color: COLORS.green, textDecoration: 'none',
+              }}>hello@halalrated.com</a>
+            </div>
           </div>
         </div>
       </footer>

@@ -122,14 +122,16 @@ export function ContactPage({ navigate }) {
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: COLORS.textMid, marginBottom: 40, lineHeight: 1.6 }}>Questions, partnerships, restaurant submissions, or just want to say hi.</p>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 40 }}>
           {[
-            { icon: '', label: 'Email', value: 'hello@halalrated.com', href: 'mailto:hello@halalrated.com' },
-            { icon: '', label: 'Instagram', value: '@halalrated', href: 'https://instagram.com/halalrated' },
+            { emoji: '✉️', label: 'Email', value: 'hello@halalrated.com', href: 'mailto:hello@halalrated.com' },
+            { emoji: '📸', label: 'Instagram', value: '@halalrated', href: 'https://instagram.com/halalrated' },
+            { emoji: '🎵', label: 'TikTok', value: '@halalrated', href: 'https://tiktok.com/@halalrated' },
           ].map(item => (
             <a key={item.label} href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
               style={{ display: 'flex', alignItems: 'center', gap: 16, background: COLORS.cardWhite, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: '16px 20px', textDecoration: 'none', transition: 'box-shadow 0.2s' }}
               onMouseEnter={e => e.currentTarget.style.boxShadow = '0 4px 20px rgba(0,0,0,0.08)'}
               onMouseLeave={e => e.currentTarget.style.boxShadow = 'none'}
             >
+              <div style={{ fontSize: 24, flexShrink: 0 }}>{item.emoji}</div>
               <div>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: COLORS.textLight, marginBottom: 2 }}>{item.label}</div>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: COLORS.green }}>{item.value}</div>
@@ -221,3 +223,31 @@ export function ForRestaurantsPage({ navigate }) {
 
 
 
+
+export function PrivacyPage({ navigate }) {
+  return (
+    <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
+      <SimpleNav navigate={navigate} />
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '56px 24px 80px' }}>
+        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: COLORS.textDark, marginBottom: 8 }}>Privacy Policy</h1>
+        <p style={{ fontSize: 13, color: COLORS.textLight, marginBottom: 40 }}>Last updated: March 2026</p>
+        {[
+          { title: 'Who We Are', body: 'Halal Rated is a halal food media brand based in Northern Virginia. We operate halalrated.com and publish a newsletter spotlighting halal-friendly restaurants across the NOVA region. You can reach us at hello@halalrated.com.' },
+          { title: 'What Information We Collect', body: 'The only personal information we collect is your email address, and only when you voluntarily subscribe to our newsletter. We do not collect names, phone numbers, payment information, or any other personal data.' },
+          { title: 'How We Use Your Information', body: 'Your email address is used solely to send you our newsletter — new restaurant features, halal food discoveries, and occasional updates about Halal Rated. We will never use your email for any other purpose.' },
+          { title: 'Third-Party Services', body: "We use Beehiiv to manage our newsletter and email delivery. Your email address is stored on Beehiiv's platform in accordance with their privacy policy. We use Vercel to host halalrated.com. Basic analytics may be collected by these platforms to help us understand site performance." },
+          { title: 'Cookies', body: 'Our website may use standard cookies to ensure basic functionality and improve your browsing experience. We do not use cookies to track you across other websites or for advertising purposes.' },
+          { title: 'We Do Not Sell Your Data', body: 'We do not sell, rent, trade, or share your personal information with any third parties for marketing purposes. Ever.' },
+          { title: 'Unsubscribing', body: 'You can unsubscribe from our newsletter at any time by clicking the unsubscribe link in any email we send. You can also email us at hello@halalrated.com to be removed.' },
+          { title: 'Contact', body: 'If you have any questions about this privacy policy, please contact us at hello@halalrated.com.' },
+        ].map(section => (
+          <div key={section.title} style={{ marginBottom: 36 }}>
+            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: COLORS.textDark, marginBottom: 10 }}>{section.title}</h2>
+            <p style={{ fontSize: 15, color: COLORS.textMid, lineHeight: 1.8 }}>{section.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
