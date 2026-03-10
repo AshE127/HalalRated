@@ -492,13 +492,10 @@ const BEEHIIV_PUB_ID = '516d8310-4df5-407e-9681-a142b4b46732';
 const BEEHIIV_API_KEY = 'beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r';
 
 async function subscribeToBeehiiv(email) {
-  const res = await fetch(`https://api.beehiiv.com/v2/publications/${BEEHIIV_PUB_ID}/subscriptions`, {
+  const res = await fetch('/api/subscribe', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${BEEHIIV_API_KEY}`,
-    },
-    body: JSON.stringify({ email, reactivate_existing: true, send_welcome_email: true }),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
   });
   if (!res.ok) throw new Error('Failed');
   return res.json();
@@ -631,39 +628,102 @@ export default function Landing({ navigate }) {
           <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
             <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
           </div>
-
-          {/* Category pills in hero */}
-          <div style={{
-            display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap',
-            marginTop: 20, maxWidth: 700, margin: '20px auto 0',
-          }}>
-            {categories.map(cat => (
-              <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); }} style={{
-                background: 'rgba(255,255,255,0.12)',
-                backdropFilter: 'blur(8px)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                borderRadius: 40, padding: '7px 16px',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 6,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, fontWeight: 600, color: 'white',
-                transition: 'all 0.2s',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.22)';
-                e.currentTarget.style.borderColor = COLORS.gold;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(255,255,255,0.12)';
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.2)';
-              }}
-              >
-                <span>{cat.emoji}</span>
-                <span>{cat.name}</span>
-              </button>
-            ))}
-          </div>
         </div>
       </section>
+
+      {/* CATEGORY PILLS — between hero and stats */}
+      <div style={{
+        background: COLORS.bg,
+        padding: '24px 24px 0',
+        display: 'flex', justifyContent: 'center',
+      }}>
+        <div style={{
+          display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'center',
+          maxWidth: 800,
+        }}>
+          {categories.map(cat => (
+            <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
+              background: COLORS.cardWhite,
+              border: `1px solid ${COLORS.border}`,
+              borderRadius: 40, padding: '9px 20px',
+              cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 7,
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: 13, fontWeight: 600, color: COLORS.textDark,
+              transition: 'all 0.2s', whiteSpace: 'nowrap',
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.borderColor = COLORS.green;
+              e.currentTarget.style.background = COLORS.greenLight;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.borderColor = COLORS.border;
+              e.currentTarget.style.background = COLORS.cardWhite;
+            }}
+            >
+              <span style={{ fontSize: 16 }}>{cat.emoji}</span>
+              <span>{cat.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* RESTAURANT OF THE WEEK */}
+      {(() => {
+        const rotw = restaurants.find(r => r.rotw);
+        if (!rotw) return null;
+        return (
+          <section style={{ padding: '24px 24px 0' }}>
+            <div style={{ maxWidth: 1200, margin: '0 auto' }}>
+              <div style={{
+                background: 'linear-gradient(135deg, #7a4a00, #C5960C)',
+                borderRadius: 20, padding: '28px 36px',
+                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                gap: 24, position: 'relative', overflow: 'hidden',
+              }}>
+                {/* glow */}
+                <div style={{
+                  position: 'absolute', top: -60, right: -60,
+                  width: 240, height: 240, borderRadius: '50%',
+                  background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
+                }} />
+                <div style={{ position: 'relative', flex: 1 }}>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                    <span style={{ fontSize: 16 }}>⭐</span>
+                    <span style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.85)',
+                      letterSpacing: '1.5px', textTransform: 'uppercase',
+                    }}>Restaurant of the Week</span>
+                  </div>
+                  <h3 style={{
+                    fontFamily: "'Playfair Display', serif",
+                    fontSize: 26, fontWeight: 700, color: 'white',
+                    marginBottom: 6, letterSpacing: '-0.3px',
+                  }}>{rotw.name}</h3>
+                  <p style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6,
+                    maxWidth: 560,
+                  }}>{rotw.description}</p>
+                  <div style={{ marginTop: 8, fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
+                    📍 {rotw.city}, {rotw.state} · {rotw.cuisine}
+                  </div>
+                </div>
+                <button onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
+                  background: 'white', color: '#7a4a00',
+                  border: 'none', borderRadius: 10, cursor: 'pointer',
+                  padding: '12px 24px', flexShrink: 0,
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
+                  whiteSpace: 'nowrap', transition: 'opacity 0.15s',
+                }}
+                onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                >View Feature →</button>
+              </div>
+            </div>
+          </section>
+        );
+      })()}
 
       {/* STATS STRIP */}
       <div style={{

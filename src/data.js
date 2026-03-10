@@ -220,6 +220,7 @@ export const restaurants = [
     slug: "bawadi",
     featured: true,
     spotlight: true,
+    rotw: true,
     seoTitle: "Bawadi Falls Church VA – Halal Buffet | Halal Rated",
     seoDescription: "Bawadi in Falls Church, VA is NOVA's go-to halal buffet. Pakistani curries, Middle Eastern mezze — all halal.",
   },
@@ -331,46 +332,11 @@ export const restaurants = [
 ];
 
 export const categories = [
-  {
-    id: "hidden-halal",
-    name: "Hidden Halal",
-    emoji: "🔍",
-    description: "Mainstream spots you didn't know were halal",
-    color: "#1B7340",
-    slug: "hidden-halal",
-  },
-  {
-    id: "delicious-desi",
-    name: "Delicious Desi",
-    emoji: "🍛",
-    description: "The best Pakistani, Indian & South Asian in NOVA",
-    color: "#0f4d2a",
-    slug: "delicious-desi",
-  },
-  {
-    id: "mezze-musts",
-    name: "Mezze Musts",
-    emoji: "🫙",
-    description: "Mediterranean, Arab, Turkish & Afghan gems",
-    color: "#1B7340",
-    slug: "mezze-musts",
-  },
-  {
-    id: "soy-selects",
-    name: "Soy Selects",
-    emoji: "🥢",
-    description: "Halal Asian food done right",
-    color: "#0f4d2a",
-    slug: "soy-selects",
-  },
-  {
-    id: "top-tier",
-    name: "Top Tier",
-    emoji: "⭐",
-    description: "The best of the best, regardless of cuisine",
-    color: "#0f4d2a",
-    slug: "top-tier",
-  },
+  { id: "hidden-halal", name: "Hidden Halal", emoji: "🔍", description: "Mainstream spots you didn't know were halal", color: "#1B7340", slug: "hidden-halal" },
+  { id: "delicious-desi", name: "Delicious Desi", emoji: "🍛", description: "The best Pakistani, Indian & South Asian in NOVA", color: "#0f4d2a", slug: "delicious-desi" },
+  { id: "mezze-musts", name: "Mezze Musts", emoji: "🫙", description: "Mediterranean, Arab, Turkish & Afghan gems", color: "#1B7340", slug: "mezze-musts" },
+  { id: "soy-selects", name: "Soy Selects", emoji: "🥢", description: "Halal Asian food done right", color: "#0f4d2a", slug: "soy-selects" },
+  { id: "top-tier", name: "Top Tier", emoji: "⭐", description: "The best of the best, regardless of cuisine", color: "#0f4d2a", slug: "top-tier" },
 ];
 
 export const cities = [
