@@ -310,6 +310,24 @@ export const restaurants = [
     seoTitle: "Krave Shack Chantilly VA – Halal Wings & Burgers | Halal Rated",
     seoDescription: "Krave Shack in Chantilly, VA is a fully halal comfort food spot. Wings, burgers, loaded fries — all halal.",
   },
+  {
+  id: "saigon-rolls",
+  name: "Saigon Rolls",
+  city: "Alexandria",
+  state: "VA",
+  category: ["hidden-halal", "soy-selects"],
+  cuisine: "Vietnamese",
+  tags: ["Noodles", "Vietnamese", "Pho", "Old Town Alexandria", "bánh mì", "Curry", "Fried Rice", "Soup", "Shrimp Rolls"],
+  description: "Tucked along King Street in Old Town Alexandria, Saigon Rolls brings bold Vietnamese flavors to NOVA. Rich pho broths, crispy spring rolls, fresh bánh mì — and yes, halal.",
+  isHalal: true,
+  halalNote: "Owner confirmed halal chicken and beef. Separate cooking from pork.",
+  slug: "saigon-rolls",
+  featured: true,
+  spotlight: true,
+  mapsUrl: "https://maps.app.goo.gl/1r8h7QyDzeb4cb9UA",
+  seoTitle: "Is Saigon Rolls in Alexandria Halal? | Halal Rated",
+  seoDescription: "Yes — Saigon Rolls in Old Town Alexandria is halal. Vietnamese pho, bánh mì and spring rolls with halal chicken and beef on King Street.",
+},
 ];
 
 export const categories = [
