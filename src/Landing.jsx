@@ -631,10 +631,10 @@ export default function Landing({ navigate }) {
         </div>
       </section>
 
-      {/* CATEGORY PILLS — between hero and stats */}
+      {/* CATEGORY PILLS — directly below stats */}
       <div style={{
         background: COLORS.bg,
-        padding: '24px 24px 0',
+        padding: '20px 24px 0',
         display: 'flex', justifyContent: 'center',
       }}>
         <div style={{
@@ -703,22 +703,35 @@ export default function Landing({ navigate }) {
                   <p style={{
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6,
-                    maxWidth: 560,
+                    maxWidth: 480,
                   }}>{rotw.description}</p>
                   <div style={{ marginTop: 8, fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
                     📍 {rotw.city}, {rotw.state} · {rotw.cuisine}
                   </div>
+                  <button onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
+                    marginTop: 18, background: 'white', color: '#7a4a00',
+                    border: 'none', borderRadius: 10, cursor: 'pointer',
+                    padding: '11px 22px',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
+                    transition: 'opacity 0.15s', display: 'inline-block',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
+                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+                  >View Feature →</button>
                 </div>
-                <button onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
-                  background: 'white', color: '#7a4a00',
-                  border: 'none', borderRadius: 10, cursor: 'pointer',
-                  padding: '12px 24px', flexShrink: 0,
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
-                  whiteSpace: 'nowrap', transition: 'opacity 0.15s',
-                }}
-                onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
-                onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                >View Feature →</button>
+                {/* Food photo */}
+                <div style={{
+                  width: 160, height: 160, borderRadius: 16, flexShrink: 0,
+                  overflow: 'hidden',
+                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                  border: '3px solid rgba(255,255,255,0.2)',
+                }}>
+                  <img
+                    src={getPhotoUrl(rotw.cuisine, rotw.tags)}
+                    alt={rotw.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </div>
               </div>
             </div>
           </section>
@@ -756,121 +769,6 @@ export default function Landing({ navigate }) {
           ))}
         </div>
       </div>
-
-      {/* RESTAURANT OF THE WEEK */}
-      <section style={{ padding: '48px 24px 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{
-            display: 'flex', alignItems: 'center', gap: 10, marginBottom: 20,
-          }}>
-            <div style={{
-              width: 4, height: 24, background: COLORS.gold, borderRadius: 2,
-            }} />
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, fontWeight: 700, color: COLORS.gold,
-              letterSpacing: '1px', textTransform: 'uppercase',
-            }}>Restaurant of the Week</span>
-          </div>
-          <div
-            className="rotw-inner"
-            onClick={() => navigate(`/restaurant/${RESTAURANT_OF_WEEK.slug}`)}
-            style={{
-              background: `linear-gradient(135deg, ${COLORS.greenDark} 0%, ${COLORS.green} 100%)`,
-              borderRadius: 20, padding: '32px 36px',
-              display: 'flex', alignItems: 'center', gap: 32,
-              cursor: 'pointer',
-              position: 'relative', overflow: 'hidden',
-              transition: 'transform 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.01)'}
-            onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
-          >
-            <div style={{
-              position: 'absolute', right: -40, top: -40,
-              width: 220, height: 220, borderRadius: '50%',
-              background: 'rgba(197,150,12,0.15)',
-              pointerEvents: 'none',
-            }} />
-            <div style={{
-              width: 80, height: 80, borderRadius: 20,
-              background: 'rgba(255,255,255,0.15)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 36, flexShrink: 0,
-            }}>🔥</div>
-            <div style={{ flex: 1, position: 'relative' }}>
-              <div style={{
-                display: 'inline-flex', alignItems: 'center', gap: 4,
-                background: COLORS.gold, borderRadius: 20,
-                padding: '3px 10px', marginBottom: 10,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 11, fontWeight: 700, color: 'white',
-                letterSpacing: '0.5px',
-              }}>⭐ RESTAURANT OF THE WEEK</div>
-              <h2 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 28, fontWeight: 700, color: 'white',
-                marginBottom: 6, letterSpacing: '-0.3px',
-              }}>{RESTAURANT_OF_WEEK.name}</h2>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, color: 'rgba(255,255,255,0.75)',
-                marginBottom: 6,
-              }}>{RESTAURANT_OF_WEEK.city} · {RESTAURANT_OF_WEEK.category}</p>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 15, color: 'rgba(255,255,255,0.9)',
-                fontStyle: 'italic',
-              }}>{RESTAURANT_OF_WEEK.tagline}</p>
-            </div>
-            <div style={{
-              color: COLORS.gold, fontSize: 24, flexShrink: 0,
-            }}>→</div>
-          </div>
-        </div>
-      </section>
-
-      {/* CATEGORIES */}
-      <section style={{ padding: '48px 0 0' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto', padding: '0 24px' }}>
-          <h2 style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 22, fontWeight: 700, color: COLORS.textDark,
-            marginBottom: 16,
-          }}>Browse by Category</h2>
-        </div>
-        <div style={{
-          display: 'flex', gap: 10, overflowX: 'auto', paddingBottom: 4,
-          paddingLeft: 24, paddingRight: 24,
-          scrollbarWidth: 'none', msOverflowStyle: 'none',
-        }}>
-          {categories.map(cat => (
-            <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-              background: COLORS.cardWhite,
-              border: `1px solid ${COLORS.border}`,
-              borderRadius: 40, padding: '10px 20px',
-              cursor: 'pointer', whiteSpace: 'nowrap', flexShrink: 0,
-              display: 'flex', alignItems: 'center', gap: 7,
-              transition: 'all 0.2s',
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.borderColor = COLORS.green;
-              e.currentTarget.style.background = COLORS.greenLight;
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.borderColor = COLORS.border;
-              e.currentTarget.style.background = COLORS.cardWhite;
-            }}
-            >
-              <span style={{ fontSize: 16 }}>{cat.emoji}</span>
-              <span style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, fontWeight: 600, color: COLORS.textDark,
-              }}>{cat.name}</span>
-            </button>
-          ))}
-        </div>
-      </section>
 
 {/* HIDDEN HALAL BANNER */}
       <section style={{ padding: '56px 24px 0' }}>
