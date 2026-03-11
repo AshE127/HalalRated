@@ -629,27 +629,23 @@ export default function Landing({ navigate }) {
             <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
           </div>
 
-          {/* CATEGORY PILLS — white bg, green text */}
-          <div style={{ maxWidth: 560, margin: '14px auto 0', display: 'flex', gap: 8 }}>
-            {categories.map(cat => (
+          {/* CATEGORY PILLS — same pill style as carousel but white/green, no Hidden Halal */}
+          <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+            {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
               <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-                flex: 1,
-                background: 'white',
-                border: '1px solid white',
-                borderRadius: 40, padding: '9px 8px',
-                cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+                background: 'rgba(255,255,255,0.95)',
+                border: '1px solid rgba(255,255,255,0.95)',
+                color: COLORS.green,
+                borderRadius: 100, padding: '7px 16px',
+                cursor: 'pointer',
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 600, color: COLORS.green,
-                transition: 'all 0.2s', whiteSpace: 'nowrap',
+                fontSize: 13, fontWeight: 500,
+                whiteSpace: 'nowrap',
+                display: 'flex', alignItems: 'center', gap: 6,
+                transition: 'background 0.2s, border-color 0.2s',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = COLORS.greenLight;
-                e.currentTarget.style.borderColor = COLORS.greenLight;
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'white';
-                e.currentTarget.style.borderColor = 'white';
-              }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'white'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.95)'; }}
               >
                 <span style={{ fontSize: 15 }}>{cat.emoji}</span>
                 <span>{cat.name}</span>
@@ -657,8 +653,8 @@ export default function Landing({ navigate }) {
             ))}
           </div>
 
-          {/* HIDDEN HALAL BANNER — slim, inside hero */}
-          <div style={{ maxWidth: 560, margin: '12px auto 0' }}>
+          {/* HIDDEN HALAL BANNER — slim, inside hero, same width as search/carousel */}
+          <div style={{ maxWidth: 560, margin: '10px auto 0', width: '100%' }}>
             <div style={{
               background: 'rgba(0,0,0,0.45)',
               backdropFilter: 'blur(8px)',
