@@ -629,28 +629,26 @@ export default function Landing({ navigate }) {
             <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
           </div>
 
-          {/* CATEGORY PILLS — inside hero, inverted (off-white pill, green text on hover) */}
+          {/* CATEGORY PILLS — white bg, green text */}
           <div style={{ maxWidth: 560, margin: '14px auto 0', display: 'flex', gap: 8 }}>
             {categories.map(cat => (
               <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
                 flex: 1,
-                background: 'rgba(250,250,248,0.15)',
-                border: '1px solid rgba(250,250,248,0.3)',
+                background: 'white',
+                border: '1px solid white',
                 borderRadius: 40, padding: '9px 8px',
                 cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, fontWeight: 600, color: 'white',
+                fontSize: 12, fontWeight: 600, color: COLORS.green,
                 transition: 'all 0.2s', whiteSpace: 'nowrap',
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.background = 'rgba(250,250,248,0.95)';
-                e.currentTarget.style.color = COLORS.green;
-                e.currentTarget.style.borderColor = 'rgba(250,250,248,0.95)';
+                e.currentTarget.style.background = COLORS.greenLight;
+                e.currentTarget.style.borderColor = COLORS.greenLight;
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.background = 'rgba(250,250,248,0.15)';
-                e.currentTarget.style.color = 'white';
-                e.currentTarget.style.borderColor = 'rgba(250,250,248,0.3)';
+                e.currentTarget.style.background = 'white';
+                e.currentTarget.style.borderColor = 'white';
               }}
               >
                 <span style={{ fontSize: 15 }}>{cat.emoji}</span>
@@ -658,59 +656,54 @@ export default function Landing({ navigate }) {
               </button>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* HIDDEN HALAL SERIES BANNER — slim black/gold */}
-      <div style={{ padding: '16px 24px 0', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '100%', maxWidth: 560 }}>
-          <div style={{
-            background: '#111',
-            borderRadius: 14, padding: '14px 20px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            gap: 16, position: 'relative', overflow: 'hidden',
-          }}>
-            {/* gold left border */}
+          {/* HIDDEN HALAL BANNER — slim, inside hero */}
+          <div style={{ maxWidth: 560, margin: '12px auto 0' }}>
             <div style={{
-              position: 'absolute', left: 0, top: 0, bottom: 0,
-              width: 3, background: COLORS.gold, borderRadius: '14px 0 0 14px',
-            }} />
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', gap: 10, flex: 1 }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+              background: 'rgba(0,0,0,0.45)',
+              backdropFilter: 'blur(8px)',
+              borderRadius: 12, padding: '12px 18px',
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              gap: 16, position: 'relative', overflow: 'hidden',
+              border: '1px solid rgba(197,150,12,0.3)',
+            }}>
+              <div style={{
+                position: 'absolute', left: 0, top: 0, bottom: 0,
+                width: 3, background: COLORS.gold, borderRadius: '12px 0 0 12px',
+              }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1, position: 'relative' }}>
                 <div style={{ width: 5, height: 5, borderRadius: '50%', background: COLORS.gold, flexShrink: 0 }} />
                 <span style={{
                   fontFamily: "'DM Sans', sans-serif",
                   fontSize: 10, fontWeight: 700, color: COLORS.gold,
                   letterSpacing: '1.5px', textTransform: 'uppercase', whiteSpace: 'nowrap',
                 }}>Hidden Halal</span>
+                <span style={{ color: 'rgba(255,255,255,0.3)', fontSize: 12 }}>·</span>
+                <span style={{
+                  fontFamily: "'Playfair Display', serif",
+                  fontSize: 13, fontWeight: 700, color: 'white', letterSpacing: '-0.2px',
+                }}>You didn't know these spots were halal.</span>
               </div>
-              <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: 12 }}>·</span>
-              <span style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 14, fontWeight: 700, color: 'white',
-                letterSpacing: '-0.2px',
-              }}>You didn't know these spots were halal.</span>
+              <button onClick={() => navigate('/category/hidden-halal')} style={{
+                background: 'transparent', color: COLORS.gold,
+                border: `1px solid ${COLORS.gold}`, borderRadius: 7,
+                cursor: 'pointer', padding: '5px 12px', flexShrink: 0,
+                fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700,
+                whiteSpace: 'nowrap', transition: 'all 0.15s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = COLORS.gold; e.currentTarget.style.color = 'white'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = COLORS.gold; }}
+              >Explore →</button>
             </div>
-            <button onClick={() => navigate('/category/hidden-halal')} style={{
-              background: 'transparent', color: COLORS.gold,
-              border: `1px solid ${COLORS.gold}`, borderRadius: 8,
-              cursor: 'pointer', padding: '6px 14px', flexShrink: 0,
-              fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700,
-              whiteSpace: 'nowrap', transition: 'all 0.15s', letterSpacing: '0.3px',
-            }}
-            onMouseEnter={e => { e.currentTarget.style.background = COLORS.gold; e.currentTarget.style.color = 'white'; }}
-            onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = COLORS.gold; }}
-            >Explore →</button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* STATS STRIP */}
+      {/* STATS STRIP — directly below hero */}
       <div style={{
         background: COLORS.cardWhite,
         borderBottom: `1px solid ${COLORS.border}`,
         padding: '20px 24px',
-        marginTop: 24,
       }}>
         <div className="stats-strip" style={{
           maxWidth: 1200, margin: '0 auto',
