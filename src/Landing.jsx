@@ -594,9 +594,14 @@ export default function Landing({ navigate }) {
             Spotlighting NOVA's best halal restaurants — from neighborhood classics to cuisines you wouldn't expect to find halal.
           </p>
 
+          {/* Scrolling pill carousel — above search */}
+          <div style={{ maxWidth: 560, margin: '0 auto 16px', overflow: 'hidden', borderRadius: 8 }}>
+            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
+          </div>
+
           {/* Search */}
           <div className="fade-up-3" style={{
-            display: 'flex', gap: 10, maxWidth: 560, margin: '0 auto 20px',
+            display: 'flex', gap: 10, maxWidth: 560, margin: '0 auto 0',
           }}>
             <input
               value={search}
@@ -624,18 +629,13 @@ export default function Landing({ navigate }) {
               }}>Search</button>
           </div>
 
-          {/* Scrolling pill carousel */}
-          <div style={{ marginTop: 20, maxWidth: 560, margin: '20px auto 0', overflow: 'hidden', borderRadius: 8 }}>
-            <ScrollingCarousel onSelect={(tag) => { setSearch(tag); setTimeout(() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50); }} />
-          </div>
-
-          {/* CATEGORY PILLS — same pill style as carousel but white/green, no Hidden Halal */}
+          {/* CATEGORY PILLS — same frosted style as carousel pills, no Hidden Halal */}
           <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
             {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
               <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-                background: 'rgba(255,255,255,0.95)',
-                border: '1px solid rgba(255,255,255,0.95)',
-                color: COLORS.green,
+                background: 'rgba(255,255,255,0.12)',
+                border: '1px solid rgba(255,255,255,0.22)',
+                color: 'white',
                 borderRadius: 100, padding: '7px 16px',
                 cursor: 'pointer',
                 fontFamily: "'DM Sans', sans-serif",
@@ -644,8 +644,8 @@ export default function Landing({ navigate }) {
                 display: 'flex', alignItems: 'center', gap: 6,
                 transition: 'background 0.2s, border-color 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'white'; e.currentTarget.style.borderColor = 'white'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.95)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.95)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.24)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; }}
               >
                 <span style={{ fontSize: 15 }}>{cat.emoji}</span>
                 <span>{cat.name}</span>
