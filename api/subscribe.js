@@ -11,7 +11,7 @@ module.exports = async function handler(req, res) {
 
   try {
     const response = await fetch(
-      'https://api.beehiiv.com/v2/publications/516d8310-4df5-407e-9681-a142b4b46732/subscriptions',
+      'https://api.beehiiv.com/v2/publications/pub_516d8310-4df5-407e-9681-a142b4b46732/subscriptions',
       {
         method: 'POST',
         headers: {
