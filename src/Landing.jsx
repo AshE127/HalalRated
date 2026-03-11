@@ -497,8 +497,12 @@ async function subscribeToBeehiiv(email) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email }),
   });
-  if (!res.ok) throw new Error('Failed');
-  return res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    console.error('Subscribe error:', res.status, data);
+    throw new Error('Failed');
+  }
+  return data;
 }
 
 export default function Landing({ navigate }) {
@@ -620,7 +624,8 @@ export default function Landing({ navigate }) {
               onClick={() => document.getElementById('results-section').scrollIntoView({ behavior: 'smooth', block: 'start' })}
               style={{
                 background: COLORS.green, color: 'white',
-                border: 'none', borderRadius: 12, cursor: 'pointer',
+                border: '2px solid rgba(255,255,255,0.4)',
+                borderRadius: 12, cursor: 'pointer',
                 padding: '14px 22px',
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 14, fontWeight: 600, letterSpacing: '0.3px',
@@ -629,12 +634,12 @@ export default function Landing({ navigate }) {
               }}>Search</button>
           </div>
 
-          {/* CATEGORY PILLS — same frosted style as carousel pills, no Hidden Halal */}
+          {/* CATEGORY PILLS — transparent bg, green text (inverted from carousel) */}
           <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
             {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
               <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-                background: 'rgba(255,255,255,0.12)',
-                border: '1px solid rgba(255,255,255,0.22)',
+                background: 'transparent',
+                border: '1px solid rgba(255,255,255,0.4)',
                 color: 'white',
                 borderRadius: 100, padding: '7px 16px',
                 cursor: 'pointer',
@@ -644,8 +649,8 @@ export default function Landing({ navigate }) {
                 display: 'flex', alignItems: 'center', gap: 6,
                 transition: 'background 0.2s, border-color 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.24)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.12)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.22)'; }}
+              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
               >
                 <span style={{ fontSize: 15 }}>{cat.emoji}</span>
                 <span>{cat.name}</span>

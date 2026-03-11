@@ -18,13 +18,23 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           'Authorization': `Bearer beCQZDFSlrKPLAyrLELFLZsarDKOOGtaMj8xcaeCi0JSMSIHv1DUxTQ4N3uDt20r`,
         },
-        body: JSON.stringify({ email, reactivate_existing: true, send_welcome_email: true }),
+        body: JSON.stringify({
+          email,
+          reactivate_existing: true,
+          send_welcome_email: true,
+          utm_source: 'website',
+          utm_medium: 'organic',
+        }),
       }
     );
     const data = await response.json();
-    if (!response.ok) return res.status(response.status).json(data);
-    return res.status(200).json(data);
+    if (!response.ok) {
+      console.error('Beehiiv error:', response.status, data);
+      return res.status(response.status).json(data);
+    }
+    return res.status(200).json({ success: true });
   } catch (err) {
+    console.error('Handler error:', err);
     return res.status(500).json({ error: 'Server error' });
   }
 }
