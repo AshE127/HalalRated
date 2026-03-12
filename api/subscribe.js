@@ -21,6 +21,7 @@ module.exports = async function handler(req, res) {
         body: JSON.stringify({
           email,
           reactivate_existing: true,
+          send_welcome_email: true,
           utm_source: 'website',
           utm_medium: 'organic',
         }),

@@ -544,11 +544,42 @@ export default function Landing({ navigate }) {
         .fade-up { animation: fadeUp 0.6s ease forwards; }
         .fade-up-2 { animation: fadeUp 0.6s 0.15s ease forwards; opacity: 0; }
         .fade-up-3 { animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
+        @keyframes tickerScroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .ticker-track { animation: tickerScroll 32s linear infinite; display: flex; width: max-content; }
+        .ticker-track:hover { animation-play-state: paused; }
       `}</style>
 
       <Nav navigate={navigate} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
-      {/* HERO */}
+      {/* NEWS TICKER */}
+      <div style={{ background: '#0a2e17', borderBottom: `2px solid ${COLORS.gold}`, overflow: 'hidden', position: 'relative', height: 34, display: 'flex', alignItems: 'center' }}>
+        <div style={{ background: COLORS.gold, height: '100%', minWidth: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 2 }}>
+          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 800, color: 'white', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEWS</span>
+        </div>
+        <div style={{ overflow: 'hidden', flex: 1 }}>
+          <div className="ticker-track">
+            {[...Array(2)].map((_, i) => (
+              <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
+                {[
+                  '👋 Welcome to Halal Rated — Northern Virginia\'s halal food spotlight platform',
+                  '🔄 We\'re currently expanding our restaurant directory across the DMV area',
+                  '🍽️ Discover halal Korean BBQ, Chinese, smokehouse, and more unexpected cuisines',
+                  '✅ Every spot is verified halal — no guesswork, just good food',
+                  '📧 Subscribe to our weekly newsletter for fresh restaurant drops',
+                  '📍 Covering Herndon, Chantilly, Sterling, Ashburn, Falls Church & beyond',
+                ].map((text, j) => (
+                  <span key={j} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.88)', whiteSpace: 'nowrap', padding: '0 28px' }}>
+                    {text} <span style={{ color: COLORS.gold, marginLeft: 14 }}>◆</span>
+                  </span>
+                ))}
+              </span>
+            ))}
+          </div>
+        </div>
+      </div>
       <section style={{
         background: `linear-gradient(160deg, ${COLORS.greenDark} 0%, ${COLORS.green} 60%, #2d9e5f 100%)`,
         padding: '72px 24px 80px',
@@ -634,8 +665,8 @@ export default function Landing({ navigate }) {
               }}>Search</button>
           </div>
 
-          {/* CATEGORY PILLS — transparent bg, green text (inverted from carousel) */}
-          <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
+          {/* CATEGORY PILLS — single scrollable row */}
+          <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, overflowX: 'auto', flexWrap: 'nowrap', paddingBottom: 4, scrollbarWidth: 'none' }}>
             {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
               <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
                 background: 'transparent',
@@ -646,6 +677,7 @@ export default function Landing({ navigate }) {
                 fontFamily: "'DM Sans', sans-serif",
                 fontSize: 13, fontWeight: 500,
                 whiteSpace: 'nowrap',
+                flexShrink: 0,
                 display: 'flex', alignItems: 'center', gap: 6,
                 transition: 'background 0.2s, border-color 0.2s',
               }}
