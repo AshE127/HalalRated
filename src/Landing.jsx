@@ -210,6 +210,9 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
 
         {/* Desktop Nav */}
         <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4 }}>
+          <DropdownNav label="Categories" navigate={navigate} items={
+            categories.map(cat => ({ label: `${cat.emoji} ${cat.name}`, path: `/category/${cat.slug}` }))
+          } />
           {[
             { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
@@ -304,6 +307,43 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
               borderBottom: `1px solid ${COLORS.border}`,
             }}>{item.label}</button>
           ))}
+
+          {/* Categories expandable in mobile menu */}
+          {(() => {
+            const [catExpanded, setCatExpanded] = React.useState(false);
+            return (
+              <div style={{ borderBottom: `1px solid ${COLORS.border}` }}>
+                <button onClick={() => setCatExpanded(o => !o)} style={{
+                  background: 'none', border: 'none', cursor: 'pointer',
+                  padding: '13px 8px', width: '100%',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
+                  color: COLORS.textDark, textAlign: 'left',
+                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
+                }}>
+                  <span>Categories</span>
+                  <span style={{ fontSize: 12, transform: catExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
+                </button>
+                {catExpanded && (
+                  <div style={{ paddingBottom: 12, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                    {categories.map(cat => (
+                      <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setMenuOpen(false); }} style={{
+                        background: 'none', border: 'none', cursor: 'pointer',
+                        padding: '9px 16px', textAlign: 'left',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
+                        color: COLORS.textMid, display: 'flex', alignItems: 'center', gap: 8,
+                        borderRadius: 8, transition: 'background 0.15s',
+                      }}
+                      onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textMid; }}
+                      >
+                        <span>{cat.emoji}</span><span>{cat.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
           <button onClick={() => { navigate('/for-restaurants'); setMenuOpen(false); }} style={{
             marginTop: 20, background: COLORS.green, color: 'white',
             border: 'none', borderRadius: 12, cursor: 'pointer',
@@ -663,58 +703,6 @@ export default function Landing({ navigate }) {
               }}>Search</button>
           </div>
 
-          {/* BROWSE CATEGORIES BUTTON */}
-          <div style={{ maxWidth: 560, margin: '10px auto 0', width: '100%' }}>
-            <button onClick={() => setCategoryOpen(o => !o)} style={{
-              width: '100%', background: 'rgba(255,255,255,0.1)',
-              border: '1px solid rgba(255,255,255,0.35)',
-              borderRadius: 12, padding: '11px 18px',
-              cursor: 'pointer', color: 'white',
-              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
-              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-              transition: 'background 0.2s',
-            }}
-            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
-            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
-            >
-              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <span style={{ fontSize: 16 }}>🍴</span> Browse Categories
-              </span>
-              <span style={{ fontSize: 12, transition: 'transform 0.2s', display: 'inline-block', transform: categoryOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
-            </button>
-
-            {/* DROPDOWN PANEL */}
-            {categoryOpen && (
-              <div style={{
-                marginTop: 8, background: 'rgba(10,46,23,0.97)',
-                backdropFilter: 'blur(12px)',
-                border: '1px solid rgba(255,255,255,0.15)',
-                borderRadius: 14, padding: '16px',
-                display: 'flex', flexWrap: 'wrap', gap: 8,
-              }}>
-                {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
-                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCategoryOpen(false); }} style={{
-                    background: 'rgba(255,255,255,0.08)',
-                    border: '1px solid rgba(255,255,255,0.2)',
-                    color: 'white', borderRadius: 100,
-                    padding: '7px 15px', cursor: 'pointer',
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13, fontWeight: 500,
-                    whiteSpace: 'nowrap',
-                    display: 'flex', alignItems: 'center', gap: 6,
-                    transition: 'background 0.15s',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
-                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
-                  >
-                    <span>{cat.emoji}</span>
-                    <span>{cat.name}</span>
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-
           {/* HIDDEN HALAL BANNER — slim, inside hero, same width as search/carousel */}
           <div style={{ maxWidth: 560, margin: '10px auto 0', width: '100%' }}>
             <div style={{
@@ -794,65 +782,42 @@ export default function Landing({ navigate }) {
         const rotw = restaurants.find(r => r.rotw);
         if (!rotw) return null;
         return (
-          <section style={{ padding: '24px 24px 0' }}>
+          <section style={{ padding: '20px 24px 0' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-              <div style={{
-                background: 'linear-gradient(135deg, #7a4a00, #C5960C)',
-                borderRadius: 20, padding: '28px 36px',
-                display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                gap: 24, position: 'relative', overflow: 'hidden',
-              }}>
-                <div style={{
-                  position: 'absolute', top: -60, right: -60,
-                  width: 240, height: 240, borderRadius: '50%',
-                  background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
-                }} />
-                <div style={{ position: 'relative', flex: 1 }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10,
-                    background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 10px',
+              <div onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
+                background: 'linear-gradient(120deg, #6b3f00, #C5960C)',
+                borderRadius: 16, overflow: 'hidden',
+                display: 'flex', alignItems: 'stretch',
+                cursor: 'pointer', position: 'relative',
+                minHeight: 100,
+                transition: 'opacity 0.15s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.opacity = '0.95'}
+              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              >
+                {/* Left content */}
+                <div style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4, position: 'relative', zIndex: 1 }}>
+                  <div style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 5,
+                    background: 'rgba(255,255,255,0.18)', borderRadius: 20,
+                    padding: '2px 9px', alignSelf: 'flex-start', marginBottom: 2,
                   }}>
-                    <span style={{
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 10, fontWeight: 700, color: 'white',
-                      letterSpacing: '1.5px', textTransform: 'uppercase',
-                    }}>Restaurant of the Week</span>
+                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 800, color: 'white', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Restaurant of the Week</span>
                   </div>
-                  <h3 style={{
-                    fontFamily: "'Playfair Display', serif",
-                    fontSize: 26, fontWeight: 700, color: 'white',
-                    marginBottom: 6, letterSpacing: '-0.3px',
-                  }}>{rotw.name}</h3>
-                  <p style={{
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 14, color: 'rgba(255,255,255,0.8)', lineHeight: 1.6,
-                    maxWidth: 480,
-                  }}>{rotw.description}</p>
-                  <div style={{ marginTop: 8, fontSize: 13, color: 'rgba(255,255,255,0.6)', fontFamily: "'DM Sans', sans-serif" }}>
-                    📍 {rotw.city}, {rotw.state} · {rotw.cuisine}
-                  </div>
-                  <button onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
-                    marginTop: 18, background: 'white', color: '#7a4a00',
-                    border: 'none', borderRadius: 10, cursor: 'pointer',
-                    padding: '11px 22px',
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
-                    transition: 'opacity 0.15s', display: 'inline-block',
-                  }}
-                  onMouseEnter={e => e.currentTarget.style.opacity = '0.9'}
-                  onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-                  >View Feature →</button>
+                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: 'white', lineHeight: 1.2 }}>{rotw.name}</div>
+                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>{rotw.city} · {rotw.cuisine}</div>
                 </div>
-                <div style={{
-                  width: 160, height: 160, borderRadius: 16, flexShrink: 0,
-                  overflow: 'hidden',
-                  boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
-                  border: '3px solid rgba(255,255,255,0.2)',
-                }}>
+                {/* Right image */}
+                <div style={{ width: 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
                   <img
                     src={getPhotoUrl(rotw.cuisine, rotw.tags)}
                     alt={rotw.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
+                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(107,63,0,0.3), transparent)' }} />
                 </div>
+                {/* Arrow */}
+                <div style={{ position: 'absolute', bottom: 14, right: 120, fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)' }}>View Feature →</div>
               </div>
             </div>
           </section>
