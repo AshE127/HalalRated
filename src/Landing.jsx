@@ -557,24 +557,20 @@ export default function Landing({ navigate }) {
       <Nav navigate={navigate} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
 
       {/* NEWS TICKER */}
-      <div style={{ background: '#0a2e17', borderBottom: `2px solid ${COLORS.gold}`, overflow: 'hidden', position: 'relative', height: 34, display: 'flex', alignItems: 'center' }}>
-        <div style={{ background: COLORS.gold, height: '100%', minWidth: 56, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, zIndex: 2 }}>
-          <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 10, fontWeight: 800, color: 'white', letterSpacing: '1.5px', textTransform: 'uppercase' }}>NEWS</span>
-        </div>
+      <div style={{ background: '#0a2e17', borderBottom: `1px solid rgba(197,150,12,0.3)`, overflow: 'hidden', position: 'relative', height: 32, display: 'flex', alignItems: 'center' }}>
         <div style={{ overflow: 'hidden', flex: 1 }}>
           <div className="ticker-track">
             {[...Array(2)].map((_, i) => (
               <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
                 {[
-                  '👋 Welcome to Halal Rated — Northern Virginia\'s halal food spotlight platform',
-                  '🔄 We\'re currently expanding our restaurant directory across the DMV area',
-                  '🍽️ Discover halal Korean BBQ, Chinese, smokehouse, and more unexpected cuisines',
-                  '✅ Every spot is verified halal — no guesswork, just good food',
-                  '📧 Subscribe to our weekly newsletter for fresh restaurant drops',
-                  '📍 Covering Herndon, Chantilly, Sterling, Ashburn, Falls Church & beyond',
+                  'Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory',
+                  'New halal spots being added across Herndon, Chantilly, Sterling, Ashburn, Falls Church and beyond',
+                  'Discover cuisines you never knew were halal — Korean BBQ, Chinese, smokehouse, and more',
+                  'Every restaurant featured is verified halal — no guesswork, just great food',
+                  'Subscribe to our weekly newsletter to be the first to know about new spots',
                 ].map((text, j) => (
-                  <span key={j} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.88)', whiteSpace: 'nowrap', padding: '0 28px' }}>
-                    {text} <span style={{ color: COLORS.gold, marginLeft: 14 }}>◆</span>
+                  <span key={j} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', padding: '0 28px' }}>
+                    {text} <span style={{ color: COLORS.gold, marginLeft: 14 }}>·</span>
                   </span>
                 ))}
               </span>
@@ -812,11 +808,12 @@ export default function Landing({ navigate }) {
                   background: 'rgba(255,255,255,0.08)', pointerEvents: 'none',
                 }} />
                 <div style={{ position: 'relative', flex: 1 }}>
-                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
-                    <span style={{ fontSize: 16 }}>⭐</span>
+                  <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 10,
+                    background: 'rgba(255,255,255,0.15)', borderRadius: 20, padding: '3px 10px',
+                  }}>
                     <span style={{
                       fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 11, fontWeight: 700, color: 'rgba(255,255,255,0.85)',
+                      fontSize: 10, fontWeight: 700, color: 'white',
                       letterSpacing: '1.5px', textTransform: 'uppercase',
                     }}>Restaurant of the Week</span>
                   </div>
@@ -875,25 +872,74 @@ export default function Landing({ navigate }) {
             </h2>
           </div>
 
-          {/* City filter pills — always visible */}
-          <div className="city-scroll" style={{
-            display: 'flex', gap: 8, marginBottom: 24,
-            overflowX: 'auto', paddingBottom: 4,
-            scrollbarWidth: 'none',
-          }}>
-            {['All', 'Herndon', 'Chantilly', 'Sterling', 'Ashburn', 'Fairfax', 'Falls Church', 'Alexandria', 'Fair Oaks'].map(city => (
-              <button key={city} onClick={() => setActiveCity(city)} style={{
-                background: activeCity === city ? COLORS.green : COLORS.cardWhite,
-                color: activeCity === city ? 'white' : COLORS.textMid,
-                border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
-                borderRadius: 20, padding: '6px 16px', cursor: 'pointer',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, fontWeight: 500,
-                whiteSpace: 'nowrap', flexShrink: 0,
-                transition: 'all 0.2s',
-              }}>{city}</button>
-            ))}
-          </div>
+          {/* City filter — scrollable pills + search */}
+          {(() => {
+            const allCities = ['All', 'Alexandria', 'Ashburn', 'Chantilly', 'Fair Oaks', 'Fairfax', 'Falls Church', 'Herndon', 'Sterling'];
+            const [citySearch, setCitySearch] = React.useState('');
+            const [showSuggestions, setShowSuggestions] = React.useState(false);
+            const suggestions = citySearch.length > 0
+              ? allCities.filter(c => c !== 'All' && c.toLowerCase().startsWith(citySearch.toLowerCase()))
+              : [];
+            return (
+              <div style={{ marginBottom: 24 }}>
+                <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10 }}>
+                  {/* Scrollable pills */}
+                  <div style={{ display: 'flex', gap: 8, overflowX: 'auto', flex: 1, scrollbarWidth: 'none', paddingBottom: 2 }}>
+                    {allCities.map(city => (
+                      <button key={city} onClick={() => { setActiveCity(city); setCitySearch(''); }} style={{
+                        background: activeCity === city ? COLORS.green : COLORS.cardWhite,
+                        color: activeCity === city ? 'white' : COLORS.textMid,
+                        border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
+                        borderRadius: 100, padding: '6px 16px', cursor: 'pointer',
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 13, fontWeight: 500,
+                        whiteSpace: 'nowrap', flexShrink: 0,
+                        transition: 'all 0.2s',
+                      }}>{city}</button>
+                    ))}
+                  </div>
+                  {/* City search input */}
+                  <div style={{ position: 'relative', flexShrink: 0 }}>
+                    <input
+                      value={citySearch}
+                      onChange={e => { setCitySearch(e.target.value); setShowSuggestions(true); }}
+                      onFocus={() => setShowSuggestions(true)}
+                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                      placeholder="Search city..."
+                      style={{
+                        padding: '6px 14px', borderRadius: 100,
+                        border: `1px solid ${COLORS.border}`,
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+                        outline: 'none', width: 130,
+                        background: COLORS.cardWhite, color: COLORS.textDark,
+                      }}
+                    />
+                    {showSuggestions && suggestions.length > 0 && (
+                      <div style={{
+                        position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                        background: 'white', border: `1px solid ${COLORS.border}`,
+                        borderRadius: 10, boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
+                        zIndex: 50, overflow: 'hidden', minWidth: 160,
+                      }}>
+                        {suggestions.map(city => (
+                          <button key={city} onMouseDown={() => { setActiveCity(city); setCitySearch(city); setShowSuggestions(false); }} style={{
+                            display: 'block', width: '100%', background: 'none',
+                            border: 'none', borderBottom: `1px solid ${COLORS.border}`,
+                            padding: '9px 14px', cursor: 'pointer', textAlign: 'left',
+                            fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+                            color: COLORS.textDark, transition: 'background 0.1s',
+                          }}
+                          onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+                          onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
+                          >{city}</button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* Restaurant Grid */}
           <div className="restaurant-grid" style={{
@@ -946,13 +992,13 @@ export default function Landing({ navigate }) {
               }}>You're in! Check your inbox for a confirmation email.</div>
             ) : (
               <div style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
                   <input
                     type="email" placeholder="your@email.com" value={subEmail}
                     onChange={e => setSubEmail(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handleSubscribe()}
                     style={{
-                      flex: 1, padding: '12px 16px',
+                      flex: '1 1 200px', minWidth: 0, padding: '12px 16px',
                       borderRadius: 10, border: `1px solid ${subStatus === 'error' ? '#c0392b' : COLORS.border}`,
                       fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
                     }}
@@ -976,7 +1022,8 @@ export default function Landing({ navigate }) {
                       padding: '12px 20px',
                       fontFamily: "'DM Sans', sans-serif",
                       fontSize: 14, fontWeight: 600,
-                      whiteSpace: 'nowrap', opacity: subStatus === 'loading' ? 0.7 : 1,
+                      whiteSpace: 'nowrap', flexShrink: 0,
+                      opacity: subStatus === 'loading' ? 0.7 : 1,
                     }}>{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
                 </div>
                 {subStatus === 'error' && (
