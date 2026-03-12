@@ -603,11 +603,9 @@ export default function Landing({ navigate }) {
             {[...Array(2)].map((_, i) => (
               <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
                 {[
-                  'Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory',
-                  'New halal spots being added across Herndon, Chantilly, Sterling, Ashburn, Falls Church and beyond',
-                  'Discover cuisines you never knew were halal — Korean BBQ, Chinese, smokehouse, and more',
                   'Every restaurant featured is verified halal — no guesswork, just great food',
                   'Subscribe to our weekly newsletter to be the first to know about new spots',
+                  'Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory',
                 ].map((text, j) => (
                   <span key={j} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', padding: '0 28px' }}>
                     {text} <span style={{ color: COLORS.gold, marginLeft: 14 }}>·</span>
@@ -828,16 +826,7 @@ export default function Landing({ navigate }) {
       <section style={{ padding: '40px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div id="results-section" style={{ scrollMarginTop: '120px' }} />
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 16 }}>
-            <h2 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 26, fontWeight: 700, color: COLORS.textDark,
-            }}>
-              {search ? `Results for "${search}"` : 'Featured Restaurants'}
-            </h2>
-          </div>
-
-          {/* City filter — scrollable pills + search */}
+          {/* Header row with search */}
           {(() => {
             const allCities = ['All', 'Alexandria', 'Ashburn', 'Chantilly', 'Fair Oaks', 'Fairfax', 'Falls Church', 'Herndon', 'Sterling'];
             const [citySearch, setCitySearch] = React.useState('');
@@ -845,65 +834,64 @@ export default function Landing({ navigate }) {
             const suggestions = citySearch.length > 0
               ? allCities.filter(c => c !== 'All' && c.toLowerCase().startsWith(citySearch.toLowerCase()))
               : [];
-            return (
-              <div style={{ marginBottom: 24 }}>
-                <div style={{ display: 'flex', gap: 10, alignItems: 'center', marginBottom: 10 }}>
-                  {/* Scrollable pills */}
-                  <div style={{ display: 'flex', gap: 8, overflowX: 'auto', flex: 1, scrollbarWidth: 'none', paddingBottom: 2 }}>
-                    {allCities.map(city => (
-                      <button key={city} onClick={() => { setActiveCity(city); setCitySearch(''); }} style={{
-                        background: activeCity === city ? COLORS.green : COLORS.cardWhite,
-                        color: activeCity === city ? 'white' : COLORS.textMid,
-                        border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
-                        borderRadius: 100, padding: '6px 16px', cursor: 'pointer',
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 13, fontWeight: 500,
-                        whiteSpace: 'nowrap', flexShrink: 0,
-                        transition: 'all 0.2s',
-                      }}>{city}</button>
-                    ))}
-                  </div>
-                  {/* City search input */}
-                  <div style={{ position: 'relative', flexShrink: 0 }}>
-                    <input
-                      value={citySearch}
-                      onChange={e => { setCitySearch(e.target.value); setShowSuggestions(true); }}
-                      onFocus={() => setShowSuggestions(true)}
-                      onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                      placeholder="Search city..."
-                      style={{
-                        padding: '6px 14px', borderRadius: 100,
-                        border: `1px solid ${COLORS.border}`,
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-                        outline: 'none', width: 130,
-                        background: COLORS.cardWhite, color: COLORS.textDark,
-                      }}
-                    />
-                    {showSuggestions && suggestions.length > 0 && (
-                      <div style={{
-                        position: 'absolute', top: 'calc(100% + 6px)', right: 0,
-                        background: 'white', border: `1px solid ${COLORS.border}`,
-                        borderRadius: 10, boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
-                        zIndex: 50, overflow: 'hidden', minWidth: 160,
-                      }}>
-                        {suggestions.map(city => (
-                          <button key={city} onMouseDown={() => { setActiveCity(city); setCitySearch(city); setShowSuggestions(false); }} style={{
-                            display: 'block', width: '100%', background: 'none',
-                            border: 'none', borderBottom: `1px solid ${COLORS.border}`,
-                            padding: '9px 14px', cursor: 'pointer', textAlign: 'left',
-                            fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-                            color: COLORS.textDark, transition: 'background 0.1s',
-                          }}
-                          onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
-                          >{city}</button>
-                        ))}
-                      </div>
-                    )}
-                  </div>
+            return (<>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
+                <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: COLORS.textDark }}>
+                  {search ? `Results for "${search}"` : 'Featured Restaurants'}
+                </h2>
+                {/* City search — next to header */}
+                <div style={{ position: 'relative', flexShrink: 0 }}>
+                  <input
+                    value={citySearch}
+                    onChange={e => { setCitySearch(e.target.value); setShowSuggestions(true); }}
+                    onFocus={() => setShowSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
+                    placeholder="Search city..."
+                    style={{
+                      padding: '7px 14px', borderRadius: 100,
+                      border: `1px solid ${COLORS.border}`,
+                      fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+                      outline: 'none', width: 140,
+                      background: COLORS.cardWhite, color: COLORS.textDark,
+                    }}
+                  />
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div style={{
+                      position: 'absolute', top: 'calc(100% + 6px)', right: 0,
+                      background: 'white', border: `1px solid ${COLORS.border}`,
+                      borderRadius: 10, boxShadow: '0 6px 24px rgba(0,0,0,0.1)',
+                      zIndex: 50, overflow: 'hidden', minWidth: 160,
+                    }}>
+                      {suggestions.map(city => (
+                        <button key={city} onMouseDown={() => { setActiveCity(city); setCitySearch(city); setShowSuggestions(false); }} style={{
+                          display: 'block', width: '100%', background: 'none',
+                          border: 'none', borderBottom: `1px solid ${COLORS.border}`,
+                          padding: '9px 14px', cursor: 'pointer', textAlign: 'left',
+                          fontFamily: "'DM Sans', sans-serif", fontSize: 13,
+                          color: COLORS.textDark, transition: 'background 0.1s',
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
+                        >{city}</button>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
-            );
+              {/* City pills — own row, scrollable */}
+              <div style={{ display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4, marginBottom: 20 }}>
+                {allCities.map(city => (
+                  <button key={city} onClick={() => { setActiveCity(city); setCitySearch(''); }} style={{
+                    background: activeCity === city ? COLORS.green : COLORS.cardWhite,
+                    color: activeCity === city ? 'white' : COLORS.textMid,
+                    border: `1px solid ${activeCity === city ? COLORS.green : COLORS.border}`,
+                    borderRadius: 100, padding: '6px 16px', cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 500,
+                    whiteSpace: 'nowrap', flexShrink: 0, transition: 'all 0.2s',
+                  }}>{city}</button>
+                ))}
+              </div>
+            </>);
           })()}
 
           {/* Restaurant Grid */}
@@ -934,70 +922,88 @@ export default function Landing({ navigate }) {
       <section style={{ padding: '56px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{
-            background: COLORS.cardWhite,
-            border: `1px solid ${COLORS.border}`,
-            borderRadius: 20, padding: '40px',
-            textAlign: 'center',
+            background: `linear-gradient(135deg, ${COLORS.greenDark} 0%, ${COLORS.green} 100%)`,
+            borderRadius: 20, padding: '48px 40px',
+            textAlign: 'center', position: 'relative', overflow: 'hidden',
           }}>
-            <h3 style={{
-              fontFamily: "'Playfair Display', serif",
-              fontSize: 24, fontWeight: 700, color: COLORS.textDark,
-              marginBottom: 8,
-            }}>New spots, straight to your inbox.</h3>
-            <p style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 14, color: COLORS.textMid,
-              marginBottom: 24,
-            }}>Weekly halal restaurant discoveries across Northern Virginia.</p>
-            {subStatus === 'success' ? (
-              <div style={{
-                background: COLORS.greenLight, border: `1px solid rgba(15,77,42,0.2)`,
-                borderRadius: 12, padding: '16px 24px', maxWidth: 440, margin: '0 auto',
-                fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: COLORS.green, fontWeight: 600,
-              }}>You're in! Check your inbox for a confirmation email.</div>
-            ) : (
-              <div style={{ display: 'flex', gap: 10, maxWidth: 440, margin: '0 auto', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-                  <input
-                    type="email" placeholder="your@email.com" value={subEmail}
-                    onChange={e => setSubEmail(e.target.value)}
-                    onKeyDown={e => e.key === 'Enter' && handleSubscribe()}
-                    style={{
-                      flex: '1 1 200px', minWidth: 0, padding: '12px 16px',
-                      borderRadius: 10, border: `1px solid ${subStatus === 'error' ? '#c0392b' : COLORS.border}`,
-                      fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
-                    }}
-                  />
-                  <button
-                    onClick={async () => {
-                      if (!subEmail) return;
-                      setSubStatus('loading');
-                      try {
-                        await subscribeToBeehiiv(subEmail);
-                        setSubStatus('success');
-                        setSubEmail('');
-                      } catch {
-                        setSubStatus('error');
-                      }
-                    }}
-                    disabled={subStatus === 'loading'}
-                    style={{
-                      background: COLORS.green, color: 'white',
-                      border: 'none', borderRadius: 10, cursor: 'pointer',
-                      padding: '12px 20px',
-                      fontFamily: "'DM Sans', sans-serif",
-                      fontSize: 14, fontWeight: 600,
-                      whiteSpace: 'nowrap', flexShrink: 0,
-                      opacity: subStatus === 'loading' ? 0.7 : 1,
-                    }}>{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
-                </div>
-                {subStatus === 'error' && (
-                  <div style={{ fontSize: 12, color: '#c0392b', fontFamily: "'DM Sans', sans-serif" }}>
-                    Something went wrong — please try again.
-                  </div>
-                )}
+            {/* decorative circles */}
+            <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(197,150,12,0.12)', pointerEvents: 'none' }} />
+            <div style={{ position: 'absolute', bottom: -30, left: -30, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
+            <div style={{ position: 'relative' }}>
+              {/* eyebrow */}
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 14,
+                background: 'rgba(197,150,12,0.2)', border: '1px solid rgba(197,150,12,0.4)',
+                borderRadius: 20, padding: '4px 14px',
+              }}>
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: COLORS.gold, flexShrink: 0 }} />
+                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700, color: COLORS.gold, letterSpacing: '1px', textTransform: 'uppercase' }}>Weekly Newsletter</span>
               </div>
-            )}
+              <h3 style={{
+                fontFamily: "'Playfair Display', serif",
+                fontSize: 'clamp(22px, 4vw, 32px)', fontWeight: 700, color: 'white',
+                marginBottom: 10, lineHeight: 1.2,
+              }}>New spots, straight to your inbox.</h3>
+              <p style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: 14, color: 'rgba(255,255,255,0.65)',
+                marginBottom: 28, maxWidth: 400, margin: '0 auto 28px',
+              }}>Be first to know about halal restaurant drops across Northern Virginia every week.</p>
+
+              {subStatus === 'success' ? (
+                <div style={{
+                  background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
+                  borderRadius: 12, padding: '14px 24px', maxWidth: 400, margin: '0 auto',
+                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: 'white', fontWeight: 600,
+                }}>You're in! Check your inbox.</div>
+              ) : (
+                <div style={{ maxWidth: 420, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    <input
+                      type="email" placeholder="your@email.com" value={subEmail}
+                      onChange={e => setSubEmail(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && (async () => {
+                        if (!subEmail) return;
+                        setSubStatus('loading');
+                        try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
+                        catch { setSubStatus('error'); }
+                      })()}
+                      style={{
+                        flex: '1 1 180px', minWidth: 0, padding: '13px 16px',
+                        borderRadius: 10, border: `1px solid ${subStatus === 'error' ? '#e74c3c' : 'rgba(255,255,255,0.2)'}`,
+                        background: 'rgba(255,255,255,0.1)', color: 'white',
+                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
+                      }}
+                    />
+                    <button
+                      onClick={async () => {
+                        if (!subEmail) return;
+                        setSubStatus('loading');
+                        try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
+                        catch { setSubStatus('error'); }
+                      }}
+                      disabled={subStatus === 'loading'}
+                      style={{
+                        background: COLORS.gold, color: 'white',
+                        border: 'none', borderRadius: 10, cursor: 'pointer',
+                        padding: '13px 22px',
+                        fontFamily: "'DM Sans', sans-serif",
+                        fontSize: 14, fontWeight: 700,
+                        whiteSpace: 'nowrap', flexShrink: 0,
+                        opacity: subStatus === 'loading' ? 0.7 : 1,
+                        transition: 'opacity 0.15s',
+                      }}
+                      onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
+                      onMouseLeave={e => { if (subStatus !== 'loading') e.currentTarget.style.opacity = '1'; }}
+                    >{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
+                  </div>
+                  {subStatus === 'error' && (
+                    <div style={{ fontSize: 12, color: '#fca5a5', fontFamily: "'DM Sans', sans-serif" }}>
+                      Something went wrong — please try again.
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </section>
