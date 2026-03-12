@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Landing from './Landing.jsx';
 import RestaurantPage from './RestaurantPage.jsx';
 import CategoryPage from './CategoryPage.jsx';
+import CaterersPage from './CaterersPage.jsx';
 import { CityPage, AboutPage, ContactPage, ForRestaurantsPage, PrivacyPage } from './Pages.jsx';
 import AdminPage from './AdminPage.jsx';
 
@@ -36,6 +37,8 @@ export default function App() {
       setPage('for-restaurants'); setPageData(null);
     } else if (path === '/privacy') {
       setPage('privacy'); setPageData(null);
+    } else if (path === '/caterers') {
+      setPage('caterers'); setPageData(null);
     } else if (path === '/admin') {
       setPage('admin'); setPageData(null);
     } else {
@@ -49,6 +52,7 @@ export default function App() {
     window.scrollTo(0, 0);
   };
 
+  if (page === 'caterers') return <CaterersPage navigate={navigate} />;
   if (page === 'restaurant') return <RestaurantPage slug={pageData} navigate={navigate} />;
   if (page === 'category') return <CategoryPage slug={pageData} navigate={navigate} />;
   if (page === 'city') return <CityPage slug={pageData} navigate={navigate} />;

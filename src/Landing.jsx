@@ -213,31 +213,20 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           <DropdownNav label="Categories" navigate={navigate} items={
             categories.map(cat => ({ label: `${cat.emoji} ${cat.name}`, path: `/category/${cat.slug}` }))
           } />
+          <button onClick={() => navigate('/caterers')} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid, transition:'color 0.15s' }}
+          onMouseEnter={e=>e.target.style.color=COLORS.green} onMouseLeave={e=>e.target.style.color=COLORS.textMid}>Caterers</button>
           {[
             { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
           ].map(item => (
             <button key={item.path}
               onClick={() => item.external ? window.location.href = item.path : navigate(item.path)}
-              style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                padding: '6px 12px', borderRadius: 6,
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, fontWeight: 500,
-                color: COLORS.textMid,
-                transition: 'color 0.15s',
-              }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 6, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: COLORS.textMid, transition: 'color 0.15s' }}
               onMouseEnter={e => e.target.style.color = COLORS.green}
               onMouseLeave={e => e.target.style.color = COLORS.textMid}
             >{item.label}</button>
           ))}
-          <button onClick={() => navigate('/for-restaurants')} style={{
-            background: COLORS.green, color: 'white',
-            border: 'none', borderRadius: 8, cursor: 'pointer',
-            padding: '8px 16px', marginLeft: 8,
-            fontFamily: "'DM Sans', sans-serif",
-            fontSize: 14, fontWeight: 600,
-          }}>Get Featured</button>
+          <button onClick={() => navigate('/for-restaurants')} style={{ background: COLORS.green, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '8px 16px', marginLeft: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>Get Featured</button>
         </div>
 
         {/* Mobile hamburger */}
@@ -294,6 +283,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           </div>
 
           {[
+            { label: 'Caterers', path: '/caterers' },
             { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },
             { label: 'Contact', path: '/contact' },
@@ -303,7 +293,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
               background: 'none', border: 'none', cursor: 'pointer',
               padding: '13px 8px',
               fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
-              color: COLORS.textDark, textAlign: 'left',
+              color: item.path === '/caterers' ? COLORS.green : COLORS.textDark, textAlign: 'left',
               borderBottom: `1px solid ${COLORS.border}`,
             }}>{item.label}</button>
           ))}
@@ -552,6 +542,7 @@ export default function Landing({ navigate }) {
   const [subEmail, setSubEmail] = useState('');
   const [subStatus, setSubStatus] = useState('idle');
   const [categoryOpen, setCategoryOpen] = useState(false);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchSearch = !search ||
@@ -562,6 +553,8 @@ export default function Landing({ navigate }) {
     const matchCity = activeCity === 'All' || r.city.includes(activeCity);
     return matchSearch && matchCity;
   });
+
+  React.useEffect(() => { setVisibleCount(6); }, [search, activeCity]);
 
   const quickTags = ['Biryani', 'Burgers', 'Shawarma', 'Korean BBQ', 'Late Night', 'Buffet', 'Pizza', 'Wings'];
 
@@ -795,27 +788,18 @@ export default function Landing({ navigate }) {
               >
                 {/* Left content */}
                 <div style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4, position: 'relative', zIndex: 1 }}>
-                  <div style={{
-                    display: 'inline-flex', alignItems: 'center', gap: 5,
-                    background: 'rgba(255,255,255,0.18)', borderRadius: 20,
-                    padding: '2px 9px', alignSelf: 'flex-start', marginBottom: 2,
-                  }}>
-                    <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 9, fontWeight: 800, color: 'white', letterSpacing: '1.5px', textTransform: 'uppercase' }}>Restaurant of the Week</span>
+                  <div style={{ display:'inline-flex', alignItems:'center', background:'rgba(255,255,255,0.18)', borderRadius:20, padding:'2px 9px', alignSelf:'flex-start', marginBottom:2 }}>
+                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:9, fontWeight:800, color:'white', letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
                   </div>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 22, fontWeight: 700, color: 'white', lineHeight: 1.2 }}>{rotw.name}</div>
-                  <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.7)' }}>{rotw.city} · {rotw.cuisine}</div>
+                  <div style={{ fontFamily:"'Playfair Display', serif", fontSize:22, fontWeight:700, color:'white', lineHeight:1.2 }}>{rotw.name}</div>
+                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, color:'rgba(255,255,255,0.7)' }}>{rotw.city} · {rotw.cuisine}</div>
+                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', marginTop:4 }}>View Feature →</div>
                 </div>
                 {/* Right image */}
                 <div style={{ width: 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                  <img
-                    src={getPhotoUrl(rotw.cuisine, rotw.tags)}
-                    alt={rotw.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                  />
-                  <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to right, rgba(107,63,0,0.3), transparent)' }} />
+                  <img src={getPhotoUrl(rotw.cuisine, rotw.tags)} alt={rotw.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(107,63,0,0.3), transparent)' }} />
                 </div>
-                {/* Arrow */}
-                <div style={{ position: 'absolute', bottom: 14, right: 120, fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: 'rgba(255,255,255,0.8)' }}>View Feature →</div>
               </div>
             </div>
           </section>
@@ -900,7 +884,7 @@ export default function Landing({ navigate }) {
             gridTemplateColumns: 'repeat(3, 1fr)',
             gap: 20,
           }}>
-            {filteredRestaurants.map(r => (
+            {filteredRestaurants.slice(0, visibleCount).map(r => (
               <RestaurantCard key={r.id} restaurant={r} navigate={navigate} />
             ))}
           </div>
@@ -911,6 +895,21 @@ export default function Landing({ navigate }) {
               color: COLORS.textLight, fontSize: 16,
             }}>
               No restaurants found for "{search}" — try a different search.
+            </div>
+          )}
+          {/* Load More */}
+          {visibleCount < filteredRestaurants.length && (
+            <div style={{ textAlign: 'center', marginTop: 32 }}>
+              <button onClick={() => setVisibleCount(v => v + 6)} style={{
+                background: COLORS.cardWhite, color: COLORS.green,
+                border: `2px solid ${COLORS.green}`, borderRadius: 100,
+                cursor: 'pointer', padding: '12px 36px',
+                fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
+                transition: 'all 0.2s',
+              }}
+              onMouseEnter={e => { e.currentTarget.style.background = COLORS.green; e.currentTarget.style.color = 'white'; }}
+              onMouseLeave={e => { e.currentTarget.style.background = COLORS.cardWhite; e.currentTarget.style.color = COLORS.green; }}
+              >Load More ({filteredRestaurants.length - visibleCount} remaining)</button>
             </div>
           )}
         </div>

@@ -9,30 +9,104 @@ const COLORS = {
   border: '#E2E2DF',
 };
 
-function SimpleNav({ navigate }) {
+function Ticker() {
   return (
-    <nav style={{
-      position: 'sticky', top: 0, zIndex: 100,
-      background: 'rgba(250, 250, 248, 0.95)', backdropFilter: 'blur(12px)',
-      borderBottom: `1px solid ${COLORS.border}`,
-      padding: '0 24px',
-    }}>
-      <div style={{
-        maxWidth: 1200, margin: '0 auto',
-        display: 'flex', alignItems: 'center', height: 64, gap: 16,
-      }}>
-        <button onClick={() => navigate('/')} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 8,
-          fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: COLORS.textMid,
-        }}>← Back</button>
-        <button onClick={() => navigate('/')} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          fontFamily: "'Playfair Display', serif",
-          fontSize: 18, fontWeight: 700, color: COLORS.textDark,
-        }}>Halal <span style={{ color: COLORS.gold }}>Rated</span></button>
+    <div style={{ background:'#0a2e17', borderBottom:'1px solid rgba(197,150,12,0.3)', overflow:'hidden', height:32, display:'flex', alignItems:'center' }}>
+      <style>{`@keyframes tickerScroll{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}.ticker-track{animation:tickerScroll 32s linear infinite;display:flex;width:max-content;}.ticker-track:hover{animation-play-state:paused;}`}</style>
+      <div style={{ overflow:'hidden', flex:1 }}>
+        <div className="ticker-track">
+          {[...Array(2)].map((_,i) => (
+            <span key={i} style={{ display:'flex', alignItems:'center' }}>
+              {['Every restaurant featured is verified halal — no guesswork, just great food','Subscribe to our weekly newsletter to be the first to know about new spots','Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory'].map((text,j) => (
+                <span key={j} style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:500, color:'rgba(255,255,255,0.75)', whiteSpace:'nowrap', padding:'0 28px' }}>
+                  {text} <span style={{ color:'#C5960C', marginLeft:14 }}>·</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
       </div>
-    </nav>
+    </div>
+  );
+}
+
+function FullNav({ navigate }) {
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [catOpen, setCatOpen] = React.useState(false);
+  const [catMobileOpen, setCatMobileOpen] = React.useState(false);
+  const catRef = React.useRef(null);
+  React.useEffect(() => {
+    const h = () => setIsMobile(window.innerWidth <= 768);
+    window.addEventListener('resize', h); return () => window.removeEventListener('resize', h);
+  }, []);
+  React.useEffect(() => {
+    const h = e => { if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false); };
+    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h);
+  }, []);
+  return (
+    <>
+      <nav style={{ position:'sticky', top:0, zIndex:200, background:'rgba(250,250,248,0.97)', backdropFilter:'blur(12px)', borderBottom:`1px solid ${COLORS.border}`, padding:'0 24px' }}>
+        <div style={{ maxWidth:1200, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:64 }}>
+          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
+            <button onClick={() => window.history.back()} style={{ background:'none', border:'none', cursor:'pointer', fontFamily:"'DM Sans', sans-serif", fontSize:14, color:COLORS.textMid }}>← Back</button>
+            <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', fontFamily:"'Playfair Display', serif", fontSize:18, fontWeight:700, color:COLORS.textDark }}>Halal <span style={{ color:COLORS.gold }}>Rated</span></button>
+          </div>
+          <div style={{ display:isMobile?'none':'flex', alignItems:'center', gap:4 }}>
+            <div ref={catRef} style={{ position:'relative' }}>
+              <button onClick={() => setCatOpen(o=>!o)} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:catOpen?COLORS.green:COLORS.textMid, display:'flex', alignItems:'center', gap:4 }}>
+                Categories <span style={{ fontSize:10, transform:catOpen?'rotate(180deg)':'none', transition:'transform 0.2s', display:'inline-block' }}>▾</span>
+              </button>
+              {catOpen && (
+                <div style={{ position:'absolute', top:'calc(100% + 8px)', left:0, background:'white', border:`1px solid ${COLORS.border}`, borderRadius:12, boxShadow:'0 8px 32px rgba(0,0,0,0.10)', minWidth:200, zIndex:200, overflow:'hidden' }}>
+                  {categories.map((cat,i) => (
+                    <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCatOpen(false); }} style={{ display:'block', width:'100%', background:'none', border:'none', borderBottom:i<categories.length-1?`1px solid ${COLORS.border}`:'none', cursor:'pointer', textAlign:'left', padding:'11px 16px', fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textDark }}
+                    onMouseEnter={e=>{e.currentTarget.style.background=COLORS.greenLight;e.currentTarget.style.color=COLORS.green;}}
+                    onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=COLORS.textDark;}}
+                    >{cat.emoji} {cat.name}</button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={() => navigate('/caterers')} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid }} onMouseEnter={e=>e.target.style.color=COLORS.green} onMouseLeave={e=>e.target.style.color=COLORS.textMid}>Caterers</button>
+            <button onClick={() => navigate('/about')} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid }} onMouseEnter={e=>e.target.style.color=COLORS.green} onMouseLeave={e=>e.target.style.color=COLORS.textMid}>About</button>
+            <button onClick={() => navigate('/for-restaurants')} style={{ background:COLORS.green, color:'white', border:'none', borderRadius:8, cursor:'pointer', padding:'8px 16px', marginLeft:8, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:600 }}>Get Featured</button>
+          </div>
+          <button onClick={() => setMenuOpen(!menuOpen)} style={{ display:isMobile?'flex':'none', alignItems:'center', justifyContent:'center', flexDirection:'column', background:menuOpen?COLORS.green:COLORS.greenLight, border:`1px solid ${COLORS.border}`, borderRadius:8, cursor:'pointer', width:40, height:40, gap:5, padding:0 }}>
+            <span style={{ display:'block', width:18, height:2, background:menuOpen?'white':COLORS.green, borderRadius:2, transform:menuOpen?'rotate(45deg) translate(5px, 5px)':'none' }} />
+            <span style={{ display:menuOpen?'none':'block', width:18, height:2, background:COLORS.green, borderRadius:2 }} />
+            <span style={{ display:'block', width:18, height:2, background:menuOpen?'white':COLORS.green, borderRadius:2, transform:menuOpen?'rotate(-45deg) translate(5px, -5px)':'none' }} />
+          </button>
+        </div>
+      </nav>
+      {menuOpen && (
+        <div style={{ position:'fixed', top:0, left:0, right:0, bottom:0, background:'#F7F7F5', zIndex:9999, padding:'0 24px 40px', overflowY:'auto', display:'flex', flexDirection:'column', gap:4 }}>
+          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', height:64, borderBottom:`1px solid ${COLORS.border}`, marginBottom:8, flexShrink:0 }}>
+            <span style={{ fontFamily:"'Playfair Display', serif", fontSize:18, fontWeight:700, color:COLORS.textDark }}>Halal <span style={{ color:COLORS.gold }}>Rated</span></span>
+            <button onClick={() => setMenuOpen(false)} style={{ background:COLORS.green, border:'none', borderRadius:8, width:36, height:36, cursor:'pointer', color:'white', fontSize:18, fontWeight:700, display:'flex', alignItems:'center', justifyContent:'center' }}>✕</button>
+          </div>
+          {[{label:'Caterers',path:'/caterers'},{label:'About',path:'/about'},{label:'Contact',path:'/contact'},{label:'For Restaurants',path:'/for-restaurants'}].map(item => (
+            <button key={item.path} onClick={() => { navigate(item.path); setMenuOpen(false); }} style={{ background:'none', border:'none', cursor:'pointer', padding:'13px 8px', fontFamily:"'DM Sans', sans-serif", fontSize:16, fontWeight:500, color:item.path==='/caterers'?COLORS.green:COLORS.textDark, textAlign:'left', borderBottom:`1px solid ${COLORS.border}` }}>{item.label}</button>
+          ))}
+          <div style={{ borderBottom:`1px solid ${COLORS.border}` }}>
+            <button onClick={() => setCatMobileOpen(o=>!o)} style={{ background:'none', border:'none', cursor:'pointer', padding:'13px 8px', width:'100%', fontFamily:"'DM Sans', sans-serif", fontSize:16, fontWeight:500, color:COLORS.textDark, textAlign:'left', display:'flex', justifyContent:'space-between', alignItems:'center' }}>
+              <span>Categories</span><span style={{ fontSize:12, transform:catMobileOpen?'rotate(180deg)':'none', transition:'transform 0.2s' }}>▾</span>
+            </button>
+            {catMobileOpen && (
+              <div style={{ paddingBottom:12, display:'flex', flexDirection:'column', gap:2 }}>
+                {categories.map(cat => (
+                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setMenuOpen(false); }} style={{ background:'none', border:'none', cursor:'pointer', padding:'9px 16px', textAlign:'left', fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid }}
+                  onMouseEnter={e=>{e.currentTarget.style.background=COLORS.greenLight;e.currentTarget.style.color=COLORS.green;}}
+                  onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=COLORS.textMid;}}
+                  >{cat.emoji} {cat.name}</button>
+                ))}
+              </div>
+            )}
+          </div>
+          <button onClick={() => { navigate('/for-restaurants'); setMenuOpen(false); }} style={{ marginTop:20, background:COLORS.green, color:'white', border:'none', borderRadius:12, cursor:'pointer', padding:'14px 24px', fontFamily:"'DM Sans', sans-serif", fontSize:16, fontWeight:600 }}>Get Featured on Halal Rated</button>
+        </div>
+      )}
+    </>
   );
 }
 
@@ -166,7 +240,8 @@ export default function RestaurantPage({ slug, navigate }) {
       `}</style>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" />
 
-      <SimpleNav navigate={navigate} />
+      <FullNav navigate={navigate} />
+      <Ticker />
 
       {/* Hero */}
       <div style={{

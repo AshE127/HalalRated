@@ -1,0 +1,23 @@
+export const caterers = [
+  {
+    id: 1,
+    name: "My Lahori Kitchen",
+    slug: "my-lahori-kitchen",
+    city: "Woodbridge",
+    state: "VA",
+    cuisine: "Pakistani",
+    type: "Home-Based Caterer",
+    description: "My Lahori Kitchen brings authentic home-style Pakistani cooking to your small and medium events across the DMV. From rich karahis and fragrant biryanis to hearty nihari and freshly made breads, every dish is prepared with care and served with the warmth of a home kitchen. Fully halal certified.",
+    specialties: ["Biryani", "Karahi", "Nihari", "BBQ", "Desserts"],
+    events: ["Eid Gatherings", "Family Dinners", "Small Weddings", "Corporate Lunches", "Community Events"],
+    serves: "Small to medium events",
+    halal: true,
+    halalNote: "Fully halal certified",
+    website: "https://mylahorikitchen.com",
+    phone: null,
+    email: null,
+    instagram: null,
+    facebook: "https://www.facebook.com/p/Lahori-Kitchen-100067130160295/",
+    featured: true,
+  },
+];
