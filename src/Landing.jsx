@@ -511,6 +511,7 @@ export default function Landing({ navigate }) {
   const [activeCity, setActiveCity] = useState('All');
   const [subEmail, setSubEmail] = useState('');
   const [subStatus, setSubStatus] = useState('idle');
+  const [categoryOpen, setCategoryOpen] = useState(false);
 
   const filteredRestaurants = restaurants.filter(r => {
     const matchSearch = !search ||
@@ -530,7 +531,8 @@ export default function Landing({ navigate }) {
         * { box-sizing: border-box; margin: 0; padding: 0; }
         @media (max-width: 768px) {
           .hero-title { font-size: 38px !important; }
-          .stats-strip { flex-direction: column !important; gap: 16px !important; }
+          .stats-strip { gap: 12px !important; }
+          .stat-item { min-width: 70px !important; }
           .hidden-halal-banner { flex-direction: column !important; align-items: flex-start !important; padding: 24px !important; }
           .hidden-halal-banner button { width: 100% !important; }
           .restaurant-grid { grid-template-columns: 1fr !important; }
@@ -665,29 +667,56 @@ export default function Landing({ navigate }) {
               }}>Search</button>
           </div>
 
-          {/* CATEGORY PILLS — single scrollable row */}
-          <div style={{ maxWidth: 560, margin: '10px auto 0', display: 'flex', gap: 10, overflowX: 'auto', flexWrap: 'nowrap', paddingBottom: 4, scrollbarWidth: 'none' }}>
-            {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
-              <button key={cat.id} onClick={() => navigate(`/category/${cat.slug}`)} style={{
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.4)',
-                color: 'white',
-                borderRadius: 100, padding: '7px 16px',
-                cursor: 'pointer',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, fontWeight: 500,
-                whiteSpace: 'nowrap',
-                flexShrink: 0,
-                display: 'flex', alignItems: 'center', gap: 6,
-                transition: 'background 0.2s, border-color 0.2s',
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = 'rgba(255,255,255,0.15)'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.6)'; }}
-              onMouseLeave={e => { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.borderColor = 'rgba(255,255,255,0.4)'; }}
-              >
-                <span style={{ fontSize: 15 }}>{cat.emoji}</span>
-                <span>{cat.name}</span>
-              </button>
-            ))}
+          {/* BROWSE CATEGORIES BUTTON */}
+          <div style={{ maxWidth: 560, margin: '10px auto 0', width: '100%' }}>
+            <button onClick={() => setCategoryOpen(o => !o)} style={{
+              width: '100%', background: 'rgba(255,255,255,0.1)',
+              border: '1px solid rgba(255,255,255,0.35)',
+              borderRadius: 12, padding: '11px 18px',
+              cursor: 'pointer', color: 'white',
+              fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600,
+              display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+              transition: 'background 0.2s',
+            }}
+            onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
+            onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.1)'}
+            >
+              <span style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <span style={{ fontSize: 16 }}>🍴</span> Browse Categories
+              </span>
+              <span style={{ fontSize: 12, transition: 'transform 0.2s', display: 'inline-block', transform: categoryOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}>▾</span>
+            </button>
+
+            {/* DROPDOWN PANEL */}
+            {categoryOpen && (
+              <div style={{
+                marginTop: 8, background: 'rgba(10,46,23,0.97)',
+                backdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255,255,255,0.15)',
+                borderRadius: 14, padding: '16px',
+                display: 'flex', flexWrap: 'wrap', gap: 8,
+              }}>
+                {categories.filter(cat => cat.id !== 'hidden-halal').map(cat => (
+                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCategoryOpen(false); }} style={{
+                    background: 'rgba(255,255,255,0.08)',
+                    border: '1px solid rgba(255,255,255,0.2)',
+                    color: 'white', borderRadius: 100,
+                    padding: '7px 15px', cursor: 'pointer',
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: 13, fontWeight: 500,
+                    whiteSpace: 'nowrap',
+                    display: 'flex', alignItems: 'center', gap: 6,
+                    transition: 'background 0.15s',
+                  }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.18)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(255,255,255,0.08)'}
+                  >
+                    <span>{cat.emoji}</span>
+                    <span>{cat.name}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* HIDDEN HALAL BANNER — slim, inside hero, same width as search/carousel */}
@@ -736,12 +765,12 @@ export default function Landing({ navigate }) {
       <div style={{
         background: COLORS.cardWhite,
         borderBottom: `1px solid ${COLORS.border}`,
-        padding: '20px 24px',
+        padding: '16px 16px',
       }}>
         <div className="stats-strip" style={{
           maxWidth: 1200, margin: '0 auto',
           display: 'flex', alignItems: 'center', justifyContent: 'center',
-          gap: 48,
+          gap: 48, flexWrap: 'nowrap',
         }}>
           {[
             { num: `${restaurants.length}+`, label: 'Restaurants Featured' },
@@ -749,14 +778,14 @@ export default function Landing({ navigate }) {
             { num: '5', label: 'Categories' },
             { num: '100%', label: 'Halal Verified' },
           ].map(stat => (
-            <div key={stat.label} style={{ textAlign: 'center' }}>
+            <div className="stat-item" key={stat.label} style={{ textAlign: 'center', flex: 1 }}>
               <div style={{
                 fontFamily: "'Playfair Display', serif",
-                fontSize: 26, fontWeight: 700, color: COLORS.green,
+                fontSize: 'clamp(18px, 4vw, 26px)', fontWeight: 700, color: COLORS.green,
               }}>{stat.num}</div>
               <div style={{
                 fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, color: COLORS.textLight, fontWeight: 500,
+                fontSize: 'clamp(9px, 2.2vw, 12px)', color: COLORS.textLight, fontWeight: 500,
                 letterSpacing: '0.3px',
               }}>{stat.label}</div>
             </div>
