@@ -247,27 +247,26 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           <button onClick={() => navigate('/for-restaurants')} style={{ background: COLORS.green, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '8px 16px', marginLeft: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>Get Featured</button>
         </div>
 
-        {/* Mobile hamburger */}
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          style={{
-            display: isMobile ? 'flex' : 'none',
-            alignItems: 'center', justifyContent: 'center',
-            flexDirection: 'column',
-            background: menuOpen ? COLORS.green : COLORS.greenLight,
-            border: `1px solid ${COLORS.border}`,
-            borderRadius: 8, cursor: 'pointer',
-            width: 40, height: 40, gap: 5, padding: 0,
-            zIndex: 10001, position: 'relative',
-          }}
-        >
-          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-          <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
-          <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-        </button>
       </div>
 
     </nav>
+    {/* Nav sits at z-index 200; hamburger needs to float above the mobile overlay */}
+    <div style={{ position:'fixed', top:12, right:12, zIndex:10001, display:isMobile?'block':'none' }}>
+      <button
+        onClick={() => setMenuOpen(!menuOpen)}
+        style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
+          background: menuOpen ? COLORS.green : COLORS.greenLight,
+          border: `1px solid ${COLORS.border}`,
+          borderRadius: 8, cursor: 'pointer',
+          width: 40, height: 40, gap: 5, padding: 0,
+        }}
+      >
+        <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
+        <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
+        <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
+      </button>
+    </div>
 
       {/* Mobile menu — outside nav so z-index works correctly */}
       {menuOpen && (
@@ -297,6 +296,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
           </div>
 
           {[
+            { label: 'Home', path: '/' },
             { label: 'Caterers', path: '/caterers' },
             { label: 'Guides', path: '/guide', external: true },
             { label: 'About', path: '/about' },

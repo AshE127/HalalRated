@@ -42,10 +42,59 @@
 </style>
 </head>
 <body>
-<nav><div class="nav-inner">
-  <a href="/learn" class="back">← All Guides</a>
-  <a href="/" class="logo">Halal <span>Rated</span></a>
-</div></nav>
+<nav id="hr-nav" style="background:rgba(250,250,248,0.97);border-bottom:1px solid #E2E2DF;padding:0 24px;position:sticky;top:0;z-index:200;backdrop-filter:blur(12px);">
+<div style="max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;">
+  <a href="/" style="display:flex;align-items:center;gap:10px;text-decoration:none;">
+    <div style="width:32px;height:32px;border-radius:50%;background:#0f4d2a;display:flex;align-items:center;justify-content:center;color:#C5960C;font-size:16px;flex-shrink:0;">&#10003;</div>
+    <span style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;color:#111111;">Halal <span style="color:#C5960C;">Rated</span></span>
+  </a>
+  <div class="hr-desktop-nav" style="display:flex;align-items:center;gap:4px;">
+    <div style="position:relative;" id="hr-cat-wrap">
+      <button onclick="var d=document.getElementById('hr-cat-dd');d.style.display=d.style.display==='block'?'none':'block'" style="background:none;border:none;cursor:pointer;padding:6px 12px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#4a4a4a;display:flex;align-items:center;gap:4px;">Categories &#9662;</button>
+      <div id="hr-cat-dd" style="display:none;position:absolute;top:calc(100% + 8px);left:0;background:white;border:1px solid #E2E2DF;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.10);min-width:200px;z-index:300;overflow:hidden;">
+        <a href="/category/hidden-halal" style="display:block;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;" onmouseover="this.style.background='#e6f0eb';this.style.color='#0f4d2a'" onmouseout="this.style.background='';this.style.color='#111'">&#128373; Hidden Halal</a>
+        <a href="/category/delicious-desi" style="display:block;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;" onmouseover="this.style.background='#e6f0eb';this.style.color='#0f4d2a'" onmouseout="this.style.background='';this.style.color='#111'">&#127859; Delicious Desi</a>
+        <a href="/category/mezze-musts" style="display:block;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;" onmouseover="this.style.background='#e6f0eb';this.style.color='#0f4d2a'" onmouseout="this.style.background='';this.style.color='#111'">&#129369; Mezze Musts</a>
+        <a href="/category/soy-selects" style="display:block;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;" onmouseover="this.style.background='#e6f0eb';this.style.color='#0f4d2a'" onmouseout="this.style.background='';this.style.color='#111'">&#129346; Soy Selects</a>
+        <a href="/category/top-tier" style="display:block;padding:11px 16px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#111;text-decoration:none;" onmouseover="this.style.background='#e6f0eb';this.style.color='#0f4d2a'" onmouseout="this.style.background='';this.style.color='#111'">&#11088; Top Tier</a>
+      </div>
+    </div>
+    <a href="/caterers" style="padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#4a4a4a;text-decoration:none;" onmouseover="this.style.color='#0f4d2a'" onmouseout="this.style.color='#4a4a4a'">Caterers</a>
+    <a href="/guide" style="padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#4a4a4a;text-decoration:none;" onmouseover="this.style.color='#0f4d2a'" onmouseout="this.style.color='#4a4a4a'">Guides</a>
+    <a href="/about" style="padding:6px 12px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;color:#4a4a4a;text-decoration:none;" onmouseover="this.style.color='#0f4d2a'" onmouseout="this.style.color='#4a4a4a'">About</a>
+    <a href="/for-restaurants" style="background:#0f4d2a;color:white;border-radius:8px;padding:8px 16px;margin-left:8px;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;text-decoration:none;">Get Featured</a>
+  </div>
+  <button id="hr-hamburger" onclick="document.getElementById('hr-mobile-menu').style.display='flex'" style="display:none;align-items:center;justify-content:center;flex-direction:column;background:#e6f0eb;border:1px solid #E2E2DF;border-radius:8px;cursor:pointer;width:40px;height:40px;gap:5px;padding:0;">
+    <span style="display:block;width:18px;height:2px;background:#0f4d2a;border-radius:2px;"></span>
+    <span style="display:block;width:18px;height:2px;background:#0f4d2a;border-radius:2px;"></span>
+    <span style="display:block;width:18px;height:2px;background:#0f4d2a;border-radius:2px;"></span>
+  </button>
+</div>
+</nav>
+<div id="hr-mobile-menu" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#F7F7F5;z-index:10000;padding:0 24px 40px;overflow-y:auto;flex-direction:column;gap:4px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:64px;border-bottom:1px solid #E2E2DF;margin-bottom:8px;flex-shrink:0;">
+    <span style="font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:#111;">Halal <span style="color:#C5960C;">Rated</span></span>
+    <button onclick="document.getElementById('hr-mobile-menu').style.display='none'" style="background:#0f4d2a;border:none;border-radius:8px;width:36px;height:36px;cursor:pointer;color:white;font-size:18px;font-weight:700;display:flex;align-items:center;justify-content:center;">&#10005;</button>
+  </div>
+  <a href="/" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;">Home</a>
+  <a href="/caterers" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#0f4d2a;text-decoration:none;border-bottom:1px solid #E2E2DF;">Caterers</a>
+  <a href="/guide" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;">Guides</a>
+  <a href="/about" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;">About</a>
+  <a href="/contact" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;">Contact</a>
+  <a href="/for-restaurants" style="padding:13px 8px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:500;color:#111;text-decoration:none;border-bottom:1px solid #E2E2DF;">For Restaurants</a>
+  <a href="/for-restaurants" style="margin-top:20px;background:#0f4d2a;color:white;border-radius:12px;padding:14px 24px;font-family:'DM Sans',sans-serif;font-size:16px;font-weight:600;text-decoration:none;text-align:center;display:block;">Get Featured on Halal Rated</a>
+</div>
+<style>
+@media(max-width:768px){.hr-desktop-nav{display:none!important;}#hr-hamburger{display:flex!important;}}
+</style>
+<script>
+document.addEventListener('click',function(e){
+  var dd=document.getElementById('hr-cat-dd');
+  var wrap=document.getElementById('hr-cat-wrap');
+  if(dd&&wrap&&!wrap.contains(e.target))dd.style.display='none';
+});
+</script>
+
 <div class="hero"><div class="hero-inner">
   <div class="cat-tag">✓ Halal Verification</div>
   <h1>How Halal Rated Verifies Halal Restaurants in NOVA</h1>
