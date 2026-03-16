@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { restaurants, categories, cities } from './data.js';
+import Layout from './Layout.jsx';
 
 const COLORS = {
   green: '#0f4d2a',
@@ -488,9 +489,8 @@ export default function Landing({ navigate }) {
   const quickTags = ['Biryani', 'Burgers', 'Shawarma', 'Korean BBQ', 'Late Night', 'Buffet', 'Pizza', 'Wings'];
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
+    <Layout navigate={navigate}>
       <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         @media (max-width: 768px) {
           .hero-title { font-size: 38px !important; }
           .stats-strip { gap: 12px !important; }
@@ -508,36 +508,7 @@ export default function Landing({ navigate }) {
         .fade-up { animation: fadeUp 0.6s ease forwards; }
         .fade-up-2 { animation: fadeUp 0.6s 0.15s ease forwards; opacity: 0; }
         .fade-up-3 { animation: fadeUp 0.6s 0.3s ease forwards; opacity: 0; }
-        @keyframes tickerScroll {
-          0% { transform: translateX(0); }
-          100% { transform: translateX(-50%); }
-        }
-        .ticker-track { animation: tickerScroll 32s linear infinite; display: flex; width: max-content; }
-        .ticker-track:hover { animation-play-state: paused; }
       `}</style>
-
-      <Nav navigate={navigate} />
-
-      {/* NEWS TICKER */}
-      <div style={{ background: '#0a2e17', borderBottom: `1px solid rgba(197,150,12,0.3)`, overflow: 'hidden', position: 'relative', height: 32, display: 'flex', alignItems: 'center' }}>
-        <div style={{ overflow: 'hidden', flex: 1 }}>
-          <div className="ticker-track">
-            {[...Array(2)].map((_, i) => (
-              <span key={i} style={{ display: 'flex', alignItems: 'center' }}>
-                {[
-                  'Every restaurant featured is verified halal — no guesswork, just great food',
-                  'Subscribe to our weekly newsletter to be the first to know about new spots',
-                  'Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory',
-                ].map((text, j) => (
-                  <span key={j} style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 500, color: 'rgba(255,255,255,0.75)', whiteSpace: 'nowrap', padding: '0 28px' }}>
-                    {text} <span style={{ color: COLORS.gold, marginLeft: 14 }}>·</span>
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
       <section style={{
         background: `linear-gradient(160deg, ${COLORS.greenDark} 0%, ${COLORS.green} 60%, #2d9e5f 100%)`,
         padding: '72px 24px 80px',
@@ -865,9 +836,9 @@ export default function Landing({ navigate }) {
               </div>
             </div>
             {subStatus === 'success' ? (
-              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: COLORS.gold }}>You're in! Check your inbox. ✓</div>
+              <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, fontWeight:600, color:COLORS.gold }}>You're in! Check your inbox. ✓</div>
             ) : (
-              <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
+              <div style={{ display:'flex', gap:8, flexWrap:'wrap', width:'100%', maxWidth:380 }}>
                 <input
                   type="email" placeholder="your@email.com" value={subEmail}
                   onChange={e => setSubEmail(e.target.value)}
@@ -877,11 +848,10 @@ export default function Landing({ navigate }) {
                     catch { setSubStatus('error'); }
                   })()}
                   style={{
-                    padding: '10px 16px', borderRadius: 8,
-                    border: `1px solid ${subStatus === 'error' ? '#e74c3c' : 'rgba(255,255,255,0.2)'}`,
-                    background: 'rgba(255,255,255,0.08)', color: 'white',
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: 'none',
-                    width: 220, minWidth: 0,
+                    flex:'1 1 160px', minWidth:0, padding:'10px 16px', borderRadius:8,
+                    border:`1px solid ${subStatus==='error'?'#e74c3c':'rgba(255,255,255,0.2)'}`,
+                    background:'rgba(255,255,255,0.08)', color:'white',
+                    fontFamily:"'DM Sans', sans-serif", fontSize:13, outline:'none',
                   }}
                 />
                 <button
@@ -890,18 +860,18 @@ export default function Landing({ navigate }) {
                     try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
                     catch { setSubStatus('error'); }
                   }}
-                  disabled={subStatus === 'loading'}
+                  disabled={subStatus==='loading'}
                   style={{
-                    background: COLORS.gold, color: 'white', border: 'none',
-                    borderRadius: 8, cursor: 'pointer', padding: '10px 20px',
-                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
-                    whiteSpace: 'nowrap', opacity: subStatus === 'loading' ? 0.7 : 1,
+                    flex:'1 1 100px', background:COLORS.gold, color:'white', border:'none',
+                    borderRadius:8, cursor:'pointer', padding:'10px 20px',
+                    fontFamily:"'DM Sans', sans-serif", fontSize:13, fontWeight:700,
+                    whiteSpace:'nowrap', opacity:subStatus==='loading'?0.7:1,
                   }}
-                >{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
+                >{subStatus==='loading'?'Subscribing...':'Subscribe'}</button>
+                {subStatus==='error' && (
+                  <div style={{ width:'100%', fontSize:12, color:'#fca5a5', fontFamily:"'DM Sans', sans-serif" }}>Something went wrong — please try again.</div>
+                )}
               </div>
-            )}
-            {subStatus === 'error' && (
-              <div style={{ width: '100%', fontSize: 12, color: '#fca5a5', fontFamily: "'DM Sans', sans-serif", marginTop: -12 }}>Something went wrong — please try again.</div>
             )}
           </div>
         </div>
@@ -946,96 +916,6 @@ export default function Landing({ navigate }) {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer style={{
-        padding: '56px 24px 32px',
-        marginTop: 56,
-        borderTop: `1px solid ${COLORS.border}`,
-      }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <div style={{
-            display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start',
-            marginBottom: 32, flexWrap: 'wrap', gap: 24,
-          }}>
-            <div>
-              <div style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 22, fontWeight: 700, color: COLORS.textDark,
-                marginBottom: 6,
-              }}>Halal <span style={{ color: COLORS.gold }}>Rated</span></div>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 13, color: COLORS.textLight, maxWidth: 240, lineHeight: 1.5,
-              }}>Northern Virginia's halal food media brand. Spotlighting the best — positive coverage only.</p>
-            </div>
-            <div style={{ display: 'flex', gap: 48, flexWrap: 'wrap' }}>
-              <div>
-                <div style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12, fontWeight: 700, color: COLORS.textDark,
-                  marginBottom: 12, letterSpacing: '0.5px', textTransform: 'uppercase',
-                }}>Discover</div>
-                {[
-                  { label: 'Hidden Halal', path: '/category/hidden-halal' },
-                  { label: 'Delicious Desi', path: '/category/delicious-desi' },
-                  { label: 'Mezze Musts', path: '/category/mezze-musts' },
-                  { label: 'Soy Selects', path: '/category/soy-selects' },
-                ].map(l => (
-                  <button key={l.path} onClick={() => navigate(l.path)} style={{
-                    display: 'block', background: 'none', border: 'none',
-                    cursor: 'pointer', padding: '3px 0',
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13, color: COLORS.textMid,
-                  }}>{l.label}</button>
-                ))}
-              </div>
-              <div>
-                <div style={{
-                  fontFamily: "'DM Sans', sans-serif",
-                  fontSize: 12, fontWeight: 700, color: COLORS.textDark,
-                  marginBottom: 12, letterSpacing: '0.5px', textTransform: 'uppercase',
-                }}>Company</div>
-                {[
-                  { label: 'About', path: '/about' },
-                  { label: 'Contact', path: '/contact' },
-                  { label: 'For Restaurants', path: '/for-restaurants' },
-                  { label: 'Instagram', path: 'https://instagram.com/halalrated', external: true },
-                  { label: 'TikTok', path: 'https://tiktok.com/@halalrated', external: true },
-                ].map(l => (
-                  <button key={l.label} onClick={() => l.external ? window.open(l.path, '_blank') : navigate(l.path)} style={{
-                    display: 'block', background: 'none', border: 'none',
-                    cursor: 'pointer', padding: '3px 0',
-                    fontFamily: "'DM Sans', sans-serif",
-                    fontSize: 13, color: COLORS.textMid,
-                  }}>{l.label}</button>
-                ))}
-              </div>
-            </div>
-          </div>
-          <div style={{
-            borderTop: `1px solid ${COLORS.border}`,
-            paddingTop: 20,
-            display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-            flexWrap: 'wrap', gap: 8,
-          }}>
-            <span style={{
-              fontFamily: "'DM Sans', sans-serif",
-              fontSize: 12, color: COLORS.textLight,
-            }}>© 2026 Halal Rated. All rights reserved.</span>
-            <div style={{ display: 'flex', gap: 16, alignItems: 'center' }}>
-              <button onClick={() => navigate('/privacy')} style={{
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, color: COLORS.textLight, textDecoration: 'underline',
-              }}>Privacy Policy</button>
-              <a href="mailto:hello@halalrated.com" style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 12, color: COLORS.green, textDecoration: 'none',
-              }}>hello@halalrated.com</a>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+    </Layout>
   );
 }

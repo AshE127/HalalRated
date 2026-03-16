@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { restaurants, categories } from './data.js';
+import Layout from './Layout.jsx';
 
 const COLORS = {
   green: '#0f4d2a', greenLight: '#e6f0eb', greenDark: '#0a3520',
@@ -156,33 +157,7 @@ export default function CategoryPage({ slug, navigate }) {
   const rests = restaurants.filter(r => Array.isArray(r.category) ? r.category.includes(slug) : r.category === slug);
 
   return (
-    <div style={{ background:COLORS.bg, minHeight:'100vh', fontFamily:"'DM Sans', sans-serif" }}>
-      <style>{`
-        * { box-sizing:border-box; margin:0; padding:0; }
-        @media (max-width:768px) { .cat-grid { grid-template-columns:1fr !important; } }
-        @keyframes tickerScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
-        .ticker-track { animation:tickerScroll 32s linear infinite; display:flex; width:max-content; }
-        .ticker-track:hover { animation-play-state:paused; }
-      `}</style>
-
-      <Nav navigate={navigate} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-
-      <div style={{ background:'#0a2e17', borderBottom:'1px solid rgba(197,150,12,0.3)', overflow:'hidden', height:32, display:'flex', alignItems:'center' }}>
-        <div style={{ overflow:'hidden', flex:1 }}>
-          <div className="ticker-track">
-            {[...Array(2)].map((_,i) => (
-              <span key={i} style={{ display:'flex', alignItems:'center' }}>
-                {['Every restaurant featured is verified halal — no guesswork, just great food','Subscribe to our weekly newsletter to be the first to know about new spots','Welcome to Halal Rated — we are currently rebranding and adding new restaurants to our directory'].map((text,j) => (
-                  <span key={j} style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:500, color:'rgba(255,255,255,0.75)', whiteSpace:'nowrap', padding:'0 28px' }}>
-                    {text} <span style={{ color:'#C5960C', marginLeft:14 }}>·</span>
-                  </span>
-                ))}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-
+    <Layout navigate={navigate}>
       <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'56px 24px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto' }}>
           <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:11, fontWeight:700, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:12 }}>Category</div>
@@ -233,6 +208,6 @@ export default function CategoryPage({ slug, navigate }) {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 }

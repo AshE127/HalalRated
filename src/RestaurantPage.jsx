@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { restaurants, categories } from './data.js';
+import Layout from './Layout.jsx';
 
 const COLORS = {
   green: '#0f4d2a', greenLight: '#e6f0eb', greenDark: '#0a3520',
@@ -229,19 +230,14 @@ export default function RestaurantPage({ slug, navigate }) {
   }).slice(0, 3);
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: '100vh', fontFamily: "'DM Sans', sans-serif" }}>
+    <Layout navigate={navigate}>
       <style>{`
-        * { box-sizing: border-box; margin: 0; padding: 0; }
         @media (max-width: 768px) {
           .page-layout { flex-direction: column !important; }
           .sidebar { width: 100% !important; }
           .hero-section { padding: 32px 20px !important; }
         }
       `}</style>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" />
-
-      <FullNav navigate={navigate} />
-      <Ticker />
 
       {/* Hero */}
       <div style={{
@@ -558,6 +554,6 @@ export default function RestaurantPage({ slug, navigate }) {
           </div>
         )}
       </div>
-    </div>
+    </Layout>
   );
 }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { categories } from './data.js';
 import { caterers } from './caterers.js';
+import Layout from './Layout.jsx';
 
 const COLORS = {
   green: '#0f4d2a', greenLight: '#e6f0eb', greenDark: '#0a3520',
@@ -113,14 +114,8 @@ function Ticker() {
 }
 
 export default function CaterersPage({ navigate }) {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
-    <div style={{ background:COLORS.bg, minHeight:'100vh', fontFamily:"'DM Sans', sans-serif" }}>
-      <style>{`* { box-sizing:border-box; margin:0; padding:0; } @media(max-width:768px){.cat-grid{grid-template-columns:1fr !important;}}`}</style>
-
-      <Nav navigate={navigate} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-      <Ticker />
+    <Layout navigate={navigate}>
 
       {/* Hero */}
       <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'56px 24px' }}>
@@ -201,6 +196,6 @@ export default function CaterersPage({ navigate }) {
           <button onClick={() => navigate('/for-restaurants')} style={{ background:COLORS.gold, color:'white', border:'none', borderRadius:10, cursor:'pointer', padding:'12px 24px', fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:700 }}>Get Your Business Featured →</button>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 }
