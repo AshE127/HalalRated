@@ -30,6 +30,18 @@ function Ticker() {
   );
 }
 
+function PageHero({ eyebrow, title, subtitle }) {
+  return (
+    <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'56px 24px' }}>
+      <div style={{ maxWidth:1200, margin:'0 auto' }}>
+        {eyebrow && <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:11, fontWeight:700, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:12 }}>{eyebrow}</div>}
+        <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:'clamp(28px,5vw,42px)', fontWeight:700, color:'white', marginBottom:subtitle?12:0, letterSpacing:'-0.5px', lineHeight:1.2 }}>{title}</h1>
+        {subtitle && <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:16, color:'rgba(255,255,255,0.75)', maxWidth:560, lineHeight:1.6 }}>{subtitle}</p>}
+      </div>
+    </div>
+  );
+}
+
 function FullNav({ navigate }) {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
   const [menuOpen, setMenuOpen] = React.useState(false);
@@ -119,12 +131,7 @@ export function CityPage({ slug, navigate }) {
       <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
       <FullNav navigate={navigate} />
       <Ticker />
-      <div style={{ background: `linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding: '56px 24px' }}>
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 700, color: 'white', marginBottom: 8 }}>Halal Food in {cityName}, VA</h1>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: 'rgba(255,255,255,0.8)' }}>{rests.length} featured restaurants · Halal Rated NOVA</p>
-        </div>
-      </div>
+      <PageHero eyebrow="Halal Rated · NOVA" title={`Halal Food in ${cityName}, VA`} subtitle={`${rests.length} featured restaurant${rests.length !== 1 ? 's' : ''} · Halal Rated NOVA`} />
       <div style={{ maxWidth: 1200, margin: '0 auto', padding: '40px 24px' }}>
         {rests.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '60px 0', color: COLORS.textLight }}>
@@ -161,9 +168,8 @@ export function AboutPage({ navigate }) {
       <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
       <FullNav navigate={navigate} />
       <Ticker />
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '56px 24px' }}>
-        <div style={{ marginBottom: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: COLORS.gold, letterSpacing: '1px', textTransform: 'uppercase' }}>About</div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 40, fontWeight: 700, color: COLORS.textDark, marginBottom: 24, letterSpacing: '-0.5px' }}>Putting NOVA's halal food on the map.</h1>
+      <PageHero eyebrow="About" title="Putting NOVA's halal food on the map." subtitle="Northern Virginia's halal food media brand — spotlighting the best halal restaurants across the DMV." />
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '48px 24px' }}>
         <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: COLORS.textMid, lineHeight: 1.8, marginBottom: 20 }}>
           Halal Rated is Northern Virginia's halal food media brand. We spotlight the best halal restaurants across NOVA — from Herndon to Ashburn, Sterling to Falls Church.
         </p>
@@ -209,14 +215,13 @@ export function ContactPage({ navigate }) {
       <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
       <FullNav navigate={navigate} />
       <Ticker />
-      <div style={{ maxWidth: 600, margin: '0 auto', padding: '56px 24px' }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: COLORS.textDark, marginBottom: 8 }}>Contact Us</h1>
-        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 16, color: COLORS.textMid, marginBottom: 40, lineHeight: 1.6 }}>Questions, partnerships, restaurant submissions, or just want to say hi.</p>
+      <PageHero eyebrow="Contact" title="Get in Touch" subtitle="Questions, partnerships, restaurant features, or press inquiries — we'd love to hear from you." />
+      <div style={{ maxWidth: 600, margin: '0 auto', padding: '48px 24px' }}>
         <div style={{ display: 'flex', flexDirection: 'column', gap: 16, marginBottom: 40 }}>
           {[
-            { emoji: '✉️', label: 'Email', value: 'hello@halalrated.com', href: 'mailto:hello@halalrated.com' },
-            { emoji: '📸', label: 'Instagram', value: '@halalrated', href: 'https://instagram.com/halalrated' },
-            { emoji: '🎵', label: 'TikTok', value: '@halalrated', href: 'https://tiktok.com/@halalrated' },
+            { emoji: '✉️', label: 'Email', value: 'hello@halalrated.com', href: 'mailto:hello@halalrated.com', desc: 'Best for partnerships, features, and press' },
+            { emoji: '📸', label: 'Instagram', value: '@halalrated', href: 'https://instagram.com/halalrated', desc: 'DM us for quick questions' },
+            { emoji: '🎵', label: 'TikTok', value: '@halalrated', href: 'https://tiktok.com/@halalrated', desc: 'Follow us for halal food content' },
           ].map(item => (
             <a key={item.label} href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer"
               style={{ display: 'flex', alignItems: 'center', gap: 16, background: COLORS.cardWhite, border: `1px solid ${COLORS.border}`, borderRadius: 12, padding: '16px 20px', textDecoration: 'none', transition: 'box-shadow 0.2s' }}
@@ -226,16 +231,20 @@ export function ContactPage({ navigate }) {
               <div style={{ fontSize: 24, flexShrink: 0 }}>{item.emoji}</div>
               <div>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: COLORS.textLight, marginBottom: 2 }}>{item.label}</div>
-                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: COLORS.green }}>{item.value}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600, color: COLORS.green, marginBottom: 2 }}>{item.value}</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: COLORS.textLight }}>{item.desc}</div>
               </div>
             </a>
           ))}
         </div>
-        <button onClick={() => navigate('/for-restaurants')} style={{
-          display: 'block', width: '100%', background: COLORS.green, color: 'white',
-          border: 'none', borderRadius: 12, cursor: 'pointer', padding: '16px',
-          fontFamily: "'DM Sans', sans-serif", fontSize: 15, fontWeight: 600,
-        }}>Want to get your restaurant featured? →</button>
+        <div style={{ background: COLORS.greenLight, border: `1px solid rgba(15,77,42,0.15)`, borderRadius: 16, padding: '24px', marginBottom: 24 }}>
+          <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: COLORS.textDark, marginBottom: 8 }}>Restaurant Owners</h3>
+          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: COLORS.textMid, lineHeight: 1.6, marginBottom: 16 }}>Interested in getting your halal restaurant featured on Halal Rated? We'd love to spotlight you.</p>
+          <button onClick={() => navigate('/for-restaurants')} style={{ background: COLORS.green, color: 'white', border: 'none', borderRadius: 10, cursor: 'pointer', padding: '10px 20px', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>Learn About Getting Featured →</button>
+        </div>
+        <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, color: COLORS.textLight, lineHeight: 1.6 }}>
+          Halal Rated is based in Northern Virginia. We typically respond to emails within 24 hours on weekdays.
+        </p>
       </div>
     </div>
   );
@@ -247,18 +256,7 @@ export function ForRestaurantsPage({ navigate }) {
       <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
       <FullNav navigate={navigate} />
       <Ticker />
-      <div style={{
-        background: `linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`,
-        padding: '64px 24px',
-      }}>
-        <div style={{ maxWidth: 700, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, fontWeight: 700, color: COLORS.gold, letterSpacing: '1px', textTransform: 'uppercase', marginBottom: 12 }}>For Restaurants</div>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 42, fontWeight: 700, color: 'white', marginBottom: 16, letterSpacing: '-0.5px' }}>Get Your Restaurant Featured</h1>
-          <p style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 17, color: 'rgba(255,255,255,0.85)', lineHeight: 1.7 }}>
-            A permanent, searchable page on NOVA's premier halal food guide — plus an Instagram Reel and exposure to thousands of halal food seekers.
-          </p>
-        </div>
-      </div>
+      <PageHero eyebrow="For Restaurants" title="Get Your Restaurant Featured" subtitle="A permanent, searchable page on NOVA's premier halal food guide — plus an Instagram Reel and exposure to thousands of halal food seekers." />
 
       <div style={{ maxWidth: 800, margin: '0 auto', padding: '56px 24px' }}>
         <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 28, fontWeight: 700, color: COLORS.textDark, marginBottom: 24, textAlign: 'center' }}>What You Get</h2>
@@ -323,9 +321,8 @@ export function PrivacyPage({ navigate }) {
       <style>{`* { box-sizing: border-box; margin: 0; padding: 0; }`}</style>
       <FullNav navigate={navigate} />
       <Ticker />
-      <div style={{ maxWidth: 720, margin: '0 auto', padding: '56px 24px 80px' }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: 36, fontWeight: 700, color: COLORS.textDark, marginBottom: 8 }}>Privacy Policy</h1>
-        <p style={{ fontSize: 13, color: COLORS.textLight, marginBottom: 40 }}>Last updated: March 2026</p>
+      <PageHero eyebrow="Legal" title="Privacy Policy" subtitle="Last updated: March 2026" />
+      <div style={{ maxWidth: 720, margin: '0 auto', padding: '48px 24px 80px' }}>
         {[
           { title: 'Who We Are', body: 'Halal Rated is a halal food media brand based in Northern Virginia. We operate halalrated.com and publish a newsletter spotlighting halal-friendly restaurants across the NOVA region. You can reach us at hello@halalrated.com.' },
           { title: 'What Information We Collect', body: 'The only personal information we collect is your email address, and only when you voluntarily subscribe to our newsletter. We do not collect names, phone numbers, payment information, or any other personal data.' },

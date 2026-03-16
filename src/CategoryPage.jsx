@@ -183,12 +183,12 @@ export default function CategoryPage({ slug, navigate }) {
         </div>
       </div>
 
-      <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'48px 24px' }}>
+      <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'56px 24px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto' }}>
-          <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', color:'rgba(255,255,255,0.7)', fontFamily:"'DM Sans', sans-serif", fontSize:13, marginBottom:16, padding:0 }}>← Back to all restaurants</button>
-          <div style={{ fontSize:44, marginBottom:10 }}>{cat?.emoji||'🍽️'}</div>
-          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:36, fontWeight:700, color:'white', marginBottom:8 }}>{cat?.name||slug}</h1>
-          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:15, color:'rgba(255,255,255,0.75)' }}>
+          <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:11, fontWeight:700, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:12 }}>Category</div>
+          <div style={{ fontSize:40, marginBottom:10 }}>{cat?.emoji||'🍽️'}</div>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:'clamp(28px,5vw,42px)', fontWeight:700, color:'white', marginBottom:8, letterSpacing:'-0.5px' }}>{cat?.name||slug}</h1>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:16, color:'rgba(255,255,255,0.75)', maxWidth:560, lineHeight:1.6 }}>
             {cat?.description} · <strong style={{ color:'white' }}>{rests.length}</strong> {rests.length===1?'restaurant':'restaurants'} featured
           </p>
         </div>

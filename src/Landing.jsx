@@ -166,10 +166,13 @@ function ScrollingCarousel({ onSelect }) {
   );
 }
 
-function Nav({ navigate, menuOpen, setMenuOpen }) {
+function Nav({ navigate }) {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [catOpen, setCatOpen] = React.useState(false);
+  const [catMobileOpen, setCatMobileOpen] = React.useState(false);
   const catRef = React.useRef(null);
+
   React.useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handler);
@@ -177,124 +180,64 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
   }, []);
   React.useEffect(() => {
     const h = e => { if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false); };
-    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h);
+    document.addEventListener('mousedown', h);
+    return () => document.removeEventListener('mousedown', h);
   }, []);
 
   return (
     <>
-    <nav style={{
-      position: 'sticky', top: 0, zIndex: 200,
-      background: 'rgba(250, 250, 248, 0.97)',
-      backdropFilter: 'blur(12px)',
-      borderBottom: `1px solid ${COLORS.border}`,
-      padding: '0 24px',
-    }}>
-      <div style={{
-        maxWidth: 1200, margin: '0 auto',
-        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-        height: 64,
-      }}>
-        {/* Logo */}
-        <button onClick={() => navigate('/')} style={{
-          background: 'none', border: 'none', cursor: 'pointer',
-          display: 'flex', alignItems: 'center', gap: 10,
-        }}>
-          <div style={{
-            width: 32, height: 32, borderRadius: '50%',
-            background: COLORS.green,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            color: COLORS.gold, fontSize: 16,
-          }}>✓</div>
-          <span style={{
-            fontFamily: "'Playfair Display', serif",
-            fontSize: 20, fontWeight: 700,
-            color: COLORS.textDark, letterSpacing: '-0.3px',
-          }}>
-            Halal <span style={{ color: COLORS.gold }}>Rated</span>
-          </span>
-        </button>
-
-        {/* Desktop Nav */}
-        <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4 }}>
-          <div ref={catRef} style={{ position: 'relative' }}>
-            <button onClick={() => setCatOpen(o => !o)} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:catOpen?COLORS.green:COLORS.textMid, display:'flex', alignItems:'center', gap:4 }}>
-              Categories <span style={{ fontSize:10, transform:catOpen?'rotate(180deg)':'none', transition:'transform 0.2s', display:'inline-block' }}>▾</span>
-            </button>
-            {catOpen && (
-              <div style={{ position:'absolute', top:'calc(100% + 8px)', left:0, background:'white', border:`1px solid ${COLORS.border}`, borderRadius:12, boxShadow:'0 8px 32px rgba(0,0,0,0.10)', minWidth:200, zIndex:300, overflow:'hidden' }}>
-                {categories.map((cat,i) => (
-                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCatOpen(false); }} style={{ display:'block', width:'100%', background:'none', border:'none', borderBottom:i<categories.length-1?`1px solid ${COLORS.border}`:'none', cursor:'pointer', textAlign:'left', padding:'11px 16px', fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textDark }}
-                  onMouseEnter={e=>{e.currentTarget.style.background=COLORS.greenLight;e.currentTarget.style.color=COLORS.green;}}
-                  onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=COLORS.textDark;}}
-                  >{cat.emoji} {cat.name}</button>
-                ))}
-              </div>
-            )}
-          </div>
-          <button onClick={() => navigate('/caterers')} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid, transition:'color 0.15s' }}
-          onMouseEnter={e=>e.target.style.color=COLORS.green} onMouseLeave={e=>e.target.style.color=COLORS.textMid}>Caterers</button>
-          {[
-            { label: 'Guides', path: '/guide', external: true },
-            { label: 'About', path: '/about' },
-          ].map(item => (
-            <button key={item.path}
-              onClick={() => item.external ? window.location.href = item.path : navigate(item.path)}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 6, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: COLORS.textMid, transition: 'color 0.15s' }}
-              onMouseEnter={e => e.target.style.color = COLORS.green}
-              onMouseLeave={e => e.target.style.color = COLORS.textMid}
-            >{item.label}</button>
-          ))}
-          <button onClick={() => navigate('/for-restaurants')} style={{ background: COLORS.green, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '8px 16px', marginLeft: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>Get Featured</button>
-        </div>
-
-      </div>
-
-    </nav>
-    {/* Nav sits at z-index 200; hamburger needs to float above the mobile overlay */}
-    <div style={{ position:'fixed', top:12, right:12, zIndex:10001, display:isMobile?'block':'none' }}>
-      <button
-        onClick={() => setMenuOpen(!menuOpen)}
-        style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column',
-          background: menuOpen ? COLORS.green : COLORS.greenLight,
-          border: `1px solid ${COLORS.border}`,
-          borderRadius: 8, cursor: 'pointer',
-          width: 40, height: 40, gap: 5, padding: 0,
-        }}
-      >
-        <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
-        <span style={{ display: menuOpen ? 'none' : 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
-        <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(-45deg) translate(5px, -5px)' : 'none' }} />
-      </button>
-    </div>
-
-      {/* Mobile menu — outside nav so z-index works correctly */}
-      {menuOpen && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
-          background: '#F7F7F5',
-          zIndex: 10000,
-          padding: '0 24px 40px',
-          overflowY: 'auto',
-          display: 'flex', flexDirection: 'column', gap: 4,
-        }}>
-          {/* Mobile menu header */}
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            height: 64, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 8,
-            flexShrink: 0,
-          }}>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: COLORS.textDark }}>
+      <nav style={{ position: 'sticky', top: 0, zIndex: 200, background: 'rgba(250,250,248,0.97)', backdropFilter: 'blur(12px)', borderBottom: `1px solid ${COLORS.border}`, padding: '0 24px' }}>
+        <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64 }}>
+          <button onClick={() => navigate('/')} style={{ background: 'none', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div style={{ width: 32, height: 32, borderRadius: '50%', background: COLORS.green, display: 'flex', alignItems: 'center', justifyContent: 'center', color: COLORS.gold, fontSize: 16 }}>&#10003;</div>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 20, fontWeight: 700, color: COLORS.textDark, letterSpacing: '-0.3px' }}>
               Halal <span style={{ color: COLORS.gold }}>Rated</span>
             </span>
-            <button onClick={() => setMenuOpen(false)} style={{
-              background: COLORS.green, border: 'none', borderRadius: 8,
-              width: 36, height: 36, cursor: 'pointer',
-              color: 'white', fontSize: 18, fontWeight: 700,
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-            }}>✕</button>
+          </button>
+
+          <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4 }}>
+            <div ref={catRef} style={{ position: 'relative' }}>
+              <button onClick={() => setCatOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 6, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: catOpen ? COLORS.green : COLORS.textMid, display: 'flex', alignItems: 'center', gap: 4 }}>
+                Categories <span style={{ fontSize: 10, transform: catOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>&#9662;</span>
+              </button>
+              {catOpen && (
+                <div style={{ position: 'absolute', top: 'calc(100% + 8px)', left: 0, background: 'white', border: `1px solid ${COLORS.border}`, borderRadius: 12, boxShadow: '0 8px 32px rgba(0,0,0,0.10)', minWidth: 200, zIndex: 300, overflow: 'hidden' }}>
+                  {categories.map((cat, i) => (
+                    <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCatOpen(false); }}
+                      style={{ display: 'block', width: '100%', background: 'none', border: 'none', borderBottom: i < categories.length - 1 ? `1px solid ${COLORS.border}` : 'none', cursor: 'pointer', textAlign: 'left', padding: '11px 16px', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: COLORS.textDark }}
+                      onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
+                    >{cat.emoji} {cat.name}</button>
+                  ))}
+                </div>
+              )}
+            </div>
+            {[{ label: 'Caterers', path: '/caterers' }, { label: 'Guides', path: '/guide', external: true }, { label: 'About', path: '/about' }].map(item => (
+              <button key={item.path} onClick={() => item.external ? window.location.href = item.path : navigate(item.path)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '6px 12px', borderRadius: 6, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: COLORS.textMid }}
+                onMouseEnter={e => e.currentTarget.style.color = COLORS.green}
+                onMouseLeave={e => e.currentTarget.style.color = COLORS.textMid}
+              >{item.label}</button>
+            ))}
+            <button onClick={() => navigate('/for-restaurants')} style={{ background: COLORS.green, color: 'white', border: 'none', borderRadius: 8, cursor: 'pointer', padding: '8px 16px', marginLeft: 8, fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 600 }}>Get Featured</button>
           </div>
 
+          {isMobile && (
+            <button onClick={() => setMenuOpen(true)} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', background: COLORS.greenLight, border: `1px solid ${COLORS.border}`, borderRadius: 8, cursor: 'pointer', width: 40, height: 40, gap: 5, padding: 0 }}>
+              <span style={{ display: 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
+              <span style={{ display: 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
+              <span style={{ display: 'block', width: 18, height: 2, background: COLORS.green, borderRadius: 2 }} />
+            </button>
+          )}
+        </div>
+      </nav>
+
+      {menuOpen && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: '#F7F7F5', zIndex: 10000, padding: '0 24px 40px', overflowY: 'auto', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: 64, borderBottom: `1px solid ${COLORS.border}`, marginBottom: 8, flexShrink: 0 }}>
+            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: 18, fontWeight: 700, color: COLORS.textDark }}>Halal <span style={{ color: COLORS.gold }}>Rated</span></span>
+            <button onClick={() => setMenuOpen(false)} style={{ background: COLORS.green, border: 'none', borderRadius: 8, width: 36, height: 36, cursor: 'pointer', color: 'white', fontSize: 20, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>&#10005;</button>
+          </div>
           {[
             { label: 'Home', path: '/' },
             { label: 'Caterers', path: '/caterers' },
@@ -303,57 +246,31 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             { label: 'Contact', path: '/contact' },
             { label: 'For Restaurants', path: '/for-restaurants' },
           ].map(item => (
-            <button key={item.path} onClick={() => { item.external ? window.location.href = item.path : navigate(item.path); setMenuOpen(false); }} style={{
-              background: 'none', border: 'none', cursor: 'pointer',
-              padding: '13px 8px',
-              fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
-              color: item.path === '/caterers' ? COLORS.green : COLORS.textDark, textAlign: 'left',
-              borderBottom: `1px solid ${COLORS.border}`,
-            }}>{item.label}</button>
+            <button key={item.path}
+              onClick={() => { item.external ? window.location.href = item.path : navigate(item.path); setMenuOpen(false); }}
+              style={{ background: 'none', border: 'none', borderBottom: `1px solid ${COLORS.border}`, cursor: 'pointer', padding: '14px 8px', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: item.path === '/caterers' ? COLORS.green : COLORS.textDark, textAlign: 'left' }}
+            >{item.label}</button>
           ))}
-
-          {/* Categories expandable in mobile menu */}
-          {(() => {
-            const [catExpanded, setCatExpanded] = React.useState(false);
-            return (
-              <div style={{ borderBottom: `1px solid ${COLORS.border}` }}>
-                <button onClick={() => setCatExpanded(o => !o)} style={{
-                  background: 'none', border: 'none', cursor: 'pointer',
-                  padding: '13px 8px', width: '100%',
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500,
-                  color: COLORS.textDark, textAlign: 'left',
-                  display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-                }}>
-                  <span>Categories</span>
-                  <span style={{ fontSize: 12, transform: catExpanded ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>▾</span>
-                </button>
-                {catExpanded && (
-                  <div style={{ paddingBottom: 12, display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    {categories.map(cat => (
-                      <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setMenuOpen(false); }} style={{
-                        background: 'none', border: 'none', cursor: 'pointer',
-                        padding: '9px 16px', textAlign: 'left',
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500,
-                        color: COLORS.textMid, display: 'flex', alignItems: 'center', gap: 8,
-                        borderRadius: 8, transition: 'background 0.15s',
-                      }}
-                      onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
-                      onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textMid; }}
-                      >
-                        <span>{cat.emoji}</span><span>{cat.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                )}
+          <div style={{ borderBottom: `1px solid ${COLORS.border}` }}>
+            <button onClick={() => setCatMobileOpen(o => !o)} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '14px 8px', width: '100%', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 500, color: COLORS.textDark, textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span>Categories</span>
+              <span style={{ fontSize: 12, transform: catMobileOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s', display: 'inline-block' }}>&#9662;</span>
+            </button>
+            {catMobileOpen && (
+              <div style={{ paddingBottom: 12, display: 'flex', flexDirection: 'column', gap: 2 }}>
+                {categories.map(cat => (
+                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setMenuOpen(false); }}
+                    style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '10px 16px', textAlign: 'left', fontFamily: "'DM Sans', sans-serif", fontSize: 14, fontWeight: 500, color: COLORS.textMid, display: 'flex', alignItems: 'center', gap: 8 }}
+                    onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
+                    onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textMid; }}
+                  ><span>{cat.emoji}</span><span>{cat.name}</span></button>
+                ))}
               </div>
-            );
-          })()}
-          <button onClick={() => { navigate('/for-restaurants'); setMenuOpen(false); }} style={{
-            marginTop: 20, background: COLORS.green, color: 'white',
-            border: 'none', borderRadius: 12, cursor: 'pointer',
-            padding: '14px 24px',
-            fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600,
-          }}>Get Featured on Halal Rated</button>
+            )}
+          </div>
+          <button onClick={() => { navigate('/for-restaurants'); setMenuOpen(false); }} style={{ marginTop: 20, background: COLORS.green, color: 'white', border: 'none', borderRadius: 12, cursor: 'pointer', padding: '14px 24px', fontFamily: "'DM Sans', sans-serif", fontSize: 16, fontWeight: 600 }}>
+            Get Featured on Halal Rated
+          </button>
         </div>
       )}
     </>
@@ -550,12 +467,10 @@ async function subscribeToBeehiiv(email) {
 }
 
 export default function Landing({ navigate }) {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [search, setSearch] = useState('');
   const [activeCity, setActiveCity] = useState('All');
   const [subEmail, setSubEmail] = useState('');
   const [subStatus, setSubStatus] = useState('idle');
-  const [categoryOpen, setCategoryOpen] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6);
 
   const filteredRestaurants = restaurants.filter(r => {
@@ -601,7 +516,7 @@ export default function Landing({ navigate }) {
         .ticker-track:hover { animation-play-state: paused; }
       `}</style>
 
-      <Nav navigate={navigate} menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
+      <Nav navigate={navigate} />
 
       {/* NEWS TICKER */}
       <div style={{ background: '#0a2e17', borderBottom: `1px solid rgba(197,150,12,0.3)`, overflow: 'hidden', position: 'relative', height: 32, display: 'flex', alignItems: 'center' }}>

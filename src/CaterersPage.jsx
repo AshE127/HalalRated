@@ -125,11 +125,9 @@ export default function CaterersPage({ navigate }) {
       {/* Hero */}
       <div style={{ background:`linear-gradient(135deg, ${COLORS.greenDark}, ${COLORS.green})`, padding:'56px 24px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto' }}>
-          <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.12)', borderRadius:20, padding:'4px 14px', marginBottom:16 }}>
-            <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:600, color:COLORS.gold, letterSpacing:'0.5px' }}>Halal Catering · DMV Area</span>
-          </div>
-          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:42, fontWeight:700, color:'white', marginBottom:12, letterSpacing:'-0.5px' }}>Halal Caterers<br/>in Northern Virginia</h1>
-          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:16, color:'rgba(255,255,255,0.75)', maxWidth:520, lineHeight:1.6 }}>
+          <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:11, fontWeight:700, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase', marginBottom:12 }}>Halal Catering · DMV Area</div>
+          <h1 style={{ fontFamily:"'Playfair Display', serif", fontSize:'clamp(28px,5vw,42px)', fontWeight:700, color:'white', marginBottom:12, letterSpacing:'-0.5px', lineHeight:1.2 }}>Halal Caterers in Northern Virginia</h1>
+          <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:16, color:'rgba(255,255,255,0.75)', maxWidth:560, lineHeight:1.6 }}>
             Home cooks and professional caterers serving halal food for weddings, Eid gatherings, family events, and everything in between.
           </p>
         </div>
