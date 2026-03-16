@@ -48,10 +48,10 @@ function FullNav({ navigate }) {
     <>
       <nav style={{ position:'sticky', top:0, zIndex:200, background:'rgba(250,250,248,0.97)', backdropFilter:'blur(12px)', borderBottom:`1px solid ${COLORS.border}`, padding:'0 24px' }}>
         <div style={{ maxWidth:1200, margin:'0 auto', display:'flex', alignItems:'center', justifyContent:'space-between', height:64 }}>
-          <div style={{ display:'flex', alignItems:'center', gap:12 }}>
-            <button onClick={() => window.history.back()} style={{ background:'none', border:'none', cursor:'pointer', fontFamily:"'DM Sans', sans-serif", fontSize:14, color:COLORS.textMid }}>← Back</button>
-            <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', fontFamily:"'Playfair Display', serif", fontSize:18, fontWeight:700, color:COLORS.textDark }}>Halal <span style={{ color:COLORS.gold }}>Rated</span></button>
-          </div>
+          <button onClick={() => navigate('/')} style={{ background:'none', border:'none', cursor:'pointer', display:'flex', alignItems:'center', gap:10 }}>
+            <div style={{ width:32, height:32, borderRadius:'50%', background:COLORS.green, display:'flex', alignItems:'center', justifyContent:'center', color:COLORS.gold, fontSize:16 }}>✓</div>
+            <span style={{ fontFamily:"'Playfair Display', serif", fontSize:20, fontWeight:700, color:COLORS.textDark }}>Halal <span style={{ color:COLORS.gold }}>Rated</span></span>
+          </button>
           <div style={{ display:isMobile?'none':'flex', alignItems:'center', gap:4 }}>
             <div ref={catRef} style={{ position:'relative' }}>
               <button onClick={() => setCatOpen(o=>!o)} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:catOpen?COLORS.green:COLORS.textMid, display:'flex', alignItems:'center', gap:4 }}>

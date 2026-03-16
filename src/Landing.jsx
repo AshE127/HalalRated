@@ -168,10 +168,16 @@ function ScrollingCarousel({ onSelect }) {
 
 function Nav({ navigate, menuOpen, setMenuOpen }) {
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+  const [catOpen, setCatOpen] = React.useState(false);
+  const catRef = React.useRef(null);
   React.useEffect(() => {
     const handler = () => setIsMobile(window.innerWidth <= 768);
     window.addEventListener('resize', handler);
     return () => window.removeEventListener('resize', handler);
+  }, []);
+  React.useEffect(() => {
+    const h = e => { if (catRef.current && !catRef.current.contains(e.target)) setCatOpen(false); };
+    document.addEventListener('mousedown', h); return () => document.removeEventListener('mousedown', h);
   }, []);
 
   return (
@@ -210,9 +216,21 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
 
         {/* Desktop Nav */}
         <div style={{ display: isMobile ? 'none' : 'flex', alignItems: 'center', gap: 4 }}>
-          <DropdownNav label="Categories" navigate={navigate} items={
-            categories.map(cat => ({ label: `${cat.emoji} ${cat.name}`, path: `/category/${cat.slug}` }))
-          } />
+          <div ref={catRef} style={{ position: 'relative' }}>
+            <button onClick={() => setCatOpen(o => !o)} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:catOpen?COLORS.green:COLORS.textMid, display:'flex', alignItems:'center', gap:4 }}>
+              Categories <span style={{ fontSize:10, transform:catOpen?'rotate(180deg)':'none', transition:'transform 0.2s', display:'inline-block' }}>▾</span>
+            </button>
+            {catOpen && (
+              <div style={{ position:'absolute', top:'calc(100% + 8px)', left:0, background:'white', border:`1px solid ${COLORS.border}`, borderRadius:12, boxShadow:'0 8px 32px rgba(0,0,0,0.10)', minWidth:200, zIndex:300, overflow:'hidden' }}>
+                {categories.map((cat,i) => (
+                  <button key={cat.id} onClick={() => { navigate(`/category/${cat.slug}`); setCatOpen(false); }} style={{ display:'block', width:'100%', background:'none', border:'none', borderBottom:i<categories.length-1?`1px solid ${COLORS.border}`:'none', cursor:'pointer', textAlign:'left', padding:'11px 16px', fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textDark }}
+                  onMouseEnter={e=>{e.currentTarget.style.background=COLORS.greenLight;e.currentTarget.style.color=COLORS.green;}}
+                  onMouseLeave={e=>{e.currentTarget.style.background='none';e.currentTarget.style.color=COLORS.textDark;}}
+                  >{cat.emoji} {cat.name}</button>
+                ))}
+              </div>
+            )}
+          </div>
           <button onClick={() => navigate('/caterers')} style={{ background:'none', border:'none', cursor:'pointer', padding:'6px 12px', borderRadius:6, fontFamily:"'DM Sans', sans-serif", fontSize:14, fontWeight:500, color:COLORS.textMid, transition:'color 0.15s' }}
           onMouseEnter={e=>e.target.style.color=COLORS.green} onMouseLeave={e=>e.target.style.color=COLORS.textMid}>Caterers</button>
           {[
@@ -238,13 +256,9 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
             flexDirection: 'column',
             background: menuOpen ? COLORS.green : COLORS.greenLight,
             border: `1px solid ${COLORS.border}`,
-            borderRadius: 8,
-            cursor: 'pointer',
-            width: 40, height: 40,
-            gap: 5,
-            padding: 0,
-            zIndex: 201,
-            position: 'relative',
+            borderRadius: 8, cursor: 'pointer',
+            width: 40, height: 40, gap: 5, padding: 0,
+            zIndex: 10001, position: 'relative',
           }}
         >
           <span style={{ display: 'block', width: 18, height: 2, background: menuOpen ? 'white' : COLORS.green, borderRadius: 2, transition: 'all 0.2s', transform: menuOpen ? 'rotate(45deg) translate(5px, 5px)' : 'none' }} />
@@ -260,7 +274,7 @@ function Nav({ navigate, menuOpen, setMenuOpen }) {
         <div style={{
           position: 'fixed', top: 0, left: 0, right: 0, bottom: 0,
           background: '#F7F7F5',
-          zIndex: 9999,
+          zIndex: 10000,
           padding: '0 24px 40px',
           overflowY: 'auto',
           display: 'flex', flexDirection: 'column', gap: 4,
@@ -819,7 +833,7 @@ export default function Landing({ navigate }) {
               ? allCities.filter(c => c !== 'All' && c.toLowerCase().startsWith(citySearch.toLowerCase()))
               : [];
             return (<>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12 }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12, gap: 12, flexWrap: 'wrap' }}>
                 <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: 26, fontWeight: 700, color: COLORS.textDark }}>
                   {search ? `Results for "${search}"` : 'Featured Restaurants'}
                 </h2>
@@ -830,12 +844,12 @@ export default function Landing({ navigate }) {
                     onChange={e => { setCitySearch(e.target.value); setShowSuggestions(true); }}
                     onFocus={() => setShowSuggestions(true)}
                     onBlur={() => setTimeout(() => setShowSuggestions(false), 150)}
-                    placeholder="Search city..."
+                    placeholder="Filter by city..."
                     style={{
-                      padding: '7px 14px', borderRadius: 100,
+                      padding: '8px 16px', borderRadius: 100,
                       border: `1px solid ${COLORS.border}`,
                       fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-                      outline: 'none', width: 140,
+                      outline: 'none', width: 160,
                       background: COLORS.cardWhite, color: COLORS.textDark,
                     }}
                   />
@@ -852,7 +866,7 @@ export default function Landing({ navigate }) {
                           border: 'none', borderBottom: `1px solid ${COLORS.border}`,
                           padding: '9px 14px', cursor: 'pointer', textAlign: 'left',
                           fontFamily: "'DM Sans', sans-serif", fontSize: 13,
-                          color: COLORS.textDark, transition: 'background 0.1s',
+                          color: COLORS.textDark,
                         }}
                         onMouseEnter={e => { e.currentTarget.style.background = COLORS.greenLight; e.currentTarget.style.color = COLORS.green; }}
                         onMouseLeave={e => { e.currentTarget.style.background = 'none'; e.currentTarget.style.color = COLORS.textDark; }}
@@ -862,7 +876,7 @@ export default function Landing({ navigate }) {
                   )}
                 </div>
               </div>
-              {/* City pills — own row, scrollable */}
+              {/* City pills — scrollable row */}
               <div style={{ display: 'flex', gap: 8, overflowX: 'auto', scrollbarWidth: 'none', paddingBottom: 4, marginBottom: 20 }}>
                 {allCities.map(city => (
                   <button key={city} onClick={() => { setActiveCity(city); setCitySearch(''); }} style={{
@@ -917,92 +931,63 @@ export default function Landing({ navigate }) {
 
       
 
-      {/* EMAIL SUBSCRIPTION */}
-      <section style={{ padding: '56px 24px 0' }}>
+      {/* EMAIL SUBSCRIPTION — slim horizontal strip */}
+      <section style={{ padding: '40px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{
-            background: `linear-gradient(135deg, ${COLORS.greenDark} 0%, ${COLORS.green} 100%)`,
-            borderRadius: 20, padding: '48px 40px',
-            textAlign: 'center', position: 'relative', overflow: 'hidden',
+            background: COLORS.greenDark,
+            borderRadius: 16, padding: '24px 32px',
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            gap: 24, flexWrap: 'wrap',
           }}>
-            {/* decorative circles */}
-            <div style={{ position: 'absolute', top: -40, right: -40, width: 180, height: 180, borderRadius: '50%', background: 'rgba(197,150,12,0.12)', pointerEvents: 'none' }} />
-            <div style={{ position: 'absolute', bottom: -30, left: -30, width: 140, height: 140, borderRadius: '50%', background: 'rgba(255,255,255,0.04)', pointerEvents: 'none' }} />
-            <div style={{ position: 'relative' }}>
-              {/* eyebrow */}
-              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 6, marginBottom: 14,
-                background: 'rgba(197,150,12,0.2)', border: '1px solid rgba(197,150,12,0.4)',
-                borderRadius: 20, padding: '4px 14px',
-              }}>
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: COLORS.gold, flexShrink: 0 }} />
-                <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 11, fontWeight: 700, color: COLORS.gold, letterSpacing: '1px', textTransform: 'uppercase' }}>Weekly Newsletter</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+              <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(197,150,12,0.2)', border: '1px solid rgba(197,150,12,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <span style={{ fontSize: 16 }}>✉</span>
               </div>
-              <h3 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: 'clamp(22px, 4vw, 32px)', fontWeight: 700, color: 'white',
-                marginBottom: 10, lineHeight: 1.2,
-              }}>New spots, straight to your inbox.</h3>
-              <p style={{
-                fontFamily: "'DM Sans', sans-serif",
-                fontSize: 14, color: 'rgba(255,255,255,0.65)',
-                marginBottom: 28, maxWidth: 400, margin: '0 auto 28px',
-              }}>Be first to know about halal restaurant drops across Northern Virginia every week.</p>
-
-              {subStatus === 'success' ? (
-                <div style={{
-                  background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)',
-                  borderRadius: 12, padding: '14px 24px', maxWidth: 400, margin: '0 auto',
-                  fontFamily: "'DM Sans', sans-serif", fontSize: 14, color: 'white', fontWeight: 600,
-                }}>You're in! Check your inbox.</div>
-              ) : (
-                <div style={{ maxWidth: 420, margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 8 }}>
-                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                    <input
-                      type="email" placeholder="your@email.com" value={subEmail}
-                      onChange={e => setSubEmail(e.target.value)}
-                      onKeyDown={e => e.key === 'Enter' && (async () => {
-                        if (!subEmail) return;
-                        setSubStatus('loading');
-                        try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
-                        catch { setSubStatus('error'); }
-                      })()}
-                      style={{
-                        flex: '1 1 180px', minWidth: 0, padding: '13px 16px',
-                        borderRadius: 10, border: `1px solid ${subStatus === 'error' ? '#e74c3c' : 'rgba(255,255,255,0.2)'}`,
-                        background: 'rgba(255,255,255,0.1)', color: 'white',
-                        fontFamily: "'DM Sans', sans-serif", fontSize: 14, outline: 'none',
-                      }}
-                    />
-                    <button
-                      onClick={async () => {
-                        if (!subEmail) return;
-                        setSubStatus('loading');
-                        try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
-                        catch { setSubStatus('error'); }
-                      }}
-                      disabled={subStatus === 'loading'}
-                      style={{
-                        background: COLORS.gold, color: 'white',
-                        border: 'none', borderRadius: 10, cursor: 'pointer',
-                        padding: '13px 22px',
-                        fontFamily: "'DM Sans', sans-serif",
-                        fontSize: 14, fontWeight: 700,
-                        whiteSpace: 'nowrap', flexShrink: 0,
-                        opacity: subStatus === 'loading' ? 0.7 : 1,
-                        transition: 'opacity 0.15s',
-                      }}
-                      onMouseEnter={e => e.currentTarget.style.opacity = '0.88'}
-                      onMouseLeave={e => { if (subStatus !== 'loading') e.currentTarget.style.opacity = '1'; }}
-                    >{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
-                  </div>
-                  {subStatus === 'error' && (
-                    <div style={{ fontSize: 12, color: '#fca5a5', fontFamily: "'DM Sans', sans-serif" }}>
-                      Something went wrong — please try again.
-                    </div>
-                  )}
-                </div>
-              )}
+              <div>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700, color: 'white', marginBottom: 2 }}>Weekly halal spots, straight to your inbox.</div>
+                <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>New restaurants every week across Northern Virginia.</div>
+              </div>
             </div>
+            {subStatus === 'success' ? (
+              <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: COLORS.gold }}>You're in! Check your inbox. ✓</div>
+            ) : (
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0, flexWrap: 'wrap' }}>
+                <input
+                  type="email" placeholder="your@email.com" value={subEmail}
+                  onChange={e => setSubEmail(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && (async () => {
+                    if (!subEmail) return; setSubStatus('loading');
+                    try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
+                    catch { setSubStatus('error'); }
+                  })()}
+                  style={{
+                    padding: '10px 16px', borderRadius: 8,
+                    border: `1px solid ${subStatus === 'error' ? '#e74c3c' : 'rgba(255,255,255,0.2)'}`,
+                    background: 'rgba(255,255,255,0.08)', color: 'white',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, outline: 'none',
+                    width: 220, minWidth: 0,
+                  }}
+                />
+                <button
+                  onClick={async () => {
+                    if (!subEmail) return; setSubStatus('loading');
+                    try { await subscribeToBeehiiv(subEmail); setSubStatus('success'); setSubEmail(''); }
+                    catch { setSubStatus('error'); }
+                  }}
+                  disabled={subStatus === 'loading'}
+                  style={{
+                    background: COLORS.gold, color: 'white', border: 'none',
+                    borderRadius: 8, cursor: 'pointer', padding: '10px 20px',
+                    fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 700,
+                    whiteSpace: 'nowrap', opacity: subStatus === 'loading' ? 0.7 : 1,
+                  }}
+                >{subStatus === 'loading' ? 'Subscribing...' : 'Subscribe'}</button>
+              </div>
+            )}
+            {subStatus === 'error' && (
+              <div style={{ width: '100%', fontSize: 12, color: '#fca5a5', fontFamily: "'DM Sans', sans-serif", marginTop: -12 }}>Something went wrong — please try again.</div>
+            )}
           </div>
         </div>
       </section>
