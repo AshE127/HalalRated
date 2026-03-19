@@ -817,28 +817,30 @@ export default function Landing({ navigate }) {
 
       
 
-      {/* EMAIL SUBSCRIPTION — slim horizontal strip */}
+      {/* EMAIL SUBSCRIPTION — slim strip */}
       <section style={{ padding: '40px 24px 0' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{
             background: COLORS.greenDark,
-            borderRadius: 16, padding: '24px 32px',
+            borderRadius: 16, padding: '24px 28px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            gap: 24, flexWrap: 'wrap',
+            gap: 20, flexWrap: 'wrap',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16, flexShrink: 0 }}>
+            {/* Left — icon + text, allow shrinking */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 14, minWidth: 0, flex: '1 1 220px' }}>
               <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'rgba(197,150,12,0.2)', border: '1px solid rgba(197,150,12,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 <span style={{ fontSize: 16 }}>✉</span>
               </div>
-              <div>
-                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 17, fontWeight: 700, color: 'white', marginBottom: 2 }}>Weekly halal spots, straight to your inbox.</div>
+              <div style={{ minWidth: 0 }}>
+                <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 16, fontWeight: 700, color: 'white', marginBottom: 2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>Weekly halal spots, straight to your inbox.</div>
                 <div style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 12, color: 'rgba(255,255,255,0.55)' }}>New restaurants every week across Northern Virginia.</div>
               </div>
             </div>
+            {/* Right — form */}
             {subStatus === 'success' ? (
-              <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, fontWeight:600, color:COLORS.gold }}>You're in! Check your inbox. ✓</div>
+              <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, fontWeight:600, color:COLORS.gold, flexShrink:0 }}>You're in! Check your inbox. ✓</div>
             ) : (
-              <div style={{ display:'flex', gap:8, flexWrap:'wrap', width:'100%', maxWidth:380 }}>
+              <div style={{ display:'flex', gap:8, flex:'1 1 260px', maxWidth:360 }}>
                 <input
                   type="email" placeholder="your@email.com" value={subEmail}
                   onChange={e => setSubEmail(e.target.value)}
@@ -848,7 +850,7 @@ export default function Landing({ navigate }) {
                     catch { setSubStatus('error'); }
                   })()}
                   style={{
-                    flex:'1 1 160px', minWidth:0, padding:'10px 16px', borderRadius:8,
+                    flex:1, minWidth:0, padding:'10px 14px', borderRadius:8,
                     border:`1px solid ${subStatus==='error'?'#e74c3c':'rgba(255,255,255,0.2)'}`,
                     background:'rgba(255,255,255,0.08)', color:'white',
                     fontFamily:"'DM Sans', sans-serif", fontSize:13, outline:'none',
@@ -862,16 +864,16 @@ export default function Landing({ navigate }) {
                   }}
                   disabled={subStatus==='loading'}
                   style={{
-                    flex:'1 1 100px', background:COLORS.gold, color:'white', border:'none',
-                    borderRadius:8, cursor:'pointer', padding:'10px 20px',
+                    flexShrink:0, background:COLORS.gold, color:'white', border:'none',
+                    borderRadius:8, cursor:'pointer', padding:'10px 18px',
                     fontFamily:"'DM Sans', sans-serif", fontSize:13, fontWeight:700,
-                    whiteSpace:'nowrap', opacity:subStatus==='loading'?0.7:1,
+                    opacity:subStatus==='loading'?0.7:1,
                   }}
-                >{subStatus==='loading'?'Subscribing...':'Subscribe'}</button>
-                {subStatus==='error' && (
-                  <div style={{ width:'100%', fontSize:12, color:'#fca5a5', fontFamily:"'DM Sans', sans-serif" }}>Something went wrong — please try again.</div>
-                )}
+                >{subStatus==='loading'?'...':'Subscribe'}</button>
               </div>
+            )}
+            {subStatus==='error' && (
+              <div style={{ width:'100%', fontSize:12, color:'#fca5a5', fontFamily:"'DM Sans', sans-serif", marginTop:-12 }}>Something went wrong — please try again.</div>
             )}
           </div>
         </div>

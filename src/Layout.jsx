@@ -95,13 +95,13 @@ function Nav({ navigate }) {
         </div>
       </nav>
 
-      {/* Hamburger floats above everything */}
-      {isMobile && (
+      {/* Hamburger floats above everything — hidden when menu is open */}
+      {isMobile && !menuOpen && (
         <div style={{ position:'fixed', top:12, right:12, zIndex:10001 }}>
-          <button onClick={() => setMenuOpen(!menuOpen)} style={{ display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', background:menuOpen?COLORS.green:COLORS.greenLight, border:`1px solid ${COLORS.border}`, borderRadius:8, cursor:'pointer', width:40, height:40, gap:5, padding:0 }}>
-            <span style={{ display:'block', width:18, height:2, background:menuOpen?'white':COLORS.green, borderRadius:2, transition:'all 0.2s', transform:menuOpen?'rotate(45deg) translate(5px, 5px)':'none' }} />
-            <span style={{ display:menuOpen?'none':'block', width:18, height:2, background:COLORS.green, borderRadius:2 }} />
-            <span style={{ display:'block', width:18, height:2, background:menuOpen?'white':COLORS.green, borderRadius:2, transition:'all 0.2s', transform:menuOpen?'rotate(-45deg) translate(5px, -5px)':'none' }} />
+          <button onClick={() => setMenuOpen(true)} style={{ display:'flex', alignItems:'center', justifyContent:'center', flexDirection:'column', background:COLORS.greenLight, border:`1px solid ${COLORS.border}`, borderRadius:8, cursor:'pointer', width:40, height:40, gap:5, padding:0 }}>
+            <span style={{ display:'block', width:18, height:2, background:COLORS.green, borderRadius:2 }} />
+            <span style={{ display:'block', width:18, height:2, background:COLORS.green, borderRadius:2 }} />
+            <span style={{ display:'block', width:18, height:2, background:COLORS.green, borderRadius:2 }} />
           </button>
         </div>
       )}
