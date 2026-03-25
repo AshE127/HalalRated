@@ -697,7 +697,7 @@ export default function Landing({ navigate }) {
                 </div>
                 {/* Right image */}
                 <div style={{ width: 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                  <img src={getPhotoUrl(rotw.cuisine, rotw.tags)} alt={rotw.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
+                  <img src={rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)} alt={rotw.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
                   <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(107,63,0,0.3), transparent)' }} />
                 </div>
               </div>

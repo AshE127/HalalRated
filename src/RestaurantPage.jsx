@@ -447,7 +447,7 @@ export default function RestaurantPage({ slug, navigate }) {
                 </div>
               </div>
               <a
-                href={`https://www.google.com/maps/search/${encodeURIComponent(restaurant.name + ' ' + restaurant.city + ' VA')}`}
+                href={restaurant.mapsUrl || `https://www.google.com/maps/search/${encodeURIComponent(restaurant.name + ' ' + restaurant.city + ' VA')}`}
                 target="_blank" rel="noreferrer"
                 style={{
                   display: 'block', marginTop: 16,
