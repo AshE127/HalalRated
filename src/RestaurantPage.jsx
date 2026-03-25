@@ -382,6 +382,12 @@ export default function RestaurantPage({ slug, navigate }) {
                     fontFamily: "'DM Sans', sans-serif",
                     fontSize: 14, color: COLORS.textMid, lineHeight: 1.6,
                   }}>{restaurant.halalNote}</p>
+                  {restaurant.halalNote && restaurant.halalNote.toLowerCase().includes('ask') && (
+                    <div style={{ marginTop: 10, background: '#fef9ec', border: '1px solid rgba(197,150,12,0.4)', borderRadius: 8, padding: '8px 12px', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
+                      <span style={{ fontSize: 14, flexShrink: 0 }}>⚠️</span>
+                      <span style={{ fontFamily: "'DM Sans', sans-serif", fontSize: 13, fontWeight: 600, color: '#92700a', lineHeight: 1.5 }}>Read the halal note above before ordering.</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
