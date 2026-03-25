@@ -2,6 +2,6 @@
   "rewrites": [
     { "source": "/guide", "destination": "/learn/index.html" },
     { "source": "/guide/:path*", "destination": "/learn/:path*" },
-    { "source": "/((?!learn/|admin|restaurant/|api/).*)", "destination": "/index.html" }
+    { "source": "/((?!learn/|admin/|api/).*)", "destination": "/index.html" }
   ]
 }

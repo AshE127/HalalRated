@@ -498,6 +498,7 @@ export default function Landing({ navigate }) {
           .hidden-halal-banner { flex-direction: column !important; align-items: flex-start !important; padding: 24px !important; }
           .hidden-halal-banner button { width: 100% !important; }
           .restaurant-grid { grid-template-columns: 1fr !important; }
+          .rotw-photo { display: none !important; }
           .rotw-inner { flex-direction: column !important; }
           .city-scroll { flex-wrap: wrap !important; }
         }
@@ -684,23 +685,20 @@ export default function Landing({ navigate }) {
               onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.18)'; }}
               onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
               >
-                {/* Full bleed background image */}
                 <img
-                  src={window.innerWidth >= 768 && rotw.photoBanner ? rotw.photoBanner : (rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags))}
+                  src={rotw.photoBanner || rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)}
                   alt={rotw.name}
-                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 40%' }}
+                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 55%' }}
                 />
-                {/* Lighter gradient overlay */}
-                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,30,15,0.72) 0%, rgba(10,30,15,0.45) 55%, rgba(10,30,15,0.08) 100%)' }} />
-                {/* Content */}
+                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,30,15,0.82) 0%, rgba(10,30,15,0.5) 50%, rgba(10,30,15,0.08) 100%)' }} />
                 <div style={{ position:'relative', zIndex:1, height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', padding:'24px 32px' }}>
                   <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(197,150,12,0.25)', border:'1px solid rgba(197,150,12,0.5)', borderRadius:20, padding:'3px 12px', alignSelf:'flex-start', marginBottom:10 }}>
-                    <span style={{ width:5, height:5, borderRadius:'50%', background:'#C5960C', flexShrink:0 }} />
-                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:800, color:'#C5960C', letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
+                    <span style={{ width:5, height:5, borderRadius:'50%', background:COLORS.gold, flexShrink:0 }} />
+                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:800, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
                   </div>
                   <div style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:'white', lineHeight:1.1, marginBottom:6, letterSpacing:'-0.5px' }}>{rotw.name}</div>
                   <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, color:'rgba(255,255,255,0.8)', marginBottom:14 }}>{rotw.city}, VA · {rotw.cuisine}</div>
-                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.15)', borderRadius:8, padding:'6px 14px', alignSelf:'flex-start', backdropFilter:'blur(4px)' }}>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.15)', borderRadius:8, padding:'6px 14px', alignSelf:'flex-start' }}>
                     <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:700, color:'white' }}>View Feature →</span>
                   </div>
                 </div>
