@@ -246,7 +246,7 @@ export default function RestaurantPage({ slug, navigate }) {
         position: 'relative', overflow: 'hidden',
       }} className="hero-section">
         <img
-          src={restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.tags)}
+          src={window.innerWidth >= 768 && restaurant.photoBanner ? restaurant.photoBanner : (restaurant.photo || getPhotoUrl(restaurant.cuisine, restaurant.tags))}
           alt={restaurant.name}
           onError={e => { e.target.style.display = 'none'; }}
           style={{

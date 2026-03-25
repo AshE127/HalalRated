@@ -686,9 +686,9 @@ export default function Landing({ navigate }) {
               >
                 {/* Full bleed background image */}
                 <img
-                  src={rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)}
+                  src={window.innerWidth >= 768 && rotw.photoBanner ? rotw.photoBanner : (rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags))}
                   alt={rotw.name}
-                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 30%' }}
+                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 40%' }}
                 />
                 {/* Lighter gradient overlay */}
                 <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,30,15,0.72) 0%, rgba(10,30,15,0.45) 55%, rgba(10,30,15,0.08) 100%)' }} />
