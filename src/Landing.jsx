@@ -498,6 +498,7 @@ export default function Landing({ navigate }) {
           .hidden-halal-banner { flex-direction: column !important; align-items: flex-start !important; padding: 24px !important; }
           .hidden-halal-banner button { width: 100% !important; }
           .restaurant-grid { grid-template-columns: 1fr !important; }
+          .rotw-photo { display: none !important; }
           .rotw-inner { flex-direction: column !important; }
           .city-scroll { flex-wrap: wrap !important; }
         }
@@ -676,33 +677,44 @@ export default function Landing({ navigate }) {
           <section style={{ padding: '20px 24px 0' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
               <div onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
-                borderRadius: 20, overflow: 'hidden',
-                cursor: 'pointer', position: 'relative',
-                height: 200,
+                borderRadius: 20, overflow: 'hidden', cursor: 'pointer',
+                display: 'flex', border: `1px solid rgba(255,255,255,0.06)`,
+                boxShadow: '0 4px 24px rgba(0,0,0,0.12)',
                 transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.18)'; }}
-              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 12px 40px rgba(0,0,0,0.18)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = '0 4px 24px rgba(0,0,0,0.12)'; }}
               >
-                {/* Full bleed background image */}
-                <img
-                  src={window.innerWidth >= 768 && rotw.photoBanner ? rotw.photoBanner : (rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags))}
-                  alt={rotw.name}
-                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center 40%' }}
-                />
-                {/* Lighter gradient overlay */}
-                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,30,15,0.72) 0%, rgba(10,30,15,0.45) 55%, rgba(10,30,15,0.08) 100%)' }} />
-                {/* Content */}
-                <div style={{ position:'relative', zIndex:1, height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', padding:'24px 32px' }}>
-                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(197,150,12,0.25)', border:'1px solid rgba(197,150,12,0.5)', borderRadius:20, padding:'3px 12px', alignSelf:'flex-start', marginBottom:10 }}>
-                    <span style={{ width:5, height:5, borderRadius:'50%', background:'#C5960C', flexShrink:0 }} />
-                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:800, color:'#C5960C', letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
+                {/* Left — dark text panel */}
+                <div style={{
+                  background: COLORS.greenDark,
+                  flex: 1, minWidth: 0,
+                  padding: '28px 32px',
+                  display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 10,
+                }}>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(197,150,12,0.18)', border:'1px solid rgba(197,150,12,0.4)', borderRadius:20, padding:'3px 11px', alignSelf:'flex-start' }}>
+                    <span style={{ width:5, height:5, borderRadius:'50%', background:COLORS.gold, flexShrink:0, display:'block' }} />
+                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:9, fontWeight:800, color:COLORS.gold, letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
                   </div>
-                  <div style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:'white', lineHeight:1.1, marginBottom:6, letterSpacing:'-0.5px' }}>{rotw.name}</div>
-                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, color:'rgba(255,255,255,0.8)', marginBottom:14 }}>{rotw.city}, VA · {rotw.cuisine}</div>
-                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.15)', borderRadius:8, padding:'6px 14px', alignSelf:'flex-start', backdropFilter:'blur(4px)' }}>
+                  <div style={{ fontFamily:"'Playfair Display', serif", fontSize:28, fontWeight:700, color:'white', lineHeight:1.1, letterSpacing:'-0.5px' }}>{rotw.name}</div>
+                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, color:'rgba(255,255,255,0.55)' }}>{rotw.city}, VA · {rotw.cuisine}</div>
+                  <p style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, color:'rgba(255,255,255,0.72)', lineHeight:1.65, margin:0 }}>{rotw.description}</p>
+                  <div style={{ display:'inline-flex', alignItems:'center', background:'rgba(255,255,255,0.1)', borderRadius:8, padding:'7px 16px', alignSelf:'flex-start', marginTop:4 }}>
                     <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:700, color:'white' }}>View Feature →</span>
                   </div>
+                </div>
+
+                {/* Right — photo panel, hidden on mobile */}
+                <div className="rotw-photo" style={{
+                  width: 320, flexShrink: 0, position: 'relative', overflow: 'hidden', display: 'block',
+                }}>
+                  <img
+                    src={rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)}
+                    alt={rotw.name}
+                    style={{ width:'100%', height:'100%', objectFit:'cover', objectPosition:'center', display:'block' }}
+                  />
+                  {/* Seamless left fade into dark panel */}
+                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,45,22,0.85) 0%, rgba(10,45,22,0.2) 40%, rgba(10,45,22,0) 100%)' }} />
                 </div>
               </div>
             </div>
