@@ -676,29 +676,35 @@ export default function Landing({ navigate }) {
           <section style={{ padding: '20px 24px 0' }}>
             <div style={{ maxWidth: 1200, margin: '0 auto' }}>
               <div onClick={() => navigate(`/restaurant/${rotw.slug}`)} style={{
-                background: 'linear-gradient(120deg, #6b3f00, #C5960C)',
-                borderRadius: 16, overflow: 'hidden',
-                display: 'flex', alignItems: 'stretch',
+                borderRadius: 20, overflow: 'hidden',
                 cursor: 'pointer', position: 'relative',
-                minHeight: 100,
-                transition: 'opacity 0.15s',
+                height: 200,
+                transition: 'transform 0.2s, box-shadow 0.2s',
               }}
-              onMouseEnter={e => e.currentTarget.style.opacity = '0.95'}
-              onMouseLeave={e => e.currentTarget.style.opacity = '1'}
+              onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.boxShadow = '0 16px 48px rgba(0,0,0,0.18)'; }}
+              onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.boxShadow = 'none'; }}
               >
-                {/* Left content */}
-                <div style={{ flex: 1, padding: '16px 20px', display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: 4, position: 'relative', zIndex: 1 }}>
-                  <div style={{ display:'inline-flex', alignItems:'center', background:'rgba(255,255,255,0.18)', borderRadius:20, padding:'2px 9px', alignSelf:'flex-start', marginBottom:2 }}>
-                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:9, fontWeight:800, color:'white', letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
+                {/* Full bleed background image */}
+                <img
+                  src={rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)}
+                  alt={rotw.name}
+                  style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition:'center' }}
+                />
+                {/* Dark gradient overlay — stronger on left for text legibility */}
+                <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(10,30,15,0.88) 0%, rgba(10,30,15,0.6) 50%, rgba(10,30,15,0.15) 100%)' }} />
+                {/* Gold top-left accent line */}
+                <div style={{ position:'absolute', top:0, left:0, right:0, height:3, background:`linear-gradient(to right, #C5960C, transparent)` }} />
+                {/* Content */}
+                <div style={{ position:'relative', zIndex:1, height:'100%', display:'flex', flexDirection:'column', justifyContent:'center', padding:'24px 32px' }}>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(197,150,12,0.25)', border:'1px solid rgba(197,150,12,0.5)', borderRadius:20, padding:'3px 12px', alignSelf:'flex-start', marginBottom:10 }}>
+                    <span style={{ width:5, height:5, borderRadius:'50%', background:'#C5960C', flexShrink:0 }} />
+                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:10, fontWeight:800, color:'#C5960C', letterSpacing:'1.5px', textTransform:'uppercase' }}>Restaurant of the Week</span>
                   </div>
-                  <div style={{ fontFamily:"'Playfair Display', serif", fontSize:22, fontWeight:700, color:'white', lineHeight:1.2 }}>{rotw.name}</div>
-                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, color:'rgba(255,255,255,0.7)' }}>{rotw.city} · {rotw.cuisine}</div>
-                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:700, color:'rgba(255,255,255,0.9)', marginTop:4 }}>View Feature →</div>
-                </div>
-                {/* Right image */}
-                <div style={{ width: 110, flexShrink: 0, position: 'relative', overflow: 'hidden' }}>
-                  <img src={rotw.photo || getPhotoUrl(rotw.cuisine, rotw.tags)} alt={rotw.name} style={{ width:'100%', height:'100%', objectFit:'cover', display:'block' }} />
-                  <div style={{ position:'absolute', inset:0, background:'linear-gradient(to right, rgba(107,63,0,0.3), transparent)' }} />
+                  <div style={{ fontFamily:"'Playfair Display', serif", fontSize:32, fontWeight:700, color:'white', lineHeight:1.1, marginBottom:6, letterSpacing:'-0.5px' }}>{rotw.name}</div>
+                  <div style={{ fontFamily:"'DM Sans', sans-serif", fontSize:13, color:'rgba(255,255,255,0.7)', marginBottom:14 }}>{rotw.city}, VA · {rotw.cuisine}</div>
+                  <div style={{ display:'inline-flex', alignItems:'center', gap:6, background:'rgba(255,255,255,0.15)', borderRadius:8, padding:'6px 14px', alignSelf:'flex-start', backdropFilter:'blur(4px)' }}>
+                    <span style={{ fontFamily:"'DM Sans', sans-serif", fontSize:12, fontWeight:700, color:'white' }}>View Feature →</span>
+                  </div>
                 </div>
               </div>
             </div>
